@@ -6,8 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Profile from './profile';
-import DoctorAppointmentList from './DoctorAppointmentList';
+import Profile from '../screens/Profile'
+import DoctorAppointmentList from '../screens/DoctorAppointmentList';
 
 
 

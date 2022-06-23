@@ -6,7 +6,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Profile from './profile';
 
 export default function DoctorAppointmentList({navigation}){
     const [appointment, setAppointment] = useState([{"name":"Faiq Shahzad", "date":"28-06-2022", "time":"1300", "fees":"3000", 'status':'pending', 'medicalRecord':''}]);

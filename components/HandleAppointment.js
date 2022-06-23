@@ -10,18 +10,21 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import Prescription from './prescription';
 
 function MakeAppointment({route, navigation}) {
+  
+  const appointment = route.params?.appointment
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
+      title:"Appointment",
+      headerRight: () => (appointment.status !== 'completed' ?
         <TouchableOpacity style={{alignItems:"center", padding:10, paddingHorizontal:25, borderRadius:10, marginHorizontal:15, backgroundColor:"green"}} onPress={()=>{Alert.alert("Data Submitted", "YEAAAH!")}}>
                 <Text style={{color:"white", fontSize:15}}>Submit</Text>
         </TouchableOpacity>
+        :<></>
       ),
     });
   }, [navigation]);
 
-  const appointment = route.params?.appointment
   
 // const [details, setDetails] = useState({"name":"Muhammad Ahmed", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'in-progress'})
 // const [details, setDetails] = useState({"name":"Muhammad Ahmed", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'in-progress'})

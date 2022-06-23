@@ -1,14 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { Text, View, Image,FlatList, Alert, TouchableOpacity, ScrollView, TextInput} from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Prescription from './prescription.js';
-import Profile from './profile';
 import StarRating from 'react-native-star-rating';
-import { AuthContext } from '../navigation/AuthProvider.js';
 
 
-function SearchDoctors({navigation}){
+export default SearchDoctors = ({navigation}) => {
     const [doctors, getDoctors] = useState([{"name":"Faiq Shahzad", "speciality":"MBBS | Surgeon", "time":"11:00 - 1550", "star":"3.5"},{"name":"Fazal Khan", "speciality":"MBBS | Biologist", "time":"800 - 1200", "star":"4.7"}]);
     // const onStarRatingPress = (rating) => {
     //   this.setState({
@@ -74,7 +70,7 @@ function SearchDoctors({navigation}){
                 <View style={{flexDirection:'row'}}>
                     <View style={{}}>
                       <Image style={{width: 100, height: 100, alignSelf:'center', borderRadius:100, marginTop:10}}
-                        source={{ uri: "https://www.kindpng.com/picc/m/78-786207_user-avatar-png-user-avatar-icon-png-transparent.png"}}/>
+                        source={{ uri: "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"}}/>
                     </View>
                     <View style={{paddingLeft:25}}>
                       <Text style={{fontSize:17, fontWeight:"bold", color:"red", marginVertical:10}}>Dr. {element.name}</Text>
@@ -109,51 +105,3 @@ function SearchDoctors({navigation}){
       </View>
     );
   }
-export default function PatientHome({navigation}) {
-  const [patient, setPatient] = useState("patient");
-
-  const {user, logout} = useContext(AuthContext);
-
-  const signout = () =>{
-    Alert.alert(
-      "Log Out",
-      "Confirm Logout!",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "Confirm", 
-          onPress: () =>logout()
-
-        }
-      ]
-    );
-
-  }
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={signout}>
-                <MaterialCommunityIcons name="logout" size={24} color="grey" />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
-  const Tab = createBottomTabNavigator();
-
-  return (
-
-    <Tab.Navigator>
-        <Tab.Screen name="Search Doctors" component={SearchDoctors} options={{ title: "Doctors", tabBarIcon:({color})=>(
-        <MaterialCommunityIcons name="doctor" size={24} color={color} />)}}/>
-        <Tab.Screen name="Prescriptions" component={Prescription} options={{ tabBarIcon:({color})=>(
-        <MaterialCommunityIcons name="history" size={24} color={color} />)}}/>
-        <Tab.Screen name="Profile" component={Profile} initialParams={{patient}} options={{ tabBarIcon:({color})=>(
-        <MaterialCommunityIcons name="account" size={24} color={color} />)}}/>
-    </Tab.Navigator>
-  );
-}

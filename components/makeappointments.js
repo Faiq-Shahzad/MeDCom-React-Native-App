@@ -42,7 +42,7 @@ function MakeAppointment({route, navigation}) {
 
       <Card style={{width:"80%", marginTop:20, alignItems:"center"}}>
         <Image style={{width: 100, height: 100, alignSelf:'center', borderRadius:100, marginTop:10}}
-              source={{ uri: "https://www.kindpng.com/picc/m/78-786207_user-avatar-png-user-avatar-icon-png-transparent.png"}}/>
+              source={{ uri: "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"}}/>
         <Card.Content style={{alignItems:"center"}}>
           <Title style={{fontSize:20, fontWeight:"bold"}}>{details.name}</Title>
           <View style={{flexDirection:"row", justifyContent:"space-evenly", width:"100%", marginTop:5}}>

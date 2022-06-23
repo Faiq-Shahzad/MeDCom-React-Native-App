@@ -4,9 +4,9 @@ import {Button, RadioButton, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function RecentAppointments({navigation}){
+export default RecentAppointments = ({navigation}) => {
   const [appointment, setAppointment] = useState([{"name":"Dr. Faiq Shahzad", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'pending'}]);
-  const [completed, setCompleted] = useState([{"name":"Muhammad Ahmed", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'in-progress'}]);
+  const [completed, setCompleted] = useState([{"name":"Muhammad Ahmed", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'completed'}]);
   const [displayPending, setDisplayPending] = useState(true);
   const [displayCompleted, setDisplayCompleted] = useState(true);
 
@@ -86,7 +86,7 @@ function RecentAppointments({navigation}){
         {completed.map( (element) =>{
   
           return(
-            <TouchableOpacity style={{width:"100%"}} onPress={()=> navigation.navigate("Make Appointment", {status:'in-progress'})}>
+            <TouchableOpacity style={{width:"100%"}} onPress={()=> navigation.navigate("Handle Appointment", {appointment:element})}>
                 <View style={{marginTop:20, width:"100%", alignItems:"center"}}>
                   <View style={{flexDirection:"row", width:"85%", borderRadius:20, backgroundColor:"plum", justifyContent:'space-evenly', padding:10}}>
                       <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.name}</Text>
@@ -105,5 +105,3 @@ function RecentAppointments({navigation}){
     </View>
   );
 }
-
-export default RecentAppointments;
