@@ -6,7 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 export default RecentAppointments = ({navigation}) => {
   const [appointment, setAppointment] = useState([{"name":"Dr. Faiq Shahzad", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'pending'}]);
-  const [completed, setCompleted] = useState([{"name":"Muhammad Ahmed", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'completed'}]);
+  const [completed, setCompleted] = useState([{"name":"Muhammad Ahmed", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'completed', 'star':0}]);
   const [displayPending, setDisplayPending] = useState(true);
   const [displayCompleted, setDisplayCompleted] = useState(true);
 

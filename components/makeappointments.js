@@ -13,7 +13,7 @@ function MakeAppointment({route, navigation}) {
   const status = route.params?.status
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(['italy', 'spain', 'barcelona', 'finland']);
+  const [value, setValue] = useState(null);
   const [items, setItems] = useState([
     {label: '1300', value: '1300'},
     {label: '1330', value: '1330'},
@@ -87,7 +87,6 @@ function MakeAppointment({route, navigation}) {
 
               textStyle={{fontSize:15}}
               style={{width:"100%", borderColor:"green", color:"green"}}
-              multiple={true}
               mode="BADGE"
               badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
             />

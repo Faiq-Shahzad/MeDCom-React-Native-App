@@ -8,10 +8,16 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DropDownPicker from 'react-native-dropdown-picker';
 import Prescription from './prescription';
+import StarRating from 'react-native-star-rating';
 
 function MakeAppointment({route, navigation}) {
   
   const appointment = route.params?.appointment
+  const [starCount, setStarCount] = useState(appointment.star);
+
+  const onStarPress= (rating)=>{
+    setStarCount(rating)
+  }
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -61,6 +67,31 @@ function MakeAppointment({route, navigation}) {
       </Card>
 
       <Prescription status={appointment.status} medicalRecord={appointment.medicalRecord}/>
+      
+      <View>
+        <Card style={{width:"80%", marginTop:20, alignItems:"center", marginBottom:10}}>
+          <Card.Content style={{alignItems:"center"}}>
+            <View style={{flexDirection:"row", justifyContent:"center", width:"100%", marginTop:5}}>
+              <View>
+                  <Paragraph style={{fontWeight:"bold"}}>Rating</Paragraph>
+                  <Paragraph></Paragraph>
+                  <StarRating
+                              disabled={false}
+                              maxStars={5}
+                              rating={starCount}
+                              starSize={20}
+                              starStyle={{color:'blue'}}
+                              selectedStar={(rating) => onStarPress(rating)}
+
+                            />
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
+
+      </View>
+
+      
       
     </View>
     </ScrollView>
