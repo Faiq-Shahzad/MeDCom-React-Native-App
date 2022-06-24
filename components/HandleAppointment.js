@@ -2,10 +2,16 @@ import React, {useState, useEffect} from 'react';
 import { Text, View,  Alert, TouchableOpacity, ScrollView,  Image} from 'react-native';
 import {  Card, Title, Paragraph } from 'react-native-paper';
 import Prescription from './prescription';
+import StarRating from 'react-native-star-rating';
 
 function HandleAppointment({route, navigation}) {
   
   const appointment = route.params?.appointment
+  const [starCount, setStarCount] = useState(appointment.star);
+
+  const onStarPress= (rating)=>{
+    setStarCount(rating)
+  }
 
   
   React.useLayoutEffect(() => {
@@ -53,6 +59,31 @@ function HandleAppointment({route, navigation}) {
       </Card>
       {console.log(appointment)}
       <Prescription id={appointment.id} status={appointment.status} medicalRecord={appointment.medicalRecord} />
+      
+      <View>
+        <Card style={{width:"80%", marginTop:20, alignItems:"center", marginBottom:10}}>
+          <Card.Content style={{alignItems:"center"}}>
+            <View style={{flexDirection:"row", justifyContent:"center", width:"100%", marginTop:5}}>
+              <View>
+                  <Paragraph style={{fontWeight:"bold"}}>Rating</Paragraph>
+                  <Paragraph></Paragraph>
+                  <StarRating
+                              disabled={false}
+                              maxStars={5}
+                              rating={starCount}
+                              starSize={20}
+                              starStyle={{color:'blue'}}
+                              selectedStar={(rating) => onStarPress(rating)}
+
+                            />
+              </View>
+            </View>
+          </Card.Content>
+        </Card>
+
+      </View>
+
+      
       
     </View>
     </ScrollView>
