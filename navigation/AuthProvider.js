@@ -6,11 +6,14 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) =>{
     const [user, setUser] = useState(null);
+    const [doctor_id, setDoctor] = useState("");
     const DummyAvatar = "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"
 
     return (
         <AuthContext.Provider
             value={{
+                doctor_id,
+                setDoctor,
                 user,
                 setUser,
                 login: async (email, password) =>{

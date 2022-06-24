@@ -1,10 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import { Text, View, FlatList, Alert, TouchableOpacity, ScrollView, ImageBackground, Image} from 'react-native';
 import {Button, RadioButton, TextInput} from 'react-native-paper';
 import Onboarding from 'react-native-onboarding-swiper';
 import * as Animatable from 'react-native-animatable';
+import { AuthContext } from '../navigation/AuthProvider';
 
 function MainScreen({navigation}) {
+  const {doctor_id, setDoctor} = useContext(AuthContext);
   return (
 
     <View style={{flex:1, backgroundColor:"#07f2e7"}}>
@@ -22,6 +24,8 @@ function MainScreen({navigation}) {
           <Button mode='contained' style={{marginTop:20, padding:5, backgroundColor:"green", width:"70%"}} onPress={()=> navigation.navigate("Login")}>Login</Button>
           <Text style={{color:"grey"}}>__________________________________________</Text>
           <Button mode='contained' style={{marginTop:20, padding:5, backgroundColor:"dodgerblue", width:"65%"}} onPress={()=> navigation.navigate("Signup")}>Sign Up</Button>
+          <Text style={{color:"grey"}}>__________________________________________</Text>
+          <Button mode='contained' style={{marginTop:20, padding:5, backgroundColor:"lightblue", width:"65%"}} onPress={()=> setDoctor("BgSp51Pn9CIB3tPdEF1s")}>DOCTOR</Button>
         </View>
       </Animatable.View>
       {/* </ImageBackground> */}

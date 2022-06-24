@@ -22,8 +22,8 @@ export default function DoctorHome({navigation}) {
     <Tab.Navigator>
         <Tab.Screen name="Appointments" component={DoctorAppointmentList} options={{ title: "Appointments", tabBarIcon:({color})=>(
         <Icon name="check-circle" size={24} color={color} />)}}/>
-        <Tab.Screen name="Profile" component={Profile} initialParams={{doctor}} options={{ tabBarIcon:({color})=>(
-        <MaterialCommunityIcons name="account" size={24} color={color} />)}}/>
+        {/* <Tab.Screen name="Profile" component={Profile} initialParams={{doctor}} options={{ tabBarIcon:({color})=>(
+        <MaterialCommunityIcons name="account" size={24} color={color} />)}}/> */}
     </Tab.Navigator>
   );
 }

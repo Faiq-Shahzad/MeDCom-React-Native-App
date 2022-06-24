@@ -7,6 +7,8 @@ import StarRating from 'react-native-star-rating';
 function HandleAppointment({route, navigation}) {
   
   const appointment = route.params?.appointment
+  const isDoc = route.params?.isDoc
+
   const [starCount, setStarCount] = useState(appointment.star);
 
   const onStarPress= (rating)=>{
@@ -20,7 +22,7 @@ function HandleAppointment({route, navigation}) {
       });
     }, [navigation]);
     
-    const [medicalRecord, setMedicalRecords] = useState(appointment.medicalRecord)
+    // const [medicalRecord, setMedicalRecords] = useState(appointment.medicalRecord)
 
     
   
@@ -35,10 +37,10 @@ function HandleAppointment({route, navigation}) {
 
     <View style={{flex: 1, justifyContent:'center', alignItems:'center', paddingBottom:5, marginBottom:5}}>
       <Card style={{width:"80%", marginTop:20, alignItems:"center", marginBottom:10}}>
-        <Image style={{width: 100, height: 100, alignSelf:'center', borderRadius:100, marginTop:10}}
-              source={{ uri: appointment.doc.imgUrl}}/>
+        {/* <Image style={{width: 100, height: 100, alignSelf:'center', borderRadius:100, marginTop:10}}
+              source={{ uri: appointment.doc.imgUrl}}/> */}
         <Card.Content style={{alignItems:"center"}}>
-          <Title style={{fontSize:20, fontWeight:"bold"}}>{appointment.name}</Title>
+          {/* <Title style={{fontSize:20, fontWeight:"bold"}}>{appointment.name}</Title> */}
           <View style={{flexDirection:"row", justifyContent:"space-evenly", width:"100%", marginTop:5}}>
             <View>
                 <Paragraph style={{fontWeight:"bold"}}>Appointment Date</Paragraph>
@@ -58,8 +60,8 @@ function HandleAppointment({route, navigation}) {
         </Card.Content>
       </Card>
       {console.log(appointment)}
-      <Prescription id={appointment.id} status={appointment.status} medicalRecord={appointment.medicalRecord} />
-      
+      <Prescription id={appointment.id} status={appointment.status} medicalRecord={appointment.medicalRecord} navigation={navigation} />
+      {appointment.status == "completed" && !isDoc?
       <View>
         <Card style={{width:"80%", marginTop:20, alignItems:"center", marginBottom:10}}>
           <Card.Content style={{alignItems:"center"}}>
@@ -82,6 +84,9 @@ function HandleAppointment({route, navigation}) {
         </Card>
 
       </View>
+      :
+      <></>
+      }
 
       
       
