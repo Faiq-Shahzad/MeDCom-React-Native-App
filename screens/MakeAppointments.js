@@ -1,28 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import { Text, View, FlatList, Alert, TouchableOpacity, ScrollView, TextInput, Image} from 'react-native';
-import {RadioButton, Avatar, Card, Title, Paragraph, Button} from 'react-native-paper';
-import DatePicker from 'react-native-datepicker'
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, {useState, useContext} from 'react';
+import { Text, View, Alert, TouchableOpacity, TextInput, Image} from 'react-native';
+import {Card, Title, Paragraph, Button} from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DropDownPicker from 'react-native-dropdown-picker';
+import firestore from '@react-native-firebase/firestore';
+import { AuthContext } from '../navigation/AuthProvider';
 
 function MakeAppointment({route, navigation}) {
-
-  const status = route.params?.status
+  const {user} = useContext(AuthContext);
+  const doc = route.params.doctor
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(['italy', 'spain', 'barcelona', 'finland']);
-  const [items, setItems] = useState([
-    {label: '1300', value: '1300'},
-    {label: '1330', value: '1330'},
-    {label: '1400', value: '1400'},
-    {label: '1430', value: '1430'},
-    
-  ]);
+  const [value, setValue] = useState(null);
+
+  const timingArray = doc.timing.map(el =>{
+    return {label: el, value:el}
+  })
+  const [items, setItems] = useState(timingArray);
+  const [disabled, setDisabled] = useState(false)
   const [selectedDate, setSelectedDate] = useState()
-  const [details, setDetails] = useState({"name":"Faiq Shahzad", "speciality":"MBBS | Surgeon", "opentime":"1300", "closetime":"1500", "fees":"Rs. 2500"})
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -37,23 +33,45 @@ function MakeAppointment({route, navigation}) {
     hideDatePicker();
   };
 
+  const confirmAppointment = async () =>{
+    setDisabled(true)
+    console.log(doc.id,user.uid,selectedDate.toLocaleDateString(),value, doc.fee)
+    await firestore().collection('appointments').add({
+        doc_id: doc.id,
+        p_id: user.uid,
+        date: selectedDate,
+        time: value,
+        fee: doc.fee,
+        status: 'pending',
+        medicalRecord:null,
+        createdAt: firestore.Timestamp.fromDate(new Date()),
+    }).catch(error => {
+      setDisabled(false)
+      return console.log('Something went wrong with adding appointment to firestore: ', error);
+    })
+    Alert.alert("Success", "Appointment Booked Successfully")
+    setDisabled(false)
+    navigation.popToTop()
+    
+  }
+
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
 
       <Card style={{width:"80%", marginTop:20, alignItems:"center"}}>
         <Image style={{width: 100, height: 100, alignSelf:'center', borderRadius:100, marginTop:10}}
-              source={{ uri: "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"}}/>
+              source={{ uri: doc.imgUrl}}/>
         <Card.Content style={{alignItems:"center"}}>
-          <Title style={{fontSize:20, fontWeight:"bold"}}>{details.name}</Title>
+          <Title style={{fontSize:20, fontWeight:"bold"}}>{doc.name}</Title>
           <View style={{flexDirection:"row", justifyContent:"space-evenly", width:"100%", marginTop:5}}>
             <View>
             <Paragraph style={{fontWeight:"bold"}}>Speciality</Paragraph>
-            <Paragraph>{details.speciality}</Paragraph>
+            <Paragraph>{doc.degree} | {doc.specialty}</Paragraph>
             </View>
             <Paragraph style={{fontSize:25, marginTop:16}}>|</Paragraph>
             <View>
             <Paragraph style={{fontWeight:"bold"}}>Time</Paragraph>
-            <Paragraph>{details.opentime} - {details.closetime}</Paragraph>
+            <Paragraph>{doc.timing[0]} - {doc.timing[doc.timing.length-1]}</Paragraph>
             </View>
           </View>
         </Card.Content>
@@ -87,7 +105,6 @@ function MakeAppointment({route, navigation}) {
 
               textStyle={{fontSize:15}}
               style={{width:"100%", borderColor:"green", color:"green"}}
-              multiple={true}
               mode="BADGE"
               badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
             />
@@ -96,13 +113,13 @@ function MakeAppointment({route, navigation}) {
 
         <Text style={{marginTop:20}}>Checkup Fees:</Text>
         <View style={{width:"100%", backgroundColor:"white", alignItems:"center", marginTop:10}}>
-          <TextInput style={{alignItems:"center", width:"90%", borderWidth:1, padding:10, borderRadius:10, borderColor:"green"}} value={details.fees}/>
+          <TextInput style={{alignItems:"center", width:"90%", borderWidth:1, padding:10, borderRadius:10, borderColor:"green"}} value={"Rs. "+doc.fee} editable={false}/>
         </View>
 
         
 
         <View style={{alignItems:"center"}}>
-          <Button mode='contained' style={{marginTop:20, width:"80%", fontSize:5, padding:5, borderRadius:50, backgroundColor:"red"}}>{console.log(status)} {status==="in-progress"?'Start Diagonosis':'Confirm Appointment'}</Button> 
+          <Button disabled={disabled} mode='contained' style={{marginTop:20, width:"80%", fontSize:5, padding:5, borderRadius:50, backgroundColor:"red"}} onPress={()=>confirmAppointment()}>Confirm Appointment</Button> 
         </View>
 
 

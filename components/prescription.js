@@ -3,20 +3,26 @@ import { Text,TextInput, ScrollView, TouchableOpacity, View, Alert, Button, Styl
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import firestore from '@react-native-firebase/firestore';
 
 
 export default function Prescription(props) {
-
+    const appointmentID = props.id
     const status = props.status
+    const propMedicalRecord = props?.medicalRecord
+
+    console.log("App ID "+appointmentID)
 
     const [diagnosis, setDiagnosis] = useState();
     
     const [medicineName, setMedicineName] = useState("");
     const [amountDay, setAmountDay] = useState("");
     const [totalDays, setTotalDays] = useState("");
-    const [prescription, setPrescription] = useState([{key:1, medicine:"Panadol", amountDay:2, totalDays:7}]);
+    const [prescription, setPrescription] = useState([]);
+    // const [prescription, setPrescription] = useState([{key:1, medicine:"Panadol", amountDay:2, totalDays:7}]);
     
     const [recommendation, setRecommendation] = useState("");
+    const [followUpDate, setFollowUpDate] = useState("");
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [selectedDate, setSelectedDate] = useState()
 
@@ -25,6 +31,13 @@ export default function Prescription(props) {
     }
     const setTotalDaysText = (text) => {
         setTotalDays(text.replace(/[^0-9]/g, ''))
+    }
+
+    if(status==="completed" && propMedicalRecord){
+        setDiagnosis(propMedicalRecord.diagnosis)
+        setPrescription(propMedicalRecord.prescription)
+        setRecommendation(propMedicalRecord.recommendation)
+        setFollowUpDate(propMedicalRecord.followUpDate)
     }
 
     const addPrescription = () => {
@@ -53,6 +66,20 @@ export default function Prescription(props) {
         hideDatePicker();
     };
 
+    const updateRecords = async() =>{
+        const medicalRecord = {
+            diagnosis,
+            recommendation,
+            followUpDate:selectedDate,
+            prescription
+        }
+        await firestore()
+        .collection('appointments')
+        .doc(appointmentID)
+        .update({medicalRecord: medicalRecord})
+        Alert.alert("Updating Medical Records", "Updated")
+    }
+
   return (
     <View style={{flex:1, paddingHorizontal:25}}>
         <View style={{marginTop:5, marginHorizontal:25, justifyContent:'center', alignItems:'center', backgroundColor:'rgba(255,255,255,1)', padding:2, borderRadius:2, shadowColor: "#000",
@@ -67,9 +94,9 @@ export default function Prescription(props) {
             <View style={{flexDirection:'row', justifyContent:'center', alignItems:'center'}}>
                 <MaterialCommunityIcons style={{width:'10%'}} name="account-injury" size={30} color={'red'} />
                 {status==="in-progress"?
-                <TextInput  placeholderTextColor={'gray'} style={{width:'70%', color:'black', borderColor:'gray', borderBottomWidth:1, marginBottom:10, marginHorizontal:15}} placeholder="Diagnosis" onChangeText={setDiagnosis}></TextInput>
+                <TextInput  placeholderTextColor={'gray'} style={{width:'70%', color:'black', borderColor:'gray', borderBottomWidth:1, marginBottom:10, marginHorizontal:15}} placeholder="Diagnosis" value={diagnosis} onChangeText={setDiagnosis}></TextInput>
                 :
-                <Text style={{width:'70%', color:'black', borderColor:'gray', paddingVertical:10, marginHorizontal:15}} >Diagnosis: Some Fever</Text>
+                <Text style={{width:'70%', color:'black', borderColor:'gray', paddingVertical:10, marginHorizontal:15}} >Diagnosis: {diagnosis}</Text>
                 }
             </View>
         </View>
@@ -83,10 +110,17 @@ export default function Prescription(props) {
         shadowRadius: 4.84,
         
         elevation: 5,}}>
-            <View style={{flexDirection:'row', marginBottom:10}}>
-                <MaterialCommunityIcons style={{marginHorizontal:10}} name="medical-bag" size={30} color={'red'} />
+            <View style={{flexDirection:'row', justifyContent:'space-between', marginBottom:10}}>
+                <View style={{flexDirection:'row', marginBottom:10}}>
+                    <MaterialCommunityIcons style={{marginHorizontal:10}} name="medical-bag" size={30} color={'red'} />
 
-                <Text style={{color:'black', fontSize:25, fontWeight:'bold'}}>Prescription</Text>
+                    <Text style={{color:'black', fontSize:25, fontWeight:'bold'}}>Prescription</Text>
+                </View>
+                    {status !== 'completed' ?
+            <TouchableOpacity style={{alignItems:"center", padding:10, paddingHorizontal:25, borderRadius:10, marginHorizontal:15, backgroundColor:"green"}} onPress={()=>updateRecords()}>
+                        <Text style={{color:"white", fontSize:15}}>Submit</Text>
+                </TouchableOpacity>
+                :<></>}
             </View>
             <View style={{justifyContent:'center', alignItems:'center'}}>
                 <TextInput placeholderTextColor={'gray'} style={{ width:'100%', backgroundColor:"rgba(0,0,0,0.2)", color:'black', paddingHorizontal:25, marginVertical:5, borderRadius:25}} placeholder="Medicine Name" value={medicineName}  onChangeText={setMedicineName}></TextInput>
@@ -144,7 +178,7 @@ export default function Prescription(props) {
                 <View style={{flexDirection:'row', width:"100%", justifyContent:'space-around', alignItems:"center", marginTop:10}}>
                     <Text style={{color:'black', fontSize:25, fontWeight:'bold'}}>Follow up</Text>
                     <View style={{alignItems:"center", padding:10, paddingHorizontal:25, borderRadius:10, backgroundColor:"green"}} onPress={showDatePicker}>
-                    <Text style={{color:"white", fontSize:15}}>Some 25/10/2023</Text>
+                    <Text style={{color:"white", fontSize:15}}>{followUpDate?(new Date(followUpDate.seconds*1000)).toLocaleDateString():'None'}</Text>
                     </View>
                 </View>
                 

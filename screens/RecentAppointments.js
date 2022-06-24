@@ -1,25 +1,73 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import { Text, View, FlatList, Alert, TouchableOpacity, ScrollView} from 'react-native';
-import {Button, RadioButton, TextInput} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import firestore from '@react-native-firebase/firestore';
+import { AuthContext } from '../navigation/AuthProvider';
+
 
 export default RecentAppointments = ({navigation}) => {
-  const [appointment, setAppointment] = useState([{"name":"Dr. Faiq Shahzad", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'pending'}]);
-  const [completed, setCompleted] = useState([{"name":"Muhammad Ahmed", "date":"28-06-2022", "time":"13:00", "fees":"2500", 'status':'completed'}]);
+
+  const {user, logout} = useContext(AuthContext);
+  const [appointmentList, setAppointmentList] = useState();
+  const [loading, setLoading] = useState(true);
+
+  const [appointment, setAppointment] = useState([]);
+  const [completed, setCompleted] = useState([]);
   const [displayPending, setDisplayPending] = useState(true);
   const [displayCompleted, setDisplayCompleted] = useState(true);
+    
+  const getAppointments = async () => {
+    const tempList = []
+    await firestore()
+    .collection('appointments')
+    .where('p_id', '==', user.uid)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach(doc => {      
+        const {doc_id, p_id, status, date, time, fee, medicalRecord} = doc.data()  
 
-  const confirmAppointment = (key) =>{
+          tempList.push({
+            id: doc.id,
+            doc_id,
+            status,
+            date,
+            time,
+            fee,
+            medicalRecord
+          })
+
+        }
+
+        )}
+      ).then(()=>{
+
+        const tempList2 = []
+        tempList.map( ap => {
+          firestore()
+          .collection('doctors')
+          .doc(ap.doc_id)
+          .get()
+          .then((documentSnapshot) => {
+            if( documentSnapshot.exists ) {
+              const docDetails = documentSnapshot.data()
+              tempList2.push({...ap, doc:docDetails})
+            }} )
+          }
+          
+          )
+          setAppointmentList(tempList2)
+
+      })
+      
+  }
+
+
+  const pendingAppointment = () =>{
       Alert.alert(
           "Pending",
           "The Request is being processed",
           [
-            {
-              text: "Cancel",
-              onPress: () => console.log("Cancel Pressed"),
-              style: "cancel"
-            },
+            
             { text: "OK", 
               onPress: () =>console.log("OK Pressed") 
 
@@ -27,6 +75,7 @@ export default RecentAppointments = ({navigation}) => {
           ]
         );
   }
+  
 
   const inProgress = (key, index) => {
 
@@ -46,6 +95,35 @@ export default RecentAppointments = ({navigation}) => {
   
   }
 
+  const getPendingAppointments = () =>{
+    setAppointment(appointmentList.filter(el => el.status==='pending'))
+  }
+  const getCompletedAppointments = () => {
+    setCompleted(appointmentList.filter(el => el.status==='completed'))
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    getAppointments().then(()=>{
+      getPendingAppointments()
+      getCompletedAppointments()
+      console.log(appointmentList)
+      setLoading(false)
+    });
+    
+    
+  }, []);
+
+
+  if(loading){
+    console.log("Some data")
+    return(
+      <View>
+        <Text> Loading </Text>
+      </View>
+    )
+  }else{
+
   return(
     <View style={{flex:1}}>
     
@@ -55,15 +133,21 @@ export default RecentAppointments = ({navigation}) => {
       </TouchableOpacity>
 
       { (displayPending || appointment.length != 0) ? 
-      <ScrollView style={{width:"100%", maxHeight:'30%', padding:2}}>
+      <ScrollView style={{width:"100%", maxHeight:'30%', paddingBottom:10, padding:2}}>
         
       {appointment.map( (element, index) =>{
 
         return(
-          <TouchableOpacity style={{width:"100%"}} onPress={()=>confirmAppointment(element.key, index)}>
-              <View style={{marginTop:20, width:"100%", alignItems:"center"}}>
+          <TouchableOpacity key={index} style={{width:"100%",marginVertical:15}} onPress={()=>pendingAppointment(element.key, index)}>
+              <View style={{width:"100%", alignItems:"center"}}>
                 <View style={{flexDirection:"row", width:"85%", borderRadius:20, backgroundColor:"plum", justifyContent:'space-evenly', padding:10}}>
-                    <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.name}</Text>
+                    <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.doc.name}</Text>
+                    
+                    <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
+                        <MaterialCommunityIcons name="calendar" size={24} color="white" />
+                        <Text style={{fontSize:16, fontFamily:"sans-serif", color:"white"}}>{(new Date(element.date.seconds*1000)).toLocaleDateString()}</Text>
+                    </View>
+
                     <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
                         <MaterialCommunityIcons name="clock-time-three" size={24} color="white" />
                         <Text style={{fontSize:16, fontFamily:"sans-serif", color:"white"}}>{element.time}</Text>
@@ -75,7 +159,7 @@ export default RecentAppointments = ({navigation}) => {
       })}
       </ScrollView> : <View style={{width:0, height:0}}></View>}
 
-      <TouchableOpacity style={{backgroundColor:"black", padding:13, borderWidth:1, borderColor:"lightgrey"}} 
+      <TouchableOpacity style={{backgroundColor:"black", padding:13, borderWidth:1, borderColor:"lightgrey"}}
         onPress={()=> (displayCompleted) ? setDisplayCompleted(false) : setDisplayCompleted(true)}>
           <Text style={{marginLeft: 7, color:"white", fontSize:17, fontWeight:"bold"}}>History</Text>
       </TouchableOpacity>
@@ -86,16 +170,22 @@ export default RecentAppointments = ({navigation}) => {
         {completed.map( (element) =>{
   
           return(
-            <TouchableOpacity style={{width:"100%"}} onPress={()=> navigation.navigate("Handle Appointment", {appointment:element})}>
-                <View style={{marginTop:20, width:"100%", alignItems:"center"}}>
-                  <View style={{flexDirection:"row", width:"85%", borderRadius:20, backgroundColor:"plum", justifyContent:'space-evenly', padding:10}}>
-                      <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.name}</Text>
-                      <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
-                          <MaterialCommunityIcons name="clock-time-three" size={24} color="white" />
-                          <Text style={{fontSize:16, fontFamily:"sans-serif", color:"white"}}>{element.time}</Text>
-                      </View>
-                  </View>
+            <TouchableOpacity style={{width:"100%", marginVertical:15}} onPress={()=> navigation.navigate("Handle Appointment", {appointment:element})}>
+                <View style={{width:"100%", alignItems:"center"}}>
+                <View style={{flexDirection:"row", width:"85%", borderRadius:20, backgroundColor:"plum", justifyContent:'space-evenly', padding:10}}>
+                    <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.doc.name}</Text>
+                    
+                    <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
+                        <MaterialCommunityIcons name="calendar" size={24} color="white" />
+                        <Text style={{fontSize:16, fontFamily:"sans-serif", color:"white"}}>{(new Date(element.date.seconds*1000)).toLocaleDateString()}</Text>
+                    </View>
+
+                    <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
+                        <MaterialCommunityIcons name="clock-time-three" size={24} color="white" />
+                        <Text style={{fontSize:16, fontFamily:"sans-serif", color:"white"}}>{element.time}</Text>
+                    </View>
                 </View>
+              </View>
             </TouchableOpacity>
           );
         })}
@@ -104,4 +194,5 @@ export default RecentAppointments = ({navigation}) => {
       
     </View>
   );
+  }
 }

@@ -8,53 +8,76 @@ import { AuthContext } from '../navigation/AuthProvider';
 
 
 export default function Profile({navigation, route}) {
-  const data = route.params
   const {user, logout} = useContext(AuthContext);
   
-  const [signup_name, setSignUpName] = useState("")
-  const [signup_password, setSignUpPassword] = useState("")
-  const [signup_confirm, setSignUpConfirm] = useState("")
   const [details, setDetails] = useState()
   // var details;
   const [loading, setLoading] = useState(true)
   const [disabled, setDisabled] = useState(true)
 
   const edit = () =>{
-    setDisabled(false);
+    setDisabled(!disabled);
   }
 
-  const getUser = async() => {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [open, setOpen] = useState(false)
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setDetails({...details, dob:date})
+    hideDatePicker();
+  };
+
+
+  const getUser = async () => {
     await firestore()
     .collection('users')
     .doc(user.uid)
     .get()
     .then((documentSnapshot) => {
       if( documentSnapshot.exists ) {
-        console.log('User Data', documentSnapshot.data());
-        setDetails(documentSnapshot.data());
+        // console.log('User Data', documentSnapshot.data());
+        // setDetails({...documentSnapshot.data(), dob:(new Date(documentSnapshot.data().dob.seconds))});
+        setDetails({...documentSnapshot.data(), dob:(new Date(documentSnapshot.data().dob.seconds * 1000))});
+        // console.log('Details Data', details.dob);
         setLoading(false)
       }
     })
   }
 
-  // const viewProfile = () =>{
-  //   console.log(data.doctor)
-  //   if (data.doctor === "doctor"){
-  //     console.log("true")
-  //     details = {"name":"Faiq Shahzad", "email":"faiqshahad933@gmail.com", "phn_number":"0331-5558407", "dob":"15-06-2001" }
-  //     console.log(details)
-  //   }else{
-  //     details = {"name":"Muhammad Ahmed", "email":"th3Un1qu3m4n@gmail.com", "phn_number":"0320-2020720", "dob":"18-08-2000"}
-  //   }
-  // }
+  const handleProfileUpdate = async () => {
+    setDisabled(true);
+    let imgUrl = details.userImg
+    await firestore()
+    .collection('users')
+    .doc(user.uid)
+    .update({
+      fname: details.fname,
+      lname: details.lname,
+      email: details.email,
+      phone: details.phone,
+      gender: details.gender,
+      dob: details.dob,
+      createdAt: details.createdAt,
+      userImg: imgUrl,
+    }).then(()=>{
+      console.log('User Updated')
+      Alert.alert('Profile', 'Your Profile Updated Successfully.')
+    })
+  }
 
-  // viewProfile();
 
   useEffect(() => {
     getUser();
+    
   }, []);
 
-  const DummyAvatar = "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"
 
   if(loading){
     console.log("Some data")
@@ -66,23 +89,67 @@ export default function Profile({navigation, route}) {
   }else{
 
   return (
-    <View style={{ flex: 1, alignItems: 'center'}}>
-      <ScrollView style={{width:"95%"}}>
+    <View style={{ flex: 1,
+    alignItems: 'center',
+    }}>
+      <ScrollView style={{width:"95%"}} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
         
-        <View style={{borderWidth:1, padding:8, borderRadius:10, borderColor:"lightgrey", width:"100%", marginTop:20}}>
+        <View style={{padding:8, borderRadius:10, width:"100%", backgroundColor:'white', marginVertical:20,
+                      shadowColor: "#000",
+                      shadowOffset: {
+                          width: 0,
+                          height: 2,
+                      },
+                      shadowOpacity: 0.25,
+                      shadowRadius: 4.84,    
+                      elevation: 5,}}>
           <TouchableOpacity onPress={edit}><Icon style={{alignSelf:"flex-end"}} name="edit" size={24} color="black"/></TouchableOpacity>
-          <Image style={{width: 150, height: 150, alignSelf:'center', borderRadius:100}}
-                source={{ uri: details ? details.userImg || DummyAvatar : DummyAvatar}}/>
-          <Text>First Name:</Text>
-          <TextInput style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={details.fname} editable={!disabled}></TextInput>
-          <Text>Last Name:</Text>
-          <TextInput style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={details.lname} editable={!disabled}></TextInput>
-          <Text style={{marginTop:15}}>Email:</Text>
-          <TextInput style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={details.email} editable={!disabled}></TextInput>
-          <Text style={{marginTop:15}}>Phone Number:</Text>
-          <TextInput style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={details.phone} editable={!disabled}></TextInput>
+          <Image style={{width: 150, height: 150, marginBottom:50, alignSelf:'center', borderRadius:100}}
+                source={{ uri: details.userImg }}/>
         </View>
-        <Button mode='outlined' style={{marginTop:20, padding:5, borderColor:"blue"}} disabled={disabled}>Update</Button> 
+        <View style={{paddingHorizontal:10}}>
+        <View style={{flexDirection:'row', marginTop:10}}>
+          <View style={{width:'48%', marginRight:10}}>
+            <Text>First Name:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.fname} onChangeText={(val)=>setDetails({...details, fname:val})} editable={!disabled}></TextInput>
+          </View>
+          <View style={{width:'48%', marginLeft:10}}>
+            <Text>Last Name:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.lname} onChangeText={(val)=>setDetails({...details, lname:val})} editable={!disabled}></TextInput>
+          </View>
+        </View>
+        <View style={{flexDirection:'row', marginTop:10}}>
+          <View style={{width:'50%'}}>
+            <Text style={{marginTop:15}}>Phone Number:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.phone} onChangeText={(val)=>setDetails({...details, phone:val})} editable={!disabled}></TextInput>
+            <Text style={{marginTop:15}}>Date of Birth:</Text>
+            <TouchableOpacity style={{alignItems:"center", backgroundColor:disabled?'lightgray':'rgb(120,220,140)', borderWidth:1, padding:10, borderRadius:5, borderColor:"lightgrey"}} onPress={showDatePicker} disabled={disabled}>
+              <Text style={{fontSize:15, color:'white'}}>{details.dob.toLocaleDateString()}</Text>
+            </TouchableOpacity>
+
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+              />
+          </View >
+          <View style={{width:'50%'}}>
+
+            <View style={{backgroundColor:'white', marginHorizontal:10, borderRadius:10}}>
+            <Text style={{marginTop:15, alignSelf:'center'}}>Gender:</Text>
+            <RadioButton.Group onValueChange={(val)=>setDetails({...details, gender:val})} value={details.gender} >
+              <RadioButton.Item mode='android' label="Male" labelStyle={{fontSize:13}} value="male" color='red' disabled={disabled}/>
+              <RadioButton.Item mode='android' label="Female" labelStyle={{fontSize:13}} value="female" color='red' disabled={disabled}/>
+              <RadioButton.Item mode='android' label="Custom" labelStyle={{fontSize:13}} value="custom" color='red' disabled={disabled}/>
+            </RadioButton.Group>
+            </View>
+          </View>
+        </View>
+
+
+        <Button mode='contained' style={{marginTop:20, padding:5, borderColor:"blue"}} disabled={disabled} onPress={handleProfileUpdate} >Update</Button> 
+        </View>
       </ScrollView>
 
     </View>
