@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text,TextInput, ScrollView, TouchableOpacity, View, Alert, Button, StyleSheet } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,8 @@ export default function Prescription(props) {
     const appointmentID = props.id
     const status = props.status
     const propMedicalRecord = props?.medicalRecord
+
+    const navigation = props.navigation
 
     console.log("App ID "+appointmentID)
 
@@ -32,13 +34,13 @@ export default function Prescription(props) {
     const setTotalDaysText = (text) => {
         setTotalDays(text.replace(/[^0-9]/g, ''))
     }
-
+    useEffect(()=>{
     if(status==="completed" && propMedicalRecord){
         setDiagnosis(propMedicalRecord.diagnosis)
         setPrescription(propMedicalRecord.prescription)
         setRecommendation(propMedicalRecord.recommendation)
         setFollowUpDate(propMedicalRecord.followUpDate)
-    }
+    }},[])
 
     const addPrescription = () => {
         if(medicineName === "" || amountDay === "" || totalDays === ""){
@@ -76,8 +78,10 @@ export default function Prescription(props) {
         await firestore()
         .collection('appointments')
         .doc(appointmentID)
-        .update({medicalRecord: medicalRecord})
+        .update({status:'completed',medicalRecord: medicalRecord})
         Alert.alert("Updating Medical Records", "Updated")
+        navigation.popToTop()
+        
     }
 
   return (
@@ -173,7 +177,7 @@ export default function Prescription(props) {
 
         <View style={{justifyContent:'center', alignItems:'center'}}>
             <Text style={{ width:'100%', color:'black', paddingHorizontal:15, fontSize:20, marginVertical:5, borderRadius:25}} >Recommendation:   </Text>
-            <Text style={{ width:'100%', backgroundColor:"rgba(0,0,0,0.2)", color:'black', paddingVertical:15, paddingHorizontal:25, marginVertical:5, borderRadius:25}} >Some recommendation</Text>
+            <Text style={{ width:'100%', backgroundColor:"rgba(0,0,0,0.2)", color:'black', paddingVertical:15, paddingHorizontal:25, marginVertical:5, borderRadius:25}} >{recommendation}</Text>
             <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center', width:'100%',}}>
                 <View style={{flexDirection:'row', width:"100%", justifyContent:'space-around', alignItems:"center", marginTop:10}}>
                     <Text style={{color:'black', fontSize:25, fontWeight:'bold'}}>Follow up</Text>

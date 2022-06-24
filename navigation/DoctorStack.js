@@ -11,9 +11,7 @@ const Stack = createNativeStackNavigator();
 const AppStack=()=>{
   return(
       <Stack.Navigator>
-          <Stack.Screen name="Patient Home" component={PatientTabMavigation} options={{ title: 'PATIENT' }}/>
-          {/* <Stack.Screen name="Doctor Home" component={DoctorHome} options={{ title: 'DOCTOR' }}/> */}
-          <Stack.Screen name="Make Appointment" component={MakeAppointment}/>
+          <Stack.Screen name="Doctor Home" component={DoctorHome} options={{ title: 'DOCTOR' }}/>
           <Stack.Screen name="Handle Appointment" component={HandleAppointments}/>
       </Stack.Navigator>
 

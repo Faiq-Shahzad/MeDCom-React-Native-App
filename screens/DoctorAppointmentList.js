@@ -5,7 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import { AuthContext } from '../navigation/AuthProvider';
 
 export default function DoctorAppointmentList({navigation}){
-    const {user, logout} = useContext(AuthContext);
+    const {doctor_id, setDoctor} = useContext(AuthContext);
     const [appointmentList, setAppointmentList] = useState();
     const [loading, setLoading] = useState(true);
 
@@ -15,6 +15,17 @@ export default function DoctorAppointmentList({navigation}){
     const [displayPending, setDisplayPending] = useState(true);
     const [displayInProgress, setDisplayInProgress] = useState(true);
     const [displayCompleted, setDisplayCompleted] = useState(true);
+    const [updateScreen, setUpdateScreen] = useState(false);
+
+    React.useLayoutEffect(() => {
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity style={{marginHorizontal:20}} onPress={()=>setDoctor("")}>
+                  <MaterialCommunityIcons name="logout" size={24} color="grey" />
+          </TouchableOpacity>
+        ),
+      });
+    }, [navigation]);
 
     const confirmAppointment = (id) =>{
         Alert.alert(
@@ -47,51 +58,87 @@ export default function DoctorAppointmentList({navigation}){
         }
       })
 
-      setAppointment(list => appointment.filter(element => element.id != id))    
-      Alert.alert('Updated', "Document ID "+id)
+      setAppointment(list => appointment.filter(element => element.id != id))  
+      setUpdateScreen(!updateScreen)  
+      // Alert.alert('Updated', "Document ID "+id)
     }
 
     const getAppointments = async () => {
-      const tempList = []
-      await firestore()
-      .collection('appointments')
-      .where('p_id', '==', user.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach(doc => {      
-          const {doc_id, p_id, status, date, time, fee} = doc.data()  
+      try{
+
+        const tempList = []
+        await firestore()
+        .collection('appointments')
+        .where('doc_id', '==', doctor_id)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach(doc => {      
+            const {doc_id, p_id, status, date, time, fee, medicalRecord} = doc.data()  
   
-            tempList.push({
-              id: doc.id,
-              doc_id,
-              status,
-              date,
-              time,
-              fee,
+              tempList.push({
+                id: doc.id,
+                doc_id,
+                status,
+                date,
+                time,
+                fee,
+                medicalRecord
+              })
+  
             })
-  
           }
-  
-          )}
-        ).then(()=>{
-  
-          const tempList2 = []
-          tempList.map( ap => {
-            firestore()
-            .collection('doctors')
-            .doc(ap.doc_id)
-            .get()
-            .then((documentSnapshot) => {
-              if( documentSnapshot.exists ) {
-                const docDetails = documentSnapshot.data()
-                tempList2.push({...ap, doc:docDetails})
-              }} )
-            }
             
-            )
-            setAppointmentList(tempList2)
+          )
+          console.log("tempList"+tempList)
+          setAppointment(tempList.filter(el => el.status==='pending'))
+          setInProgress(tempList.filter(el => el.status==='in-progress'))
+          setCompleted(tempList.filter(el => el.status==='completed'))
+          setAppointmentList(tempList)
   
-        })
+      } catch(e){
+        console.log(e);
+      }
+
+      // const tempList = []
+      // await firestore()
+      // .collection('appointments')
+      // .where('p_id', '==', user.uid)
+      // .get()
+      // .then((querySnapshot) => {
+      //   querySnapshot.forEach(doc => {      
+      //     const {doc_id, p_id, status, date, time, fee} = doc.data()  
+  
+      //       tempList.push({
+      //         id: doc.id,
+      //         doc_id,
+      //         status,
+      //         date,
+      //         time,
+      //         fee,
+      //       })
+  
+      //     }
+  
+      //     )}
+      //   ).then(()=>{
+  
+      //     const tempList2 = []
+      //     tempList.map( ap => {
+      //       firestore()
+      //       .collection('doctors')
+      //       .doc(ap.doc_id)
+      //       .get()
+      //       .then((documentSnapshot) => {
+      //         if( documentSnapshot.exists ) {
+      //           const docDetails = documentSnapshot.data()
+      //           tempList2.push({...ap, doc:docDetails})
+      //         }} )
+      //       }
+            
+      //       )
+      //       setAppointmentList(tempList2)
+  
+      //   })
         
     }
 
@@ -108,19 +155,79 @@ export default function DoctorAppointmentList({navigation}){
 
     
   
+    // useEffect(() => {
+    //   setLoading(true)
+    //   getAppointments().then(()=>{
+        
+    //     getPendingAppointments()
+    //     getInProgressAppointments()
+    //     getCompletedAppointments()
+    //     setLoading(false)
+      
+    //   });
+
+    //   const unsubscribe = navigation.addListener('focus', () => {
+    //     console.log('Refreshed!');
+    //     // setLoading(true)
+    //     getAppointments()
+    //     .then( () =>{
+    //       if(loading){
+    //         console.log(appointmentList)
+    //         // setLoading(false)
+    //       }
+          
+    //     })
+    //   });
+    //   return unsubscribe;
+      
+      
+    // }, [navigation]);
+
     useEffect(() => {
       setLoading(true)
-      getAppointments().then(()=>{
-        
-        getPendingAppointments()
-        getInProgressAppointments()
-        getCompletedAppointments()
+      getAppointments()
+      .then( () =>{
+        if(loading){
+          console.log(appointmentList)
         setLoading(false)
-      });
+        }
+        
+      }
       
+  
+      )
+      // if (loading){
+      //   setAppointment(appointmentList.filter(el => el.status==='pending'))
+      //   setCompleted(appointmentList.filter(el => el.status==='completed')) 
+      //   setLoading(false)
+      // }
       
     }, []);
-  
+    useEffect(()=>{
+      const unsubscribe = navigation.addListener('focus', () => {
+        console.log('Refreshed!');
+        // setLoading(true)
+        getAppointments()
+        .then( () =>{
+          if(loading){
+            console.log(appointmentList)
+            // setLoading(false)
+          }
+          
+        })
+      });
+      return unsubscribe;
+    },[navigation])
+
+    useEffect(()=>{
+      getAppointments()
+        .then( () =>{
+          if(loading){
+            console.log(appointmentList)
+            setLoading(false)
+          }})
+      setLoading(false)
+    },[updateScreen])
   
     if(loading){
       console.log("Some data")
@@ -142,7 +249,7 @@ export default function DoctorAppointmentList({navigation}){
         </TouchableOpacity>
 
         {displayPending && appointment.length>0 ? 
-        <ScrollView style={{maxHeight:'30%', width:"100%", padding:2}}>
+        <ScrollView style={{minHeight:'10%', maxHeight:'30%', width:"100%", padding:2}}>
           
         {appointment.map( (element, index) =>{
   
@@ -150,7 +257,7 @@ export default function DoctorAppointmentList({navigation}){
             <TouchableOpacity key={element.id} style={{width:"100%", marginVertical:10}} onPress={()=>confirmAppointment(element.id)}>
               <View style={{width:"100%", alignItems:"center"}}>
                 <View style={{flexDirection:"row", width:"85%", borderRadius:20, backgroundColor:"plum", justifyContent:'space-evenly', padding:10}}>
-                    <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.doc.name}</Text>
+                    {/* <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.doc.name}</Text> */}
                     
                     <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
                         <MaterialCommunityIcons name="calendar" size={24} color="white" />
@@ -176,14 +283,14 @@ export default function DoctorAppointmentList({navigation}){
         </TouchableOpacity>
 
         {displayInProgress && inprogress.length>0? 
-        <ScrollView style={{maxHeight:'30%', width:"100%", padding:2}}>
+        <ScrollView style={{minHeight:'10%', maxHeight:'30%', width:"100%", padding:2}}>
           {inprogress.map( (element) =>{
     
             return(
               <TouchableOpacity key={element.id} style={{width:"100%", marginVertical:10}} onPress={()=> navigation.navigate("Handle Appointment", {appointment:element})}>
                   <View style={{width:"100%", alignItems:"center"}}>
                     <View style={{flexDirection:"row", width:"85%", borderRadius:20, backgroundColor:"plum", justifyContent:'space-evenly', padding:10}}>
-                        <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.doc.name}</Text>
+                        {/* <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.doc.name}</Text> */}
                         
                         <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
                             <MaterialCommunityIcons name="calendar" size={24} color="white" />
@@ -207,15 +314,15 @@ export default function DoctorAppointmentList({navigation}){
         </TouchableOpacity>
         
         {displayCompleted ? 
-        <ScrollView style={{maxHeight:'30%', width:"100%", padding:2}}>
+        <ScrollView style={{minHeight:'10%', maxHeight:'100%', width:"100%", padding:2}}>
           
           {completed.map( (element) =>{
     
             return(
-              <TouchableOpacity key={element.id} style={{width:"100%", marginVertical:10}} onPress={()=> navigation.navigate("Handle Appointment", {appointment:element})}>
+              <TouchableOpacity key={element.id} style={{width:"100%", marginVertical:10}} onPress={()=> navigation.navigate("Handle Appointment", {appointment:element, isDoc:true})}>
                   <View style={{width:"100%", alignItems:"center"}}>
                     <View style={{flexDirection:"row", width:"85%", borderRadius:20, backgroundColor:"plum", justifyContent:'space-evenly', padding:10}}>
-                        <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.doc.name}</Text>
+                        {/* <Text style={{fontSize:17, fontWeight:"bold", color:"white", padding:10, textAlign:"center"}}>{element.doc.name}</Text> */}
                         
                         <View style={{flexDirection:"row", alignItems:"center", justifyContent:"center"}}>
                             <MaterialCommunityIcons name="calendar" size={24} color="white" />

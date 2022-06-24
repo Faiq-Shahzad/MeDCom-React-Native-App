@@ -8,8 +8,8 @@ import { AuthContext } from '../navigation/AuthProvider';
 
 export default function SignupScreen({navigation}) {
 
-  const [email, setEmail] = useState()
-  const [password, setPassword] = useState()
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [signup_confirm, setSignUpConfirm] = useState("")
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [open, setOpen] = useState(false)
@@ -50,9 +50,9 @@ export default function SignupScreen({navigation}) {
           <Text style={{marginTop:15}}>Email:</Text>
           <TextInput placeholder="e.g: abcdef@gmail.com" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={email} onChangeText={setEmail}></TextInput>
           <Text style={{marginTop:15}}>Password:</Text>
-          <TextInput placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={password} onChangeText={setPassword}></TextInput>
+          <TextInput placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={password} onChangeText={setPassword} secureTextEntry></TextInput>
           <Text style={{marginTop:15}}>Confirm Password:</Text>
-          <TextInput placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
+          <TextInput placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} secureTextEntry></TextInput>
           <Text style={{marginTop:15}}>Phone Number:</Text>
           <TextInput placeholder="e.g: 0333-5558444" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
           <Text style={{marginTop:15}}>Date of Birth:</Text>
