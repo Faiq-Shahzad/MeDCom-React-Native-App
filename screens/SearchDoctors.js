@@ -2,18 +2,96 @@ import React, {useState, useEffect, useContext} from 'react';
 import { Text, View, Image,FlatList, Alert, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import StarRating from 'react-native-star-rating';
-
+import firestore from '@react-native-firebase/firestore';
 
 export default SearchDoctors = ({navigation}) => {
-    const [doctors, getDoctors] = useState([{"name":"Faiq Shahzad", "speciality":"MBBS | Surgeon", "time":"11:00 - 1550", "star":"3.5"},{"name":"Fazal Khan", "speciality":"MBBS | Biologist", "time":"800 - 1200", "star":"4.7"}]);
+    // const [doctors, getDoctors] = useState([{"name":"Faiq Shahzad", "speciality":"MBBS | Surgeon", "time":"11:00 - 1550", "star":"3.5"},{"name":"Fazal Khan", "speciality":"MBBS | Biologist", "time":"800 - 1200", "star":"4.7"}]);
     // const onStarRatingPress = (rating) => {
     //   this.setState({
     //     starCount: rating
     //   });
     // }
 
-   
+    const [details, setDetails] = useState()
+    const [searchInput, setSearchInput] = useState()
+    // var details;
+    const [loading, setLoading] = useState(true)
+
+    const [docList, setDocList] = useState([]);
+
+    const getDoc = async () => {
+      const tempList = []
+      await firestore()
+      .collection('doctors')
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach(doc => {
+          const {name, degree, specialty, imgUrl, fee, timing, rating} = doc.data()
+
+          tempList.push({
+            id: doc.id,
+            imgUrl,
+            name,
+            degree,
+            specialty,
+            fee,
+            timing,
+            rating
+          })
+        });
+        
+        setDocList(tempList)
+        // console.log("DOC", docList)
+        setLoading(false)
+      })
+    }
+
+    const getDocFiltered = async (input) => {
+      setLoading(true)
+      const tempList = []
+      await firestore()
+      .collection('doctors')
+      .where('name', '>=', input)
+      .where('name', "<=", input +'\uf8ff')
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach(doc => {
+          const {name, degree, specialty, imgUrl, fee, timing, rating} = doc.data()
+          console.log(doc)
+
+          tempList.push({
+            id: doc.id,
+            imgUrl,
+            name,
+            degree,
+            specialty,
+            fee,
+            timing,
+            rating
+          })
+        });
+        
+        setDocList(tempList)
+        // console.log("DOC", docList)
+        setLoading(false)
+      })
+    }
+    
   
+    useEffect(() => {
+      getDoc();
+      
+    }, []);
+  
+  
+    if(loading){
+      console.log("loading Data")
+      return(
+        <View>
+          <Text> Loading </Text>
+        </View>
+      )
+    }else{
 
     return(
       <View style={{flex:1, marginTop:10, alignItems:"center"}}>
@@ -31,7 +109,7 @@ export default SearchDoctors = ({navigation}) => {
               },
               shadowOpacity: 0.25,
               shadowRadius: 4.84,
-              elevation: 5,}} color="grey" />
+              elevation: 5,}} color="grey" onPress={()=>getDocFiltered(searchInput)}/>
             <TextInput
             style={{
               width:'80%',
@@ -48,13 +126,15 @@ export default SearchDoctors = ({navigation}) => {
               color:'gray',
               elevation: 5,}}
             placeholderTextColor="gray"
-            placeholder="Search">
+            placeholder="Search"
+            value={searchInput}
+            onChangeText={setSearchInput}>
             </TextInput>
         </View>
-        {doctors.map( (element) =>{
-  
+        
+        {docList.map( (element) =>{
             return(
-            <TouchableOpacity style=
+            <TouchableOpacity key={element.id} style=
             {{marginTop:10, width:'90%', backgroundColor:'rgba(255,255,255,1)', padding:10, borderRadius:30, shadowColor: "#000",
               shadowOffset: {
                   width: 0,
@@ -64,22 +144,22 @@ export default SearchDoctors = ({navigation}) => {
               shadowRadius: 4.84,
               
               elevation: 5,}}
-             onPress={()=> navigation.navigate("Make Appointment")}>
+             onPress={()=> navigation.navigate("Make Appointment", {doctor:element})}>
                 <View style={{width:"100%", justifyContent:'center'}}>
                 {/* <View style={{width:"85%", borderRadius:20, backgroundColor:"red", justifyContent:'center', padding:10}}> */}
                 <View style={{flexDirection:'row'}}>
                     <View style={{}}>
                       <Image style={{width: 100, height: 100, alignSelf:'center', borderRadius:100, marginTop:10}}
-                        source={{ uri: "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"}}/>
+                        source={{ uri: element.imgUrl}}/>
                     </View>
                     <View style={{paddingLeft:25}}>
                       <Text style={{fontSize:17, fontWeight:"bold", color:"red", marginVertical:10}}>Dr. {element.name}</Text>
 
-                      <Text style={{fontSize:16, fontFamily:"sans-serif", color:"blue", marginRight:15}}>{element.speciality}</Text>
+                      <Text style={{fontSize:16, fontFamily:"sans-serif", color:"blue", marginRight:15}}>{element.degree} | {element.specialty}</Text>
                       
                       <View style={{flexDirection:"row", marginTop:5, alignItems:'center'}}>
                           <MaterialCommunityIcons name="clock-time-three" size={24} color="blue" />
-                          <Text style={{marginLeft:5, fontSize:16, fontFamily:"sans-serif", color:"blue"}}>{element.time}</Text>
+                          <Text style={{marginLeft:5, fontSize:16, fontFamily:"sans-serif", color:"blue"}}>{element.timing[0]} - {element.timing[element.timing.length-1]}</Text>
                       </View>
 
                       <View style={{flexDirection:"row", justifyContent:'flex-start', marginTop:5}}>
@@ -87,13 +167,12 @@ export default SearchDoctors = ({navigation}) => {
                           <StarRating
                               disabled={true}
                               maxStars={5}
-                              rating={element.star}
+                              rating={element.rating}
                               starSize={20}
-                              starStyle={{color:'blue'}}
+                              fullStarColor={'blue'}
                             />
                       </View>
                       <View style={{flexDirection:"row", justifyContent:'flex-start', marginTop:5}}>
-                      <Text>user.uid</Text>
                       </View>
                     </View>
                   </View>
@@ -104,4 +183,5 @@ export default SearchDoctors = ({navigation}) => {
         })}
       </View>
     );
+    }
   }
