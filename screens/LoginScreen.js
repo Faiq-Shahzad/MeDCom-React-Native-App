@@ -6,7 +6,7 @@ import { AuthContext } from '../navigation/AuthProvider';
 
 
 export default function LoginScreen({navigation}) {
-  const [email, setEmail] = useState("")
+  const [cnic, setCnic] = useState("")
   const [password, setPassword] = useState("");
   const [isDoctor, setIsDoctor] = useState(true);
   const [initializing, setInitializing] = useState(true);
@@ -28,9 +28,9 @@ export default function LoginScreen({navigation}) {
         </View>
         
         <View style={{marginTop:"30%", justifyContent:"center", alignItems:"center"}}>
-          <TextInput placeholder="Email" style={{borderColor:"black",borderWidth:1, marginTop:10, width:270, fontSize:16, fontWeight:"bold", borderRadius:17, backgroundColor:'rgba(225, 45, 45, 0.35)'}} value={email} onChangeText={setEmail}></TextInput>
+          <TextInput placeholder="Cnic" style={{borderColor:"black",borderWidth:1, marginTop:10, width:270, fontSize:16, fontWeight:"bold", borderRadius:17, backgroundColor:'rgba(225, 45, 45, 0.35)'}} value={cnic} onChangeText={setCnic}></TextInput>
           <TextInput placeholder="Password" style={{borderColor:"black", borderWidth:1, marginTop:10, width:270, fontSize:16, fontWeight:"bold", borderRadius:17, backgroundColor:'rgba(225, 45, 45, 0.35)'}} secureTextEntry value={password} onChangeText={setPassword}></TextInput>
-          <Button mode='contained' style={{marginTop:20, padding:5, backgroundColor:"green"}} onPress={()=> login(email, password)}>Login</Button>
+          <Button mode='contained' style={{marginTop:20, padding:5, backgroundColor:"green"}} onPress={()=> login(cnic, password)}>Login</Button>
 
           <Text style={{color:"grey"}}>__________________________________________</Text>
           <Text style={{marginTop:20}}>Dont have an account?</Text>

@@ -5,10 +5,11 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import firestore from '@react-native-firebase/firestore';
 import { AuthContext } from '../navigation/AuthProvider';
+import axios from 'axios';
 
 
 export default function Profile({navigation, route}) {
-  const {user, logout} = useContext(AuthContext);
+  const {user, logout, backendUrl, token, DummyAvatar} = useContext(AuthContext);
   
   const [details, setDetails] = useState()
   // var details;
@@ -36,19 +37,31 @@ export default function Profile({navigation, route}) {
 
 
   const getUser = async () => {
-    await firestore()
-    .collection('users')
-    .doc(user.uid)
-    .get()
-    .then((documentSnapshot) => {
-      if( documentSnapshot.exists ) {
-        // console.log('User Data', documentSnapshot.data());
-        // setDetails({...documentSnapshot.data(), dob:(new Date(documentSnapshot.data().dob.seconds))});
-        setDetails({...documentSnapshot.data(), dob:(new Date(documentSnapshot.data().dob.seconds * 1000))});
-        // console.log('Details Data', details.dob);
-        setLoading(false)
-      }
-    })
+    // await firestore()
+    // .collection('users')
+    // .doc(user.uid)
+    // .get()
+    // .then((documentSnapshot) => {
+    //   if( documentSnapshot.exists ) {
+    //     // console.log('User Data', documentSnapshot.data());
+    //     // setDetails({...documentSnapshot.data(), dob:(new Date(documentSnapshot.data().dob.seconds))});
+    //     setDetails({...documentSnapshot.data(), dob:(new Date(documentSnapshot.data().dob.seconds * 1000))});
+    //     // console.log('Details Data', details.dob);
+    //     setLoading(false)
+    //   }
+    // })
+    try {
+      const response = await axios.get(backendUrl+'patients/view', {
+        headers: {
+          authorization: `Bearer ${token}`
+        }
+        });
+      console.log(response.data[0].Value);
+      setDetails(response.data[0].Value);
+      setLoading(false);
+    } catch (error) {
+      console.log(error.response.data);
+    }
   }
 
   const handleProfileUpdate = async () => {
@@ -105,26 +118,29 @@ export default function Profile({navigation, route}) {
                       elevation: 5,}}>
           <TouchableOpacity onPress={edit}><Icon style={{alignSelf:"flex-end"}} name="edit" size={24} color="black"/></TouchableOpacity>
           <Image style={{width: 150, height: 150, marginBottom:50, alignSelf:'center', borderRadius:100}}
-                source={{ uri: details.userImg }}/>
+                source={{ uri: details.profile? 'data:image/png;base64,'+details.profile: DummyAvatar }}/>
         </View>
         <View style={{paddingHorizontal:10}}>
         <View style={{flexDirection:'row', marginTop:10}}>
           <View style={{width:'48%', marginRight:10}}>
-            <Text>First Name:</Text>
-            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.fname} onChangeText={(val)=>setDetails({...details, fname:val})} editable={!disabled}></TextInput>
+            <Text>Name:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.name} onChangeText={(val)=>setDetails({...details, name:val})} editable={!disabled}></TextInput>
           </View>
           <View style={{width:'48%', marginLeft:10}}>
-            <Text>Last Name:</Text>
-            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.lname} onChangeText={(val)=>setDetails({...details, lname:val})} editable={!disabled}></TextInput>
+            <Text style={{paddingHorizontal: 10}}>Email:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.email} onChangeText={(val)=>setDetails({...details, email:val})} editable={!disabled}></TextInput>
           </View>
         </View>
         <View style={{flexDirection:'row', marginTop:10}}>
           <View style={{width:'50%'}}>
             <Text style={{marginTop:15}}>Phone Number:</Text>
-            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.phone} onChangeText={(val)=>setDetails({...details, phone:val})} editable={!disabled}></TextInput>
-            <Text style={{marginTop:15}}>Date of Birth:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.contact} onChangeText={(val)=>setDetails({...details, contact:val})} editable={!disabled}></TextInput>
+            <Text style={{marginTop:15}}>Next Of Kin:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.emergencyContact} onChangeText={(val)=>setDetails({...details, emergencyContact:val})} editable={!disabled}></TextInput>
+            {/* <Text style={{marginTop:15}}>Date of Birth:</Text>
             <TouchableOpacity style={{alignItems:"center", backgroundColor:disabled?'lightgray':'rgb(120,220,140)', borderWidth:1, padding:10, borderRadius:5, borderColor:"lightgrey"}} onPress={showDatePicker} disabled={disabled}>
-              <Text style={{fontSize:15, color:'white'}}>{details.dob.toLocaleDateString()}</Text>
+              <Text style={{fontSize:15, color:'white'}}>{details.dob.toLocaleDateString()}</Text> 
+              <Text style={{fontSize:15, color:'white'}}></Text>
             </TouchableOpacity>
 
               <DateTimePickerModal
@@ -132,17 +148,20 @@ export default function Profile({navigation, route}) {
                 mode="date"
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
-              />
+              /> */}
           </View >
           <View style={{width:'50%'}}>
 
-            <View style={{backgroundColor:'white', marginHorizontal:10, borderRadius:10}}>
-            <Text style={{marginTop:15, alignSelf:'center'}}>Gender:</Text>
-            <RadioButton.Group onValueChange={(val)=>setDetails({...details, gender:val})} value={details.gender} >
+            <View style={{backgroundColor:'transparent', marginHorizontal:10, borderRadius:10}}>
+            <Text style={{marginTop:15, paddingHorizontal: 10}}>Blood Group:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.bloodGroup} onChangeText={(val)=>setDetails({...details, bloodGroup:val})} editable={!disabled}></TextInput>
+            <Text style={{marginTop:15, paddingHorizontal: 10}}>Emergency Number:</Text>
+            <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.nextOfKin} onChangeText={(val)=>setDetails({...details, nextOfKin:val})} editable={!disabled}></TextInput>
+            {/* <RadioButton.Group onValueChange={(val)=>setDetails({...details, gender:val})} value={details.gender} >
               <RadioButton.Item mode='android' label="Male" labelStyle={{fontSize:13}} value="male" color='red' disabled={disabled}/>
               <RadioButton.Item mode='android' label="Female" labelStyle={{fontSize:13}} value="female" color='red' disabled={disabled}/>
               <RadioButton.Item mode='android' label="Custom" labelStyle={{fontSize:13}} value="custom" color='red' disabled={disabled}/>
-            </RadioButton.Group>
+            </RadioButton.Group> */}
             </View>
           </View>
         </View>
