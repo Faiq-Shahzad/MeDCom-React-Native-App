@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 export const AuthContext = createContext(); 
 
 export const AuthProvider = ({children}) =>{
-    const backendUrl = 'http://192.168.18.146:3000/';
+    const backendUrl = 'http://192.168.171.31:3000/';
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const DummyAvatar = "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"
@@ -30,13 +30,15 @@ export const AuthProvider = ({children}) =>{
                         });
                         const user = response.data.user;
                         const user_token = response.data.token;
-                        setUser(user);
                         setToken(user_token);
+                        setUser(user);
                     } catch(e){
                         console.log(e.response.data);
+                        alert(e.response.data.message);
+
                     }
                 },
-                register: async (email, password, fname, lname, cnic, bloodGroup, nextOfKin, phone, emergencyContact, profile) =>{
+                register: async (email, password, fname, lname, cnic, bloodGroup, dob, gender, nextOfKin, phone, emergencyContact, profile) =>{
                     try{
                         // await auth().createUserWithEmailAndPassword(email, password).then(()=>{
                         //     firestore().collection('users').doc(auth().currentUser.uid)
@@ -70,10 +72,12 @@ export const AuthProvider = ({children}) =>{
                         formdata.append('name', fname+" "+lname);
                         formdata.append('contact', phone);
                         formdata.append('bloodGroup', bloodGroup);
+                        formdata.append('dob', dob.toLocaleDateString());
+                        formdata.append('gender', gender);
                         formdata.append('nextOfKin', nextOfKin);
                         formdata.append('emergencyContact', emergencyContact);
                         formdata.append('profile', profile);
-                        console.log("profile ",profile)
+                        console.log("formdata ",formdata)
                         const response  = await axios.post(backendUrl+'auth/registerPatient', formdata, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
@@ -84,6 +88,8 @@ export const AuthProvider = ({children}) =>{
                         }
                     catch(error) {
                         console.log('Something went wrong with added user ', error);
+                        console.log('eror', error.data);
+
                         
                     };
                 },

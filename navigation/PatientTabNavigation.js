@@ -6,6 +6,7 @@ import SearchDoctors from '../screens/SearchDoctors';
 import RecentAppointments from '../screens/RecentAppointments';
 import Profile from '../screens/Profile';
 import { AuthContext } from '../navigation/AuthProvider.js';
+import RecordScreen from '../screens/Record';
 
 
 export default function PatientTabMavigation({navigation}) {
@@ -47,9 +48,9 @@ export default function PatientTabMavigation({navigation}) {
   return (
 
     <Tab.Navigator>
-        <Tab.Screen name="Search Doctors" component={SearchDoctors} options={{ headerShown: false, title: "Doctors", tabBarIcon:({color})=>(
+        <Tab.Screen name="Medical Access" component={SearchDoctors} options={{ headerShown: false, title: "Doctors", tabBarIcon:({color})=>(
         <MaterialCommunityIcons name="doctor" size={24} color={color} />)}}/>
-        <Tab.Screen name="Recent Appointments" component={RecentAppointments} options={{headerShown: false, tabBarIcon:({color})=>(
+        <Tab.Screen name="Medical record" component={RecordScreen} options={{headerShown: false, tabBarIcon:({color})=>(
         <MaterialCommunityIcons name="history" size={24} color={color} />)}}/>
         <Tab.Screen name="Profile" component={Profile} initialParams={{patient}} options={{ headerShown: false, tabBarIcon:({color})=>(
         <MaterialCommunityIcons name="account" size={24} color={color} />)}}/>

@@ -61,7 +61,7 @@ export default function SignupScreen({navigation}) {
 
   const registerUser = () =>{
     // register(email, password, fname, lname, phone, gender, selectedDate)
-    register(email, password, fname, lname, cnic, bloodGroup, nextOfKin, phone, emergencyContact, profile)
+    register(email, password, fname, lname, cnic, bloodGroup, selectedDate, gender, nextOfKin, phone, emergencyContact, profile)
   }
 
   return (
@@ -82,10 +82,10 @@ export default function SignupScreen({navigation}) {
           <TextInput value={lname} onChangeText={setLname} placeholder="e.g: Shahzad" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
           <Text style={{marginTop:15}}>Email:</Text>
           <TextInput  placeholder="e.g: abcdef@gmail.com" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={email} onChangeText={setEmail}></TextInput>
-          <Text style={{marginTop:15}}>Password:</Text>
-          <TextInput  placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={password} onChangeText={setPassword}></TextInput>
+          <Text  style={{marginTop:15}}>Password:</Text>
+          <TextInput  secureTextEntry placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}} value={password} onChangeText={setPassword}></TextInput>
           <Text style={{marginTop:15}}>Confirm Password:</Text>
-          <TextInput  placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
+          <TextInput secureTextEntry  placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
           <Text style={{marginTop:15}}>Cnic:</Text>
           <TextInput  value={cnic} onChangeText={setCnic} placeholder="********" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
           <Text style={{marginTop:15}}>Next of Kin:</Text>
@@ -95,8 +95,8 @@ export default function SignupScreen({navigation}) {
           <Text style={{marginTop:15}}>Emergency Contact:</Text>
           <TextInput value={emergencyContact} onChangeText={setEmergencyContact} placeholder="e.g: 0333-5558444" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
           <Text style={{marginTop:15}}>Blood Group:</Text>
-          <TextInput value={bloodGroup} onChangeText={setBloodGroup} placeholder="e.g: 0333-5558444" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
-          {/* <Text style={{marginTop:15}}>Date of Birth:</Text>
+          <TextInput value={bloodGroup} onChangeText={setBloodGroup} placeholder="e.g AB-" style={{marginTop:5, borderColor:"lightgrey", borderRadius:5, borderWidth:1, padding:3}}></TextInput>
+          <Text style={{marginTop:15}}>Date of Birth:</Text>
           <TouchableOpacity style={{alignItems:"center", borderWidth:1, padding:5, borderRadius:5, borderColor:"lightgrey"}} onPress={showDatePicker}>
             <Text style={{fontSize:15}}>{selectedDate?selectedDate.toLocaleDateString():'Select Date'}</Text>
           </TouchableOpacity>
@@ -106,9 +106,9 @@ export default function SignupScreen({navigation}) {
             mode="date"
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
-          /> */}
+          />
 
-          {/* <Text style={{marginTop:15}}>Gender:</Text>
+          <Text style={{marginTop:15}}>Gender:</Text>
 
           <View style={{borderColor:"lightgrey", borderWidth:1, borderRadius:10}}>
           <RadioButton.Group onValueChange={value => setGender(value)} value={gender}>
@@ -116,7 +116,7 @@ export default function SignupScreen({navigation}) {
             <RadioButton.Item mode='android' label="Female" labelStyle={{fontSize:13}} value="female" color='red' />
             <RadioButton.Item mode='android' label="Custom" labelStyle={{fontSize:13}} value="custom" color='red' />
           </RadioButton.Group>
-          </View> */}
+          </View>
 
           <Text style={{marginTop:15}}>Profile Picture:</Text>
           <TouchableOpacity onPress={selectProfilePic} style={{alignItems:"center", backgroundColor:"antiquewhite", padding:5, borderRadius:5, borderWidth:1, borderColor:"lightgrey", marginTop:5}}>
