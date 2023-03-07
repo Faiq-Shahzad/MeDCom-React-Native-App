@@ -3,10 +3,12 @@ import { Text, View, Image,FlatList, Alert, TouchableOpacity, ScrollView, TextIn
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import SearchDoctors from '../screens/SearchDoctors';
+import HomePage from '../screens/HomePage';
 import RecentAppointments from '../screens/RecentAppointments';
 import Profile from '../screens/Profile';
 import { AuthContext } from '../navigation/AuthProvider.js';
 import RecordScreen from '../screens/Record';
+import CustomHeader from '../components/CustomHeader';
 
 
 export default function PatientTabMavigation({navigation}) {
@@ -37,7 +39,7 @@ export default function PatientTabMavigation({navigation}) {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity onPress={signout}>
-                <MaterialCommunityIcons name="logout" size={24} color="grey" />
+                <MaterialCommunityIcons name="logout" size={24} color="white" />
         </TouchableOpacity>
       ),
     });
@@ -48,11 +50,13 @@ export default function PatientTabMavigation({navigation}) {
   return (
 
     <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomePage} options={{ headerShown: false, title: "Home", tabBarIcon:({color})=>(
+        <MaterialCommunityIcons name="home" size={24} color={color} />)}}/>
         <Tab.Screen name="Medical Access" component={SearchDoctors} options={{ headerShown: false, title: "Doctors", tabBarIcon:({color})=>(
         <MaterialCommunityIcons name="doctor" size={24} color={color} />)}}/>
         <Tab.Screen name="Medical record" component={RecordScreen} options={{headerShown: false, tabBarIcon:({color})=>(
         <MaterialCommunityIcons name="history" size={24} color={color} />)}}/>
-        <Tab.Screen name="Profile" component={Profile} initialParams={{patient}} options={{ headerShown: false, tabBarIcon:({color})=>(
+        <Tab.Screen name="Profile" component={Profile} initialParams={{patient}} options={{ headerShown: true, tabBarIcon:({color})=>(
         <MaterialCommunityIcons name="account" size={24} color={color} />)}}/>
     </Tab.Navigator>
   );

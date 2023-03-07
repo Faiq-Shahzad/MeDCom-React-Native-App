@@ -24,12 +24,14 @@ export const AuthProvider = ({children}) =>{
                 login: async (cnic, password) =>{
                     try{
                         // await auth().signInWithEmailAndPassword(email, password);
-                        const response = await axios.post(backendUrl + 'auth/login', {
-                            cnic: cnic,
-                            password: password
-                        });
-                        const user = response.data.user;
-                        const user_token = response.data.token;
+                        // const response = await axios.post(backendUrl + 'auth/login', {
+                        //     cnic: cnic,
+                        //     password: password
+                        // });
+                        // const user = response.data.user;
+                        const user = {email:"faiq@gmail.com", identifier:"1234", role:"patient", verified:true}
+                        // const user_token = response.data.token;
+                        const user_token = "abcd";
                         setToken(user_token);
                         setUser(user);
                     } catch(e){
