@@ -108,6 +108,8 @@ const HomePage = ({navigation}) => {
           marginBottom: 20,
           marginTop: 30,
           marginLeft: 20,
+          marginRight: 20,
+          justifyContent:"space-between"
         }}>
         <Text
           style={{
@@ -115,7 +117,6 @@ const HomePage = ({navigation}) => {
             fontWeight: 'bold',
             fontSize: 30,
             marginTop: 5,
-            marginRight: 35,
           }}>
           <Text>Med</Text>
           <Text style={{color: '#44E354'}}>Com</Text>

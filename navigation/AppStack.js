@@ -5,6 +5,7 @@ import MakeAppointment from '../screens/MakeAppointments.js';
 import HandleAppointments from '../components/HandleAppointment';
 import PatientTabMavigation from './PatientTabNavigation.js';
 import CustomHeader from '../components/CustomHeader.js';
+import DoctorDetails from '../screens/DoctorDetails.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,17 @@ const AppStack = () => {
       />
       <Stack.Screen name="Make Appointment" component={MakeAppointment} />
       <Stack.Screen name="Handle Appointment" component={HandleAppointments} />
+      <Stack.Screen name="Doctor Details" component={DoctorDetails}  options={{
+          title: 'Doctor Details',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+        />
     </Stack.Navigator>
   );
 };

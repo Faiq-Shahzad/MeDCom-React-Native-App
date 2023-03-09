@@ -85,7 +85,8 @@ const Categories = ({navigation}) => {
         elevation: 3,
         margin: 13,
         borderRadius: 10,
-      }}>
+      }}
+      onPress={() => setCategories()}>
       <Card.Content style={{alignItems: 'center'}}>
         <Avatar.Image
           size={55}

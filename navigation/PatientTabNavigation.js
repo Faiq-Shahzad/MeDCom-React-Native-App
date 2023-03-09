@@ -20,6 +20,7 @@ import Profile from '../screens/Profile';
 import {AuthContext} from '../navigation/AuthProvider.js';
 import RecordScreen from '../screens/Record';
 import CustomHeader from '../components/CustomHeader';
+import Doctors from '../screens/Doctors';
 
 export default function PatientTabMavigation({navigation}) {
   const [patient, setPatient] = useState('patient');
@@ -67,7 +68,7 @@ export default function PatientTabMavigation({navigation}) {
         component={Categories}
         options={{
           title: 'Categories',
-          headerTintColor:"white",
+          headerTintColor: 'white',
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -82,13 +83,28 @@ export default function PatientTabMavigation({navigation}) {
         }}
       />
       <Tab.Screen
+        name="Doctors"
+        component={Doctors}
+        options={{
+          title: 'Doctors',
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerStyle: {backgroundColor: '#555DF2'},
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons name="doctor" size={24} color={color} />
+          ),
+        }}
+      />
+      {/* <Tab.Screen
         name="Medical Access"
         component={SearchDoctors}
         options={{
           headerShown: false,
-          title: 'Doctors',
+          title: 'Access',
           tabBarIcon: ({color}) => (
-            <MaterialCommunityIcons name="doctor" size={24} color={color} />
+            <MaterialCommunityIcons name="archive-lock" size={24} color={color} />
           ),
         }}
       />
@@ -101,15 +117,26 @@ export default function PatientTabMavigation({navigation}) {
             <MaterialCommunityIcons name="history" size={24} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
-        name="Profile"
+        name="Appointments"
         component={Profile}
         initialParams={{patient}}
         options={{
           headerShown: true,
           tabBarIcon: ({color}) => (
-            <MaterialCommunityIcons name="account" size={24} color={color} />
+            <MaterialCommunityIcons name="note-text" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Menu"
+        component={Profile}
+        initialParams={{patient}}
+        options={{
+          headerShown: true,
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons name="menu" size={24} color={color} />
           ),
         }}
       />
