@@ -148,6 +148,7 @@ const DoctorDetails = ({navigation}) => {
           padding: 10,
         }}>
         <View>
+          {/* <hr></hr> */}
           <View
             style={{
               flexDirection: 'row',
@@ -163,12 +164,12 @@ const DoctorDetails = ({navigation}) => {
             </Text>
           </View>
 
-          <ScrollView style={{height:'75%', marginBottom:10, borderRadius:10, borderColor:'grey', borderWidth:2, padding:10}}>
+          <ScrollView style={{height:'75%', marginBottom:10, borderRadius:10, padding:5, backgroundColor:'white'}}>
             {reviews.map(item => {
               return (
                 <Card
                   style={{
-                    padding: 5,
+                    padding: 0,
                     marginBottom: 8,
                   }}>
                   <Card.Content>
@@ -197,19 +198,19 @@ const DoctorDetails = ({navigation}) => {
           <TouchableOpacity
             style={{
               backgroundColor: '#555DF2',
-              padding: 5,
+              padding: 10,
               borderRadius: 5,
-              width: '80%',
+              width: '90%',
               marginLeft: 'auto',
               marginRight: 'auto',
-            }}>
+            }} onPress={() => navigation.navigate('Book Appointment')}>
             <Text
               style={{
                 color: 'white',
                 fontWeight: 'bold',
                 textAlign: 'center',
               }}>
-              Book
+              Book Appointment
             </Text>
           </TouchableOpacity>
         </View>

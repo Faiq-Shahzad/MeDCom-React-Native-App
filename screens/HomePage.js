@@ -249,7 +249,7 @@ const HomePage = ({navigation}) => {
                         height: '50%',
                         marginTop: 'auto',
                         marginBottom: 'auto',
-                      }}>
+                      }} onPress={() => navigation.navigate('Book Appointment')}>
                       <Text
                         style={{
                           color: 'white',

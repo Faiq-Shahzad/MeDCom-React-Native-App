@@ -35,6 +35,7 @@ const Doctors = ({navigation}) => {
   }
   const PopularDoctors = [
     {
+      key:0,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
@@ -43,6 +44,7 @@ const Doctors = ({navigation}) => {
       days: 'Mon - Fri',
     },
     {
+      key:1,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
@@ -51,6 +53,7 @@ const Doctors = ({navigation}) => {
       days: 'Mon - Fri',
     },
     {
+      key:2,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
@@ -59,6 +62,7 @@ const Doctors = ({navigation}) => {
       days: 'Mon - Fri',
     },
     {
+      key:3,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
@@ -67,6 +71,7 @@ const Doctors = ({navigation}) => {
       days: 'Mon - Fri',
     },
     {
+      key:4,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
@@ -75,6 +80,7 @@ const Doctors = ({navigation}) => {
       days: 'Mon - Fri',
     },
     {
+      key:5,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
@@ -83,6 +89,7 @@ const Doctors = ({navigation}) => {
       days: 'Mon - Fri',
     },
     {
+      key:5,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
@@ -91,6 +98,7 @@ const Doctors = ({navigation}) => {
       days: 'Mon - Fri',
     },
     {
+      key:6,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
@@ -99,6 +107,7 @@ const Doctors = ({navigation}) => {
       days: 'Mon - Fri',
     },
     {
+      key:7,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: '../assets/avatar2.jpg',
