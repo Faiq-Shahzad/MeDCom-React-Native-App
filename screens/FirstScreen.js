@@ -13,7 +13,7 @@ function FirstScreen({navigation}) {
         {
           backgroundColor: '#809692',
           image: <Image source={require('../assets/firstscreen.png')} style={{width:200, height:200}}/>,
-          title: 'MeDCom',
+          title: 'MedCom',
           subtitle: 'An EHR application for patients to search Doctors and Make Appointments',
         },
         {

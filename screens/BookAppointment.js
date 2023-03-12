@@ -67,15 +67,15 @@ const BookAppointment = ({navigation}) => {
     },
   ];
 
-  const setSelectedItem = (id) =>{
-    Timings.map((item, index)=>{
-      if (index==id){
+  const setSelectedItem = id => {
+    Timings.map((item, index) => {
+      if (index == id) {
         Timings[index].selected = true;
-      }else{
+      } else {
         Timings[index].selected = false;
       }
-    })
-  }
+    });
+  };
 
   const [doctor, setDoctor] = useState({
     name: 'Dr. Saima Riaz',
@@ -86,6 +86,12 @@ const BookAppointment = ({navigation}) => {
     days: 'Mon - Fri',
   });
 
+  const HandleAppointment = () => {
+    Alert.alert('Success', 'Appointment Booked Successfully!', [
+      {text: 'OK', onPress: () => navigation.navigate('Home')},
+    ]);
+  };
+
   const [date, setDate] = useState('');
   const [time, setTime] = useState();
   const [availableTime, setAvailableTime] = useState(Timings);
@@ -93,7 +99,13 @@ const BookAppointment = ({navigation}) => {
   const selectedDate = date ? date.toString() : '';
 
   const renderItem = ({item}) => (
-    <View style={{flexDirection:'row', width:'36.5%', justifyContent:'space-between', marginBottom:10}}>
+    <View
+      style={{
+        flexDirection: 'row',
+        width: '36.5%',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+      }}>
       <TouchableOpacity
         style={{
           width: '70%',
@@ -107,7 +119,9 @@ const BookAppointment = ({navigation}) => {
           setColor('#44E354');
           setTime(item.aptTime);
         }}>
-        <Text style={{color:'white', textAlign:'center'}}>{item.aptTime}</Text>
+        <Text style={{color: 'white', textAlign: 'center'}}>
+          {item.aptTime}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -246,7 +260,7 @@ const BookAppointment = ({navigation}) => {
             style={{
               marginLeft: 'auto',
               marginRight: 'auto',
-              marginBottom:20
+              marginBottom: 20,
             }}>
             <FlatList
               data={availableTime}
@@ -266,7 +280,7 @@ const BookAppointment = ({navigation}) => {
             marginLeft: 'auto',
             marginRight: 'auto',
           }}
-          onPress={() => navigation.navigate('Make Appointment')}>
+          onPress={() => HandleAppointment()}>
           <Text
             style={{
               color: 'white',

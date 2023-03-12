@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {Button, RadioButton} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AuthContext} from '../navigation/AuthProvider';
 import * as Animatable from 'react-native-animatable';
 import {Constants, Svg} from 'react-native-svg';
@@ -44,23 +45,11 @@ export default function LoginScreen({navigation}) {
         animation="fadeInDownBig"
         duration={1500}>
         <View style={{width: '100%', alignItems: 'center'}}>
-          <Icon
-            name="login"
-            size={50}
-            color="#07f2e7"
-            style={{fontWeight: 'bold'}}
-          />
+          <MaterialCommunityIcons name="login" size={50} color={'#07f2e7'} />
           <Text style={{fontSize: 25, fontWeight: 'bold', color: '#07f2e7'}}>
             Login
           </Text>
         </View>
-        {/* <View style={{width: '40%', alignItems: 'flex-end'}}>
-          <Animatable.Image
-            animation="bounceIn"
-            source={require('../assets/userlogo.png')}
-            style={{alignSelf: 'flex-end', width: 100, height: 100}}
-          />
-        </View> */}
       </Animatable.View>
       <Animatable.View
         style={{
@@ -81,40 +70,79 @@ export default function LoginScreen({navigation}) {
             paddingHorizontal: 20,
             marginTop: '25%',
           }}>
+          <View style={{paddingLeft: 5, width: '80%', flexDirection: 'row'}}>
+            <Icon name="perm-identity" size={21} color="black" style={{}} />
+            <Text
+              style={{
+                color: 'black',
+                fontWeight: '600',
+                padding: 3,
+                fontSize: 15,
+              }}>
+              CNIC
+            </Text>
+          </View>
           <TextInput
-            placeholder="CNIC"
+            placeholder="Type your CNIC"
             style={{
               color: 'black',
-              borderColor: 'black',
-              borderWidth: 1,
-              marginTop: 10,
-              width: 270,
+              borderColor: '#4baba0',
+              borderBottomWidth: 1,
+              width: '80%',
               fontSize: 16,
-              fontWeight: 'bold',
-              borderRadius: 17,
-              padding: 12,
-              backgroundColor: 'rgba(52, 249, 245, 0.77)',
+              paddingTop: 0,
+              paddingBottom: 2,
+              paddingLeft: 5,
+              paddingRight: 5,
             }}
             value={cnic}
             onChangeText={setCnic}></TextInput>
+          <View style={{paddingLeft: 5, width: '80%', flexDirection: 'row', marginTop:25}}>
+            <Icon name="lock-outline" size={21} color="black" style={{}} />
+            <Text
+              style={{
+                color: 'black',
+                fontWeight: '600',
+                padding: 3,
+                fontSize: 15,
+              }}>
+              Password
+            </Text>
+          </View>
           <TextInput
-            placeholder="Password"
+            placeholder="Type your Password"
             style={{
-              borderColor: 'black',
+              color: 'black',
+              borderColor: '#4baba0',
               borderBottomWidth: 1,
-              marginTop: 10,
-              width: 270,
+              width: '80%',
               fontSize: 16,
-              fontWeight: 'bold',
-              backgroundColor: 'rgba(52, 249, 245, 0.77)',
+              paddingTop: 0,
+              paddingBottom: 2,
+              paddingLeft: 5,
+              paddingRight: 5,
             }}
             secureTextEntry
             value={password}
             onChangeText={setPassword}></TextInput>
           <TouchableOpacity
-            style={{marginTop: 25, padding: 10, backgroundColor: '#555DF2', width:'100%', borderRadius:20}}
+            style={{
+              marginTop: 50,
+              padding: 10,
+              backgroundColor: '#555DF2',
+              width: '100%',
+              borderRadius: 20,
+            }}
             onPress={() => login(cnic, password)}>
-            <Text style={{textAlign:'center', fontSize:15, fontWeight:'600', color:'white'}}>Login</Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 15,
+                fontWeight: '600',
+                color: 'white',
+              }}>
+              Login
+            </Text>
           </TouchableOpacity>
 
           <Text style={{color: 'grey'}}>
@@ -124,9 +152,23 @@ export default function LoginScreen({navigation}) {
             Dont have an account?
           </Text>
           <TouchableOpacity
-            style={{marginTop: 25, padding: 10, backgroundColor: 'green', width:'100%', borderRadius:20}}
+            style={{
+              marginTop: 25,
+              padding: 10,
+              backgroundColor: 'green',
+              width: '100%',
+              borderRadius: 20,
+            }}
             onPress={() => navigation.navigate('Signup')}>
-            <Text style={{textAlign:'center', fontSize:15, fontWeight:'600', color:'white'}}>Sign Up</Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 15,
+                fontWeight: '600',
+                color: 'white',
+              }}>
+              Sign Up
+            </Text>
           </TouchableOpacity>
         </View>
       </Animatable.View>
