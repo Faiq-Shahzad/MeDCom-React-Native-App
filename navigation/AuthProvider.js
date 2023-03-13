@@ -7,7 +7,8 @@ import { Alert } from "react-native";
 export const AuthContext = createContext(); 
 
 export const AuthProvider = ({children}) =>{
-    const backendUrl = 'http://192.168.171.31:3000/';
+    // const backendUrl = 'http://192.168.171.31:3000/';
+    const backendUrl = 'http://192.168.137.26:3000/';
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const DummyAvatar = "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"

@@ -9,7 +9,7 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import {Button, RadioButton} from 'react-native-paper';
+import {Button, Avatar, RadioButton} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -34,6 +34,7 @@ export default function SignupScreen({navigation}) {
   const [gender, setGender] = React.useState('male');
   const [selectedDate, setSelectedDate] = useState();
   const [profile, setProfile] = useState();
+  const [displayPicIcon, setDisplayPicIcon] = useState(true);
 
   const {register} = useContext(AuthContext);
 
@@ -56,6 +57,7 @@ export default function SignupScreen({navigation}) {
         type: [DocumentPicker.types.images],
       });
       console.log('res : ' + JSON.stringify(res));
+      setDisplayPicIcon(false);
       setProfile(res);
     } catch (err) {
       setProfile(null);
@@ -87,10 +89,16 @@ export default function SignupScreen({navigation}) {
   };
 
   return (
-    <View style={{flex: 1, alignItems: 'center', alignItems: 'center', backgroundColor:"#07f2e7"}}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        alignItems: 'center',
+        backgroundColor: '#555DF2',
+      }}>
       <Animatable.View
         style={{
-          backgroundColor: '#07f2e7',
+          backgroundColor: '#555DF2',
           width: '100%',
           alignItems: 'center',
           padding: 10,
@@ -101,10 +109,16 @@ export default function SignupScreen({navigation}) {
         <MaterialCommunityIcons
           name="account-plus"
           size={50}
-          color="black"
-          style={{fontWeight: 'bold'}}
+          color="#07f2e7"
+          style={{fontWeight: 'normal'}}
         />
-        <Text style={{fontSize: 25, fontWeight: 'bold', color: 'black'}}>
+        <Text
+          style={{
+            fontSize: 25,
+            fontWeight: 'bold',
+            color: '#07f2e7',
+            textAlign: 'center',
+          }}>
           Sign Up
         </Text>
       </Animatable.View>
@@ -113,19 +127,19 @@ export default function SignupScreen({navigation}) {
         style={{
           flex: 1,
           borderWidth: 1,
-          padding: 8,
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
+          padding: 1,
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
           paddingTop: 30,
           borderColor: 'lightgrey',
           width: '100%',
           marginTop: 20,
-          backgroundColor: 'white',
-          paddingHorizontal: 20,
+          backgroundColor: '#07f2e7',
+          paddingHorizontal: 5,
         }}
         animation="fadeInUpBig"
         duration={1500}>
-        <ScrollView style={{width: '100%', borderTopLeftRadius: 30}}>
+        {/* <ScrollView style={{width: '100%', borderTopLeftRadius: 30}}>
           <Text>First Name:</Text>
           <TextInput
             value={fname}
@@ -350,6 +364,345 @@ export default function SignupScreen({navigation}) {
             onPress={() => navigation.navigate('Login')}>
             Login
           </Button>
+        </ScrollView> */}
+
+        <ScrollView
+          style={{width: '100%'}}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}>
+          <View style={{alignItems: 'center'}}>
+            {displayPicIcon ? (
+              <Avatar.Image
+                style={{marginTop: 'auto', marginBottom: 'auto'}}
+                size={100}
+                source={require('../assets/ProfilePicIcon3.png')}
+              />
+            ) : (
+              profile && (
+                <Avatar.Image
+                  style={{marginTop: 'auto', marginBottom: 'auto'}}
+                  size={100}
+                  source={{uri: profile?.uri}}
+                />
+              )
+            )}
+
+            {/* <Avatar.Image
+              style={{marginTop: 'auto', marginBottom: 'auto'}}
+              size={100}
+              source={{uri: profile?.uri}}
+            /> */}
+            <TouchableOpacity
+              onPress={selectProfilePic}
+              style={{
+                alignItems: 'center',
+                backgroundColor: 'antiquewhite',
+                padding: 5,
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: 'lightgrey',
+                marginTop: 5,
+              }}>
+              <Text style={{fontSize: 12}}>
+                {profile?.name
+                  ? (profile?.name).substring(0, 10) + '...'
+                  : 'Upload Image'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{paddingHorizontal: 10, width: '100%'}}>
+            <Text
+              style={{
+                fontSize: 20,
+                marginTop: '5%',
+                fontWeight: '600',
+                color: 'black',
+              }}>
+              Personal Information:
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '48%'}}>
+                <Text>First Name:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  value={fname}
+                  onChangeText={setFname}
+                  placeholder="e.g: Faiq"></TextInput>
+              </View>
+              <View style={{width: '48%'}}>
+                <Text>Last Name:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  value={lname}
+                  onChangeText={setLname}
+                  placeholder="e.g: Shahzad"></TextInput>
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '48%'}}>
+                <Text>CNIC:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  value={cnic}
+                  onChangeText={setCnic}
+                  placeholder="without spaces/dashes"></TextInput>
+              </View>
+              <View style={{width: '48%'}}>
+                <Text>Email:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  value={email}
+                  onChangeText={setEmail}
+                  placeholder="e.g: faiq@gmail.com"></TextInput>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '48%'}}>
+                <Text>Phone Number:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  value={phone}
+                  onChangeText={setPhone}
+                  placeholder="e.g: 0331-5558407"></TextInput>
+              </View>
+              <View style={{width: '48%'}}>
+                <Text>Blood Group:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  value={bloodGroup}
+                  onChangeText={setBloodGroup}
+                  placeholder="e.g AB-"></TextInput>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '48%'}}>
+                <Text>Password:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  secureTextEntry
+                  value={password}
+                  onChangeText={setPassword}
+                  placeholder="* * * * * * * *"></TextInput>
+              </View>
+              <View style={{width: '48%'}}>
+                <Text>Confirm Password:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  secureTextEntry
+                  placeholder="* * * * * * * *"></TextInput>
+              </View>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '100%'}}>
+                <Text>Date of Birth:</Text>
+                <TouchableOpacity
+                  style={{
+                    alignItems: 'center',
+                    backgroundColor: 'antiquewhite',
+                    padding: 5,
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: 'lightgrey',
+                    marginTop: 5,
+                  }}
+                  onPress={showDatePicker}>
+                  <Text style={{fontSize: 15}}>
+                    {selectedDate
+                      ? selectedDate.toLocaleDateString()
+                      : 'Select Date'}
+                  </Text>
+                </TouchableOpacity>
+
+                <DateTimePickerModal
+                  isVisible={isDatePickerVisible}
+                  mode="date"
+                  onConfirm={handleConfirm}
+                  onCancel={hideDatePicker}
+                />
+              </View>
+            </View>
+            <Text style={{marginTop: 10}}>Gender:</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                borderColor: 'lightgrey',
+                borderWidth: 1,
+                borderRadius: 10,
+              }}>
+              <View style={{width: '100%'}}>
+                <RadioButton.Group
+                  onValueChange={value => setGender(value)}
+                  value={gender}>
+                  <RadioButton.Item
+                    mode="android"
+                    label="Male"
+                    labelStyle={{fontSize: 13}}
+                    value="male"
+                    color="red"
+                  />
+                  <RadioButton.Item
+                    mode="android"
+                    label="Female"
+                    labelStyle={{fontSize: 13}}
+                    value="female"
+                    color="red"
+                  />
+                  <RadioButton.Item
+                    mode="android"
+                    label="Custom"
+                    labelStyle={{fontSize: 13}}
+                    value="custom"
+                    color="red"
+                  />
+                </RadioButton.Group>
+              </View>
+            </View>
+            <Text
+              style={{
+                fontSize: 20,
+                marginTop: '5%',
+                fontWeight: '600',
+                color: 'black',
+              }}>
+              Emergency Information:
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 10,
+                justifyContent: 'space-between',
+              }}>
+              <View style={{width: '48%'}}>
+                <Text>Next of Kin:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  value={nextOfKin}
+                  onChangeText={setNextOfKin}
+                  placeholder="Cnic without spaces"></TextInput>
+              </View>
+              <View style={{width: '48%'}}>
+                <Text>Emergency Contact:</Text>
+                <TextInput
+                  style={{
+                    marginTop: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 10,
+                    borderColor: 'lightgrey',
+                    borderRadius: 5,
+                    padding: 3,
+                  }}
+                  value={emergencyContact}
+                  onChangeText={setEmergencyContact}
+                  placeholder="e.g: 0333-5558444"></TextInput>
+              </View>
+            </View>
+
+            <Button
+              mode="contained"
+              style={{marginTop: 20, padding: 5}}
+              onPress={() => registerUser()}>
+              Sign Up
+            </Button>
+
+            <Text style={{marginTop: 30, textAlign: 'center'}}>
+              Already have an account?
+            </Text>
+            <Button
+              mode="outlined"
+              style={{marginTop: 20, padding: 5, marginBottom: 20}}
+              onPress={() => navigation.navigate('Login')}>
+              Login
+            </Button>
+          </View>
         </ScrollView>
       </Animatable.View>
     </View>

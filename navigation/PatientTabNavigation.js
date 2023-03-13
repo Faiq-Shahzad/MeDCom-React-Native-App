@@ -107,8 +107,8 @@ export default function PatientTabMavigation({navigation}) {
             <MaterialCommunityIcons name="archive-lock" size={24} color={color} />
           ),
         }}
-      />
-      <Tab.Screen
+      /> */}
+      {/* <Tab.Screen
         name="Medical record"
         component={RecordScreen}
         options={{
@@ -120,10 +120,15 @@ export default function PatientTabMavigation({navigation}) {
       /> */}
       <Tab.Screen
         name="Appointments"
-        component={Profile}
-        initialParams={{patient}}
+        component={RecentAppointments}
+        // initialParams={{patient}}
         options={{
           headerShown: true,
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerStyle: {backgroundColor: '#555DF2'},
           tabBarIcon: ({color}) => (
             <MaterialCommunityIcons name="note-text" size={24} color={color} />
           ),
