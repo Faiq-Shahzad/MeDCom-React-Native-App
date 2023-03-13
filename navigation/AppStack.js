@@ -32,7 +32,7 @@ const AppStack = () => {
         options={{title: 'DOCTOR'}}
       />
       <Stack.Screen name="Make Appointment" component={MakeAppointment} />
-      <Stack.Screen name="Book Appointment" component={BookAppointment} options={{
+      {/* <Stack.Screen name="Book Appointment" component={BookAppointment} options={{
           title: 'Book Appointment',
           headerStyle: {
             backgroundColor: '#555DF2',
@@ -53,7 +53,7 @@ const AppStack = () => {
             fontWeight: 'bold',
           },
         }}
-        />
+        /> */}
     </Stack.Navigator>
   );
 };

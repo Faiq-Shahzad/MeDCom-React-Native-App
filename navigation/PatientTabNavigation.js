@@ -21,6 +21,7 @@ import {AuthContext} from '../navigation/AuthProvider.js';
 import RecordScreen from '../screens/Record';
 import CustomHeader from '../components/CustomHeader';
 import Doctors from '../screens/Doctors';
+import TabStackNavigator from './TabStackNavigator';
 
 export default function PatientTabMavigation({navigation}) {
   const [patient, setPatient] = useState('patient');
@@ -145,6 +146,20 @@ export default function PatientTabMavigation({navigation}) {
           ),
         }}
       />
+
+      
+      {/* <Tab.Screen name="Book Appointment" component={TabStackNavigator} /> */}
+      {/* <Tab.Screen
+        name="Doctor Details"
+        component={Profile}
+        initialParams={{patient}}
+        options={{
+          headerShown: true,
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons name="menu" size={24} color={color} />
+          ),
+        }}
+      /> */}
     </Tab.Navigator>
   );
 }
