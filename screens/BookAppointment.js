@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useContext, useReducer} from 'react';
 import {
   Text,
   SafeAreaView,
@@ -28,63 +28,17 @@ import HandleAppointment from '../components/HandleAppointment';
 
 const BookAppointment = ({navigation}) => {
   // const { data, doctorData, setDoctorData } = useContext(UserContext);
-
-  const Timings = [
-    {
-      id: 0,
-      aptTime: '05:00 PM',
-      selected: false,
-    },
-    {
-      key: 1,
-      aptTime: '05:30 PM',
-      selected: false,
-    },
-    {
-      key: 2,
-      aptTime: '06:00 PM',
-      selected: false,
-    },
-    {
-      key: 3,
-      aptTime: '06:30 PM',
-      selected: false,
-    },
-    {
-      key: 4,
-      aptTime: '07:00 PM',
-      selected: false,
-    },
-    {
-      key: 5,
-      aptTime: '07:30 PM',
-      selected: false,
-    },
-    {
-      key: 6,
-      aptTime: '08:00 PM',
-      selected: false,
-    },
-  ];
-
-  const setSelectedItem = id => {
-    Timings.map((item, index) => {
-      if (index == id) {
-        Timings[index].selected = true;
-      } else {
-        Timings[index].selected = false;
-      }
-    });
-  };
-
   const [doctor, setDoctor] = useState({
     name: 'Dr. Saima Riaz',
     specialization: 'Heart Surgeon',
     avatar: '../assets/avatar2.jpg',
     price: 'Rs. 1000/-',
-    timings: '10AM - 4PM',
+    startTime: '10 AM',
+    endTime: '4 PM',
     days: 'Mon - Fri',
   });
+
+  const [selectedTime, setSelectedTime] = useState({});
 
   const HandleAppointment = () => {
     Alert.alert('Success', 'Appointment Booked Successfully!', [
@@ -93,10 +47,115 @@ const BookAppointment = ({navigation}) => {
   };
 
   const [date, setDate] = useState('');
-  const [time, setTime] = useState();
-  const [availableTime, setAvailableTime] = useState(Timings);
-  const [color, setColor] = useState('grey');
+  const [availableTime, setAvailableTime] = useState([]);
   const selectedDate = date ? date.toString() : '';
+
+  const createIntervals = (startTime, endTime) => {
+    // console.log(convertTime12to24(startTime))
+    const [Stime, Smodifier] = startTime.split(' ');
+    const [Etime, Emodifier] = endTime.split(' ');
+    const timesArray = [];
+
+    let [Shours, Sminutes] = Stime.split(':');
+    let [Ehours, Eminutes] = Etime.split(':');
+
+    if (!Sminutes) {
+      Sminutes = '00';
+    }
+    if (!Eminutes) {
+      Eminutes = '00';
+    }
+
+    if (Shours === '12') {
+      Shours = '00';
+    }
+
+    if (Ehours === '12') {
+      Ehours = '00';
+    }
+
+    if (Smodifier === 'PM') {
+      Shours = parseInt(Shours, 10) + 12;
+    }
+
+    if (Emodifier === 'PM') {
+      Ehours = parseInt(Ehours, 10) + 12;
+    }
+
+    let finished = false;
+
+    while (!finished) {
+      const MilitaryTime = Shours * 100 + parseInt(Sminutes, 10);
+      const MilitaryEndTime = Ehours * 100 + parseInt(Eminutes, 10);
+      console.log(MilitaryTime, MilitaryEndTime);
+      if (MilitaryTime <= MilitaryEndTime) {
+        if (MilitaryTime < 1200) {
+          timesArray.push({
+            key: MilitaryTime,
+            value: (Shours % 12) + ':' + Sminutes + ' AM',
+          });
+        } else {
+          var hour = Shours % 12;
+          if (hour == 0) {
+            timesArray.push({
+              key: MilitaryTime,
+              value: 12 + ':' + Sminutes + ' PM',
+            });
+          } else {
+            timesArray.push({
+              key: MilitaryTime,
+              value: (Shours % 12) + ':' + Sminutes + ' PM',
+            });
+          }
+        }
+
+        if (Sminutes == '00') {
+          Sminutes = '30';
+          const MilitaryTime = Shours * 100 + parseInt(Sminutes, 10);
+          if (MilitaryTime <= MilitaryEndTime) {
+            if (MilitaryTime < 1200) {
+              var hour = Shours % 12;
+              console.log(hour);
+              if (hour == 0) {
+                timesArray.push({
+                  key: MilitaryTime,
+                  value: 12 + ':' + Sminutes + ' PM',
+                });
+              } else {
+                timesArray.push({
+                  key: MilitaryTime,
+                  value: (Shours % 12) + ':' + Sminutes + ' PM',
+                });
+              }
+            } else {
+              var hour = Shours % 12;
+              if (hour == 0) {
+                timesArray.push({
+                  key: MilitaryTime,
+                  value: 12 + ':' + Sminutes + ' PM',
+                });
+              } else {
+                timesArray.push({
+                  key: MilitaryTime,
+                  value: (Shours % 12) + ':' + Sminutes + ' PM',
+                });
+              }
+            }
+          }
+        }
+        Shours = parseInt(Shours, 10) + 1;
+        Sminutes = '00';
+      } else {
+        finished = true;
+      }
+    }
+
+    setAvailableTime(timesArray);
+  };
+
+  useEffect(() => {
+    createIntervals(doctor.startTime, doctor.endTime);
+  }, []);
 
   const renderItem = ({item}) => (
     <View
@@ -110,18 +169,14 @@ const BookAppointment = ({navigation}) => {
         style={{
           width: '70%',
           borderRadius: 50,
-          backgroundColor: item.selected ? 'green' : 'grey',
+          backgroundColor: item.key == selectedTime.key ? 'green' : 'grey',
           borderWidth: 1,
           padding: 5,
         }}
         onPress={() => {
-          setSelectedItem(item.key);
-          setColor('#44E354');
-          setTime(item.aptTime);
+          setSelectedTime({key: item.key, value: item.value});
         }}>
-        <Text style={{color: 'white', textAlign: 'center'}}>
-          {item.aptTime}
-        </Text>
+        <Text style={{color: 'white', textAlign: 'center'}}>{item.value}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -176,7 +231,9 @@ const BookAppointment = ({navigation}) => {
               }}>
               <Text>{doctor.days}</Text>
               <Text> | </Text>
-              <Text>{doctor.timings}</Text>
+              <Text>
+                {doctor.startTime} - {doctor.endTime}
+              </Text>
               <Text></Text>
             </Text>
           </Card.Content>
@@ -199,6 +256,8 @@ const BookAppointment = ({navigation}) => {
           borderTopRightRadius: 30,
         }}>
         <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
           style={{
             flex: 1,
             backgroundColor: 'white',
@@ -268,6 +327,41 @@ const BookAppointment = ({navigation}) => {
               numColumns={3}
               keyExtractor={item => item.key}
             />
+
+            {/* <ScrollView>
+              {availableTime.map((item, index) => {
+                return (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      justifyContent: 'space-between',
+                      marginBottom: 10,
+                    }}>
+                    <TouchableOpacity
+                      style={{
+                        width: '70%',
+                        borderRadius: 50,
+                        backgroundColor: item.key == selectedTime.key ? 'green' : 'grey',
+                        borderWidth: 1,
+                        padding: 5,
+                      }}
+                      onPress={() => {
+                        setSelectedTime({
+                          key: item.key,
+                          aptTime: item.aptTime,
+                          selected: item.selected,
+                        });
+
+                      }}>
+                      <Text style={{color: 'white', textAlign: 'center'}}>
+                        {item.aptTime}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </ScrollView> */}
           </View>
         </ScrollView>
         <TouchableOpacity

@@ -14,7 +14,7 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import StarRating from 'react-native-star-rating';
 import firestore from '@react-native-firebase/firestore';
-import {AuthContext} from '../navigation/AuthProvider';
+import {AuthContext, AuthProvider} from '../navigation/AuthProvider';
 import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';
@@ -23,9 +23,10 @@ import {white} from 'react-native-paper/lib/typescript/styles/colors';
 import {UserContext} from '../navigation/UserProvider';
 
 const DoctorDetails = ({navigation}) => {
-  // const { data, doctorData, setDoctorData } = useContext(UserContext);
+  const { doctor } = useContext(AuthContext);
+  console.log(doctor);
 
-  const [doctor, setDoctor] = useState({
+  const [doctorArr, setDoctor] = useState({
     name: 'Dr. Saima Riaz',
     specialization: 'Heart Surgeon',
     avatar: '../assets/avatar2.jpg',
@@ -111,9 +112,9 @@ const DoctorDetails = ({navigation}) => {
                 color: 'black',
                 fontWeight: 'bold',
               }}>
-              {doctor.name}
+              {doctorArr.name}
             </Text>
-            <Text>{doctor.specialization}</Text>
+            <Text>{doctorArr.specialization}</Text>
             <Text
               style={{
                 marginTop: 5,
@@ -122,9 +123,9 @@ const DoctorDetails = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <Text>{doctor.days}</Text>
+              <Text>{doctorArr.days}</Text>
               <Text> | </Text>
-              <Text>{doctor.timings}</Text>
+              <Text>{doctorArr.timings}</Text>
               <Text></Text>
             </Text>
           </Card.Content>
@@ -134,7 +135,7 @@ const DoctorDetails = ({navigation}) => {
               color: 'green',
               fontWeight: '700',
             }}>
-            {doctor.price}
+            {doctorArr.price}
           </Text>
         </View>
       </Card>

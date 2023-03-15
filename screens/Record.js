@@ -18,7 +18,7 @@ export default RecordScreen = ({navigation}) => {
     const [details, setDetails] = useState()
     const [cnicInput, setCnicInput] = useState()
     // var details;
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false);
 
     const [medicalList, setMedicalList] = useState([]);
     const [authDocList, setAuthDocList] = useState([]);

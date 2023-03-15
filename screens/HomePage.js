@@ -25,56 +25,67 @@ const HomePage = ({navigation}) => {
   const Categories = [
     {
       title: 'Cardiologist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       title: 'Dermatologist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       title: 'Dentist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
   ];
 
   const PopularDoctors = [
     {
+      key:0,
       name: 'Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
-      price: 'Rs. 1000/-'
+      avatar: require('../assets/avatar2.jpg'),
+      price: 'Rs. 1000/-',
     },
     {
+      key:1,
       name: 'Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
-      price: 'Rs. 1000/-'
+      avatar: require('../assets/avatar4.jpg'),
+      price: 'Rs. 1000/-',
     },
     {
+      key:2,
       name: 'Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
-      price: 'Rs. 1000/-'
+      avatar: require('../assets/avatar.jpg'),
+      price: 'Rs. 1000/-',
     },
     {
+      key:3,
       name: 'Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
-      price: 'Rs. 1000/-'
+      avatar: require('../assets/avatar3.png'),
+      price: 'Rs. 1000/-',
     },
     {
+      key:4,
       name: 'Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
-      price: 'Rs. 1000/-'
+      avatar: require('../assets/avatar2.jpg'),
+      price: 'Rs. 1000/-',
     },
     {
+      key:5,
       name: 'Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
-      price: 'Rs. 1000/-'
+      avatar: require('../assets/avatar2.jpg'),
+      price: 'Rs. 1000/-',
     },
   ];
+
+  const handleBookAppointment = (element) =>{
+    console.log('This is ', element);
+    navigation.navigate('Book Appointment');
+  }
 
   const [categories, setCategories] = useState(Categories);
   const [popular, setPopular] = useState(PopularDoctors);
@@ -109,7 +120,7 @@ const HomePage = ({navigation}) => {
           marginTop: 30,
           marginLeft: 20,
           marginRight: 20,
-          justifyContent:"space-between"
+          justifyContent: 'space-between',
         }}>
         <Text
           style={{
@@ -159,7 +170,9 @@ const HomePage = ({navigation}) => {
             <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
               Categories
             </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}} onPress={()=> navigation.navigate("Categories")}>
+            <Text
+              style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}}
+              onPress={() => navigation.navigate('Categories')}>
               See all
             </Text>
           </View>
@@ -197,18 +210,20 @@ const HomePage = ({navigation}) => {
             <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
               Popular Doctors
             </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}}>
+            <Text style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}} onPress={() => navigation.navigate('Doctors')}>
               See all
             </Text>
           </View>
 
-          <ScrollView>
-            {popular.map(item => {
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}>
+            {popular.map((item, index) => {
               return (
                 <Card
                   style={{
                     padding: 5,
-                    marginBottom:8
+                    marginBottom: 8,
                   }}>
                   <View
                     style={{
@@ -219,7 +234,7 @@ const HomePage = ({navigation}) => {
                     <Avatar.Image
                       style={{marginTop: 'auto', marginBottom: 'auto'}}
                       size={60}
-                      source={require('../assets/avatar2.jpg')}
+                      source={item.avatar}
                     />
                     <Card.Content>
                       <Text
@@ -249,7 +264,8 @@ const HomePage = ({navigation}) => {
                         height: '50%',
                         marginTop: 'auto',
                         marginBottom: 'auto',
-                      }} onPress={() => navigation.navigate('Book Appointment')}>
+                      }}
+                      onPress={() => handleBookAppointment(item)}>
                       <Text
                         style={{
                           color: 'white',

@@ -8,9 +8,10 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) =>{
     // const backendUrl = 'http://192.168.171.31:3000/';
-    const backendUrl = 'http://192.168.137.26:3000/';
+    const backendUrl = 'http://192.168.1.101:3000/';
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+    const [doctor, setDoctor] = useState(null);
     const DummyAvatar = "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"
 
     return (
@@ -19,6 +20,8 @@ export const AuthProvider = ({children}) =>{
                 user,
                 DummyAvatar,
                 setUser,
+                setDoctor,
+                doctor,
                 token,
                 setToken,
                 backendUrl,
@@ -29,7 +32,9 @@ export const AuthProvider = ({children}) =>{
                         //     cnic: cnic,
                         //     password: password
                         // });
+                        // console.log('abcd1', response.data);
                         // const user = response.data.user;
+                        console.log('abcd');
                         const user = {email:"faiq@gmail.com", identifier:"1234", role:"patient", verified:true}
                         // const user_token = response.data.token;
                         const user_token = "abcd";

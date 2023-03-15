@@ -24,52 +24,52 @@ const Categories = ({navigation}) => {
     {
       key: 'a',
       title: 'Cardiologist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'b',
       title: 'Orthopedic',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'c',
       title: 'Dentist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'd',
       title: 'Eye Specialist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'e',
       title: 'Otologist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'f',
       title: 'Rhinologist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'g',
       title: 'Neurosugeon',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'h',
       title: 'Generalsugeon',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'i',
       title: 'Dermatologist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
     {
       key: 'j',
       title: 'Psycaterist',
-      avatar: '../assets/Cardiologist.png',
+      avatar: require('../assets/Cardiologist.png'),
     },
   ];
 

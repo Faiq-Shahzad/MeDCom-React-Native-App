@@ -20,97 +20,94 @@ import CustomHeader from '../components/CustomHeader';
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
-import { UserContext } from '../navigation/UserProvider';
 
 const Doctors = ({navigation}) => {
+  const { doctor, setDoctor } = useContext(AuthContext);
 
-  const [doctor, setDoctor] = useState();
-  // const { data, doctorData, setDoctorData } = useContext(UserContext);
-
-  const doctorDetails = (element) => {
+  const doctorDetails = element => {
     setDoctor(element);
     // setDoctorData(element);
     console.log(element);
     navigation.navigate('Doctor Details');
-  }
+  };
   const PopularDoctors = [
     {
-      key:0,
+      key: 0,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
+      avatar: require('../assets/avatar2.jpg'),
       price: 'Rs. 1000/-',
       timings: '10AM - 4PM',
       days: 'Mon - Fri',
     },
     {
-      key:1,
+      key: 1,
+      name: 'Dr. Arif Shahzad',
+      specialization: 'Heart Surgeon',
+      avatar: require('../assets/avatar2.jpg'),
+      price: 'Rs. 2000/-',
+      timings: '10AM - 4PM',
+      days: 'Mon - Sat',
+    },
+    {
+      key: 2,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
+      avatar: require('../assets/avatar2.jpg'),
       price: 'Rs. 1000/-',
       timings: '10AM - 4PM',
       days: 'Mon - Fri',
     },
     {
-      key:2,
+      key: 3,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
+      avatar: require('../assets/avatar2.jpg'),
       price: 'Rs. 1000/-',
       timings: '10AM - 4PM',
       days: 'Mon - Fri',
     },
     {
-      key:3,
+      key: 4,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
+      avatar: require('../assets/avatar2.jpg'),
       price: 'Rs. 1000/-',
       timings: '10AM - 4PM',
       days: 'Mon - Fri',
     },
     {
-      key:4,
+      key: 5,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
+      avatar: require('../assets/avatar2.jpg'),
       price: 'Rs. 1000/-',
       timings: '10AM - 4PM',
       days: 'Mon - Fri',
     },
     {
-      key:5,
+      key: 5,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
+      avatar: require('../assets/avatar2.jpg'),
       price: 'Rs. 1000/-',
       timings: '10AM - 4PM',
       days: 'Mon - Fri',
     },
     {
-      key:5,
+      key: 6,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
+      avatar: require('../assets/avatar2.jpg'),
       price: 'Rs. 1000/-',
       timings: '10AM - 4PM',
       days: 'Mon - Fri',
     },
     {
-      key:6,
+      key: 7,
       name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
-      price: 'Rs. 1000/-',
-      timings: '10AM - 4PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key:7,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: '../assets/avatar2.jpg',
+      avatar: require('../assets/avatar2.jpg'),
       price: 'Rs. 1000/-',
       timings: '10AM - 4PM',
       days: 'Mon - Fri',
@@ -125,18 +122,19 @@ const Doctors = ({navigation}) => {
         padding: 10,
         marginBottom: 15,
         borderRadius: 10,
-      }} onPress={() => doctorDetails(item)}>
+      }}
+      onPress={() => doctorDetails(item)}>
       <View
         style={{
           padding: 5,
           flexDirection: 'row',
           justifyContent: 'space-around',
-          marginBottom:5,
+          marginBottom: 5,
         }}>
         <Avatar.Image
           style={{marginTop: 'auto', marginBottom: 'auto'}}
           size={60}
-          source={require('../assets/avatar2.jpg')}
+          source={item.avatar}
         />
         <Card.Content>
           <Text
@@ -177,8 +175,8 @@ const Doctors = ({navigation}) => {
           padding: 5,
           borderRadius: 5,
           width: '80%',
-          marginLeft:'auto',
-          marginRight:'auto'
+          marginLeft: 'auto',
+          marginRight: 'auto',
         }}>
         <Text
           style={{
@@ -227,6 +225,8 @@ const Doctors = ({navigation}) => {
             data={popular}
             renderItem={renderItem}
             keyExtractor={item => item.key}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       </View>
