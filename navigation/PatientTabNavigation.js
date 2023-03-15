@@ -141,6 +141,11 @@ export default function PatientTabMavigation({navigation}) {
         initialParams={{patient}}
         options={{
           headerShown: true,
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerStyle: {backgroundColor: '#555DF2'},
           tabBarIcon: ({color}) => (
             <MaterialCommunityIcons name="menu" size={24} color={color} />
           ),

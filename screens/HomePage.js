@@ -17,73 +17,84 @@ import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
 import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';
-import {Avatar, Card, Title, IconButton} from 'react-native-paper';
+import {Avatar, Card, Title} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 
 const HomePage = ({navigation}) => {
+
+  const {doctor, setDoctor} = useContext(AuthContext);
+
   const Categories = [
     {
       title: 'Cardiologist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c1.png'),
     },
     {
       title: 'Dermatologist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c9.png'),
     },
     {
       title: 'Dentist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c3.png'),
     },
   ];
 
   const PopularDoctors = [
     {
-      key:0,
-      name: 'Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-    },
-    {
-      key:1,
-      name: 'Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar4.jpg'),
-      price: 'Rs. 1000/-',
-    },
-    {
-      key:2,
-      name: 'Saima Riaz',
+      key: 0,
+      name: 'Dr. Faiq Shahzad',
       specialization: 'Heart Surgeon',
       avatar: require('../assets/avatar.jpg'),
       price: 'Rs. 1000/-',
+      startTime: '10 AM',
+      endTime: '4 PM',
+      days: 'Mon - Fri',
     },
     {
-      key:3,
-      name: 'Saima Riaz',
+      key: 1,
+      name: 'Dr. Arif Shahzad',
+      specialization: 'Heart Surgeon',
+      avatar: require('../assets/avatar2.jpg'),
+      price: 'Rs. 2000/-',
+      startTime: '10 AM',
+      endTime: '4 PM',
+      days: 'Mon - Fri',
+    },
+    {
+      key: 2,
+      name: 'Dr. Saima Riaz',
+      specialization: 'Heart Surgeon',
+      avatar: require('../assets/avatar4.jpg'),
+      price: 'Rs. 1000/-',
+      startTime: '10 AM',
+      endTime: '4 PM',
+      days: 'Mon - Fri',
+    },
+    {
+      key: 3,
+      name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
       avatar: require('../assets/avatar3.png'),
       price: 'Rs. 1000/-',
+      startTime: '10 AM',
+      endTime: '4 PM',
+      days: 'Mon - Fri',
     },
     {
-      key:4,
-      name: 'Saima Riaz',
+      key: 4,
+      name: 'Dr. Saima Riaz',
       specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
+      avatar: require('../assets/avatar.jpg'),
       price: 'Rs. 1000/-',
-    },
-    {
-      key:5,
-      name: 'Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
+      startTime: '10 AM',
+      endTime: '4 PM',
+      days: 'Mon - Fri',
     },
   ];
 
   const handleBookAppointment = (element) =>{
-    console.log('This is ', element);
+    setDoctor(element);
     navigation.navigate('Book Appointment');
   }
 
@@ -183,7 +194,7 @@ const HomePage = ({navigation}) => {
                   <Card.Content style={{alignItems: 'center'}}>
                     <Avatar.Image
                       size={45}
-                      source={require('../assets/Cardiologist.png')}
+                      source={element.avatar}
                     />
                     <Title
                       style={{
@@ -239,9 +250,9 @@ const HomePage = ({navigation}) => {
                     <Card.Content>
                       <Text
                         style={{
-                          fontSize: 20,
+                          fontSize: 18,
                           color: 'black',
-                          fontWeight: '600',
+                          fontWeight: '700',
                         }}>
                         {item.name}
                       </Text>
@@ -249,7 +260,7 @@ const HomePage = ({navigation}) => {
                       <Text
                         style={{
                           fontSize: 15,
-                          color: 'black',
+                          color: 'green',
                           fontWeight: '700',
                         }}>
                         {item.price}

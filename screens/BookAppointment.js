@@ -13,36 +13,41 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import StarRating from 'react-native-star-rating';
-import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
 import axios from 'axios';
-import CustomHeader from '../components/CustomHeader';
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import CalendarPicker from 'react-native-calendar-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {white} from 'react-native-paper/lib/typescript/styles/colors';
-import {UserContext} from '../navigation/UserProvider';
 import HandleAppointment from '../components/HandleAppointment';
 
 const BookAppointment = ({navigation}) => {
-  // const { data, doctorData, setDoctorData } = useContext(UserContext);
-  const [doctor, setDoctor] = useState({
-    name: 'Dr. Saima Riaz',
-    specialization: 'Heart Surgeon',
-    avatar: '../assets/avatar2.jpg',
-    price: 'Rs. 1000/-',
-    startTime: '10 AM',
-    endTime: '4 PM',
-    days: 'Mon - Fri',
-  });
-
+  const {doctor, user, appointment, setAppointment} = useContext(AuthContext);
+  console.log(user)
   const [selectedTime, setSelectedTime] = useState({});
+  const [createApt, setCreateApt] = useState({});
 
   const HandleAppointment = () => {
+    setCreateApt({
+      doctorId: doctor.key,
+      patientId: user.identifier,
+      doctorMSP: 'org2.department1',
+      time: selectedTime.key,
+      date: selectedDate,
+      status: 'pending',
+    });
+    console.log(createApt);
+    setAppointment({
+      doctorId: doctor.key,
+      patientId: user.identifier,
+      doctorMSP: 'org2.department1',
+      time: selectedTime.key,
+      date: selectedDate,
+      status: 'pending'
+    });
     Alert.alert('Success', 'Appointment Booked Successfully!', [
-      {text: 'OK', onPress: () => navigation.navigate('Home')},
+      {text: 'OK', onPress: () => navigation.navigate('Appointments')},
     ]);
   };
 
@@ -51,7 +56,6 @@ const BookAppointment = ({navigation}) => {
   const selectedDate = date ? date.toString() : '';
 
   const createIntervals = (startTime, endTime) => {
-    // console.log(convertTime12to24(startTime))
     const [Stime, Smodifier] = startTime.split(' ');
     const [Etime, Emodifier] = endTime.split(' ');
     const timesArray = [];
@@ -209,7 +213,7 @@ const BookAppointment = ({navigation}) => {
           <Avatar.Image
             style={{marginTop: 'auto', marginBottom: 'auto'}}
             size={60}
-            source={require('../assets/avatar2.jpg')}
+            source={doctor.avatar}
           />
           <Card.Content>
             <Text
@@ -327,41 +331,6 @@ const BookAppointment = ({navigation}) => {
               numColumns={3}
               keyExtractor={item => item.key}
             />
-
-            {/* <ScrollView>
-              {availableTime.map((item, index) => {
-                return (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      width: '100%',
-                      justifyContent: 'space-between',
-                      marginBottom: 10,
-                    }}>
-                    <TouchableOpacity
-                      style={{
-                        width: '70%',
-                        borderRadius: 50,
-                        backgroundColor: item.key == selectedTime.key ? 'green' : 'grey',
-                        borderWidth: 1,
-                        padding: 5,
-                      }}
-                      onPress={() => {
-                        setSelectedTime({
-                          key: item.key,
-                          aptTime: item.aptTime,
-                          selected: item.selected,
-                        });
-
-                      }}>
-                      <Text style={{color: 'white', textAlign: 'center'}}>
-                        {item.aptTime}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              })}
-            </ScrollView> */}
           </View>
         </ScrollView>
         <TouchableOpacity

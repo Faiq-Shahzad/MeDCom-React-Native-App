@@ -24,52 +24,52 @@ const Categories = ({navigation}) => {
     {
       key: 'a',
       title: 'Cardiologist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c1.png'),
     },
     {
       key: 'b',
       title: 'Orthopedic',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c2.png'),
     },
     {
       key: 'c',
       title: 'Dentist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c3.png'),
     },
     {
       key: 'd',
       title: 'Eye Specialist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c4.png'),
     },
     {
       key: 'e',
       title: 'Otologist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c5.png'),
     },
     {
       key: 'f',
       title: 'Rhinologist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c6.png'),
     },
     {
       key: 'g',
       title: 'Neurosugeon',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c7.png'),
     },
     {
       key: 'h',
       title: 'Generalsugeon',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c8.png'),
     },
     {
       key: 'i',
       title: 'Dermatologist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c9.png'),
     },
     {
       key: 'j',
       title: 'Psycaterist',
-      avatar: require('../assets/Cardiologist.png'),
+      avatar: require('../assets/c10.png'),
     },
   ];
 
@@ -88,10 +88,7 @@ const Categories = ({navigation}) => {
       }}
       onPress={() => setCategories()}>
       <Card.Content style={{alignItems: 'center'}}>
-        <Avatar.Image
-          size={55}
-          source={require('../assets/Cardiologist.png')}
-        />
+        <Avatar.Image size={55} source={item.avatar} />
         <Title
           style={{
             fontSize: 15,
@@ -136,6 +133,8 @@ const Categories = ({navigation}) => {
         }}>
         <View style={{justifyContent: 'space-between'}}>
           <FlatList
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             data={categories}
             renderItem={renderItem}
             numColumns={2}

@@ -21,7 +21,7 @@ import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 
-const Doctors = ({navigation}) => {
+const Faqs = ({navigation}) => {
   const {doctor, setDoctor} = useContext(AuthContext);
 
   const doctorDetails = element => {
@@ -37,100 +37,40 @@ const Doctors = ({navigation}) => {
     console.log(element);
     navigation.navigate('Book Appointment');
   };
-  const PopularDoctors = [
+  const Questions = [
     {
       key: 0,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
+      ques: 'How to book an appointment?',
+      ans: 'Step 01: Search a Doctor. \nStep 02: Click Book Appointment Button. \nStep 03: Select Date. \nStep 04: Select Available Time. \nStep 05: Confirm Booking.',
     },
     {
       key: 1,
-      name: 'Dr. Arif Shahzad',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 2000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
+      ques: 'How to revoke medical access?',
+      ans: 'Step 01: Go to Medical Access Screen. \nStep 02: Press Revoke.',
     },
     {
       key: 2,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
+      ques: 'How to change password?',
+      ans: 'Step 01: Go to Menu tab. \nStep 02: In the bottom Press "Change Password". \nStep 03: Enter Old Password. \nStep 04: Enter New Password. \nStep 05: Click Change Password.',
     },
     {
       key: 3,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 4,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 5,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 5,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 6,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 7,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
+      ques: 'How to verify email?',
+      ans: 'Step 01: After Signup, go to your email inbox. \nStep 02: A verification Link was sent. \nStep 03: Open the verification link. \nStep 04: You are now verified.',
     },
   ];
 
-  const [popular, setPopular] = useState(PopularDoctors);
+  const [questions, setQuestions] = useState(Questions);
+  const [open, setOpen] = useState([]);
+  const [display, setDisplay] = useState(false);
+
+  const handleFAQs = element => {
+    setOpen([...open, element.key]);
+  };
+
+  const deleteItem = key => {
+    setOpen(list => open.filter(item => item.key != key));
+  };
 
   const renderItem = ({item}) => (
     <Card
@@ -172,7 +112,9 @@ const Doctors = ({navigation}) => {
             }}>
             <Text>{item.days}</Text>
             <Text> | </Text>
-            <Text>{item.startTime} - {item.endTime}</Text>
+            <Text>
+              {item.startTime} - {item.endTime}
+            </Text>
             <Text></Text>
           </Text>
         </Card.Content>
@@ -193,7 +135,8 @@ const Doctors = ({navigation}) => {
           width: '80%',
           marginLeft: 'auto',
           marginRight: 'auto',
-        }} onPress={() => bookAppointment(item)}>
+        }}
+        onPress={() => bookAppointment(item)}>
         <Text
           style={{
             color: 'white',
@@ -214,40 +157,47 @@ const Doctors = ({navigation}) => {
         backgroundColor: '#E6EFF9',
         marginTop: 10,
       }}>
-      <TextInput
-        placeholder="Search"
-        style={{
-          padding: 4,
-          backgroundColor: 'white',
-          width: '90%',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          borderRadius: 5,
-          shadowOpacity: 1,
-          shadowRadius: 3,
-          elevation: 3,
-        }}></TextInput>
-
       <View
         style={{
           backgroundColor: '#E6EFF9',
           flex: 1,
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-          padding: 20,
+          padding: 5,
+          alignItems:'center'
         }}>
-        <View>
-          <FlatList
-            data={popular}
-            renderItem={renderItem}
-            keyExtractor={item => item.key}
+        <View style={{alignItems:'center', width:'100%'}}>
+          <ScrollView style={{width:'100%'}}
             showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-          />
+            showsVerticalScrollIndicator={false}>
+            {questions.map((element, index) => {
+              return (
+                <View style={{alignItems:'center', width:'100%'}}>
+                  <TouchableOpacity
+                    style={{backgroundColor: 'white', width: '98%', padding: 10, flexDirection:'row', justifyContent:'space-between', borderRadius:5}}
+                    onPress={() => handleFAQs(element)}>
+                    <Text style={{fontSize:17}}>{element.ques}</Text>
+                    <Icon
+                      name="keyboard-arrow-down"
+                      size={16}
+                      color="grey"
+                      onPress={() => deleteItem(element.key)}
+                    />
+                  </TouchableOpacity>
+
+                  {open.includes(element.key) ? (
+                    <View style={{width:'100%', padding:15}}>
+                      <Text>{element.ans}</Text>
+                    </View>
+                  ) : (
+                    <View></View>
+                  )}
+                </View>
+              );
+            })}
+          </ScrollView>
         </View>
       </View>
     </SafeAreaView>
   );
 };
 
-export default Doctors;
+export default Faqs;

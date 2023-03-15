@@ -13,11 +13,11 @@ import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
 
 export default RecentAppointments = ({navigation}) => {
-  const {user, logout} = useContext(AuthContext);
-  const [appointmentList, setAppointmentList] = useState(ComApp);
+  const {user, doctor, appointment, logout} = useContext(AuthContext);
+  console.log(appointment);
   const [loading, setLoading] = useState(false);
 
-  const [appointment, setAppointment] = useState();
+  const [appointmentArr, setAppointment] = useState();
   const [completed, setCompleted] = useState();
   const [displayPending, setDisplayPending] = useState(true);
   const [displayCompleted, setDisplayCompleted] = useState(true);
@@ -25,7 +25,7 @@ export default RecentAppointments = ({navigation}) => {
   const ComApp = [
     {
       name: 'Faiq Shahzad',
-      time: '12 PM',
+      time: '12:00 PM',
       date: new Date().toLocaleDateString(),
       status: 'pending',
     },
@@ -36,6 +36,8 @@ export default RecentAppointments = ({navigation}) => {
       status: 'completed',
     },
   ];
+
+  const [appointmentList, setAppointmentList] = useState(ComApp);
 
   // const getAppointments = async () => {
   //   const tempList = []
@@ -88,28 +90,32 @@ export default RecentAppointments = ({navigation}) => {
     ]);
   };
 
-  const inProgress = (key, index) => {
-    appointment.map(el => {
-      if (el.key == key) {
-        setCompleted([...completed, el]);
-      }
-    });
+  // useEffect(() => {
+  //   setAppointmentList([...appointmentList, appointment]);
+  // }, []);
 
-    setAppointment(list => appointment.filter(element => element.key != key));
+  // const inProgress = (key, index) => {
+  //   appointment.map(el => {
+  //     if (el.key == key) {
+  //       setCompleted([...completed, el]);
+  //     }
+  //   });
 
-    console.log(appointment);
-    if (appointment.length == 0) {
-      console.log(appointment.length);
-      setDisplayPending(false);
-    }
-  };
+  //   setAppointment(list => appointment.filter(element => element.key != key));
 
-  const getPendingAppointments = () => {
-    setAppointment(appointmentList.filter(el => el.status === 'pending'));
-  };
-  const getCompletedAppointments = () => {
-    setCompleted(appointmentList.filter(el => el.status === 'completed'));
-  };
+  //   console.log(appointment);
+  //   if (appointment.length == 0) {
+  //     console.log(appointment.length);
+  //     setDisplayPending(false);
+  //   }
+  // };
+
+  // const getPendingAppointments = () => {
+  //   setAppointment(appointmentList.filter(el => el.status === 'pending'));
+  // };
+  // const getCompletedAppointments = () => {
+  //   setCompleted(appointmentList.filter(el => el.status === 'completed'));
+  // };
 
   // useEffect(() => {
   //   setLoading(true)
@@ -142,7 +148,7 @@ export default RecentAppointments = ({navigation}) => {
           </Text>
         </TouchableOpacity>
 
-        {displayPending || appointment.length != 0 ? (
+        {displayPending || appointmentArr.length != 0 ? (
           <ScrollView
             style={{
               width: '100%',
@@ -150,56 +156,66 @@ export default RecentAppointments = ({navigation}) => {
               paddingBottom: 10,
               padding: 2,
             }}>
-            {ComApp.map((element, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={{width: '100%', marginVertical: 10}}
-                  onPress={() => pendingAppointment(element.key, index)}>
-                  <Card
-                    style={{
-                      padding: 10,
-                      borderRadius: 10,
-                      width: '90%',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                      flexDirection:'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View
+            {appointmentList.map((element, index) => {
+              if (element.status == 'pending') {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={{width: '100%', marginVertical: 10}}
+                    onPress={() => pendingAppointment(element.key, index)}>
+                    <Card
                       style={{
-                        padding: 5,
+                        padding: 10,
+                        borderRadius: 10,
+                        width: '90%',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 5,
                       }}>
-                      <Card.Content style={{flexDirection:'row', justifyContent: 'space-between', width:'100%'}}>
-                        <Text
+                      <View
+                        style={{
+                          padding: 5,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginBottom: 5,
+                        }}>
+                        <Card.Content
                           style={{
-                            fontSize: 16,
-                            color: 'black',
-                            fontWeight: '600',
-                          }}>
-                          {element.name}
-                        </Text>
-                        <Text
-                          style={{
-                            marginTop: 5,
-                            fontStyle: 'italic',
-                            color: 'black',
                             flexDirection: 'row',
                             justifyContent: 'space-between',
+                            width: '100%',
                           }}>
-                          <Text>{element.date}</Text>
-                          <Text> | </Text>
-                          <Text>{element.time}</Text>
-                          <Text></Text>
-                        </Text>
-                      </Card.Content>
-                    </View>
-                  </Card>
-                </TouchableOpacity>
-              );
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              color: 'black',
+                              fontWeight: '600',
+                            }}>
+                            {element.name}
+                            {element.doctorId}
+                          </Text>
+                          <Text
+                            style={{
+                              marginTop: 5,
+                              fontStyle: 'italic',
+                              color: 'black',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                            }}>
+                            <Text>{element.date}</Text>
+                            <Text> | </Text>
+                            <Text>{element.time}</Text>
+                            <Text></Text>
+                          </Text>
+                        </Card.Content>
+                      </View>
+                    </Card>
+                  </TouchableOpacity>
+                );
+              } else {
+                return <></>;
+              }
             })}
           </ScrollView>
         ) : (
@@ -220,59 +236,68 @@ export default RecentAppointments = ({navigation}) => {
 
         {displayCompleted || completed.length != 0 ? (
           <ScrollView style={{maxHeight: '30%', width: '100%', padding: 2}}>
-            {ComApp.map(element => {
-              return (
-                <TouchableOpacity
-                  style={{width: '100%', marginVertical: 15}}
-                  onPress={() =>
-                    navigation.navigate('Handle Appointment', {
-                      appointment: element,
-                    })
-                  }>
-                  <Card
-                    style={{
-                      padding: 10,
-                      borderRadius: 10,
-                      width: '90%',
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                      flexDirection:'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View
+            {appointmentList.map(element => {
+              if (element.status == 'completed') {
+                return (
+                  <TouchableOpacity
+                    style={{width: '100%', marginVertical: 15}}
+                    onPress={() =>
+                      navigation.navigate('Handle Appointment', {
+                        appointment: element,
+                      })
+                    }>
+                    <Card
                       style={{
-                        padding: 5,
+                        padding: 10,
+                        borderRadius: 10,
+                        width: '90%',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 5,
                       }}>
-                      <Card.Content style={{flexDirection:'row', justifyContent: 'space-between', width:'100%'}}>
-                        <Text
+                      <View
+                        style={{
+                          padding: 5,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          marginBottom: 5,
+                        }}>
+                        <Card.Content
                           style={{
-                            fontSize: 16,
-                            color: 'black',
-                            fontWeight: '600',
-                          }}>
-                          {element.name}
-                        </Text>
-                        <Text
-                          style={{
-                            marginTop: 5,
-                            fontStyle: 'italic',
-                            color: 'black',
                             flexDirection: 'row',
                             justifyContent: 'space-between',
+                            width: '100%',
                           }}>
-                          <Text>{element.date}</Text>
-                          <Text> | </Text>
-                          <Text>{element.time}</Text>
-                          <Text></Text>
-                        </Text>
-                      </Card.Content>
-                    </View>
-                  </Card>
-                </TouchableOpacity>
-              );
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              color: 'black',
+                              fontWeight: '600',
+                            }}>
+                            {element.name}
+                          </Text>
+                          <Text
+                            style={{
+                              marginTop: 5,
+                              fontStyle: 'italic',
+                              color: 'black',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                            }}>
+                            <Text>{element.date}</Text>
+                            <Text> | </Text>
+                            <Text>{element.time}</Text>
+                            <Text></Text>
+                          </Text>
+                        </Card.Content>
+                      </View>
+                    </Card>
+                  </TouchableOpacity>
+                );
+              } else {
+                return <></>;
+              }
             })}
           </ScrollView>
         ) : (

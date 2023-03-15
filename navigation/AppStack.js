@@ -7,6 +7,9 @@ import PatientTabMavigation from './PatientTabNavigation.js';
 import CustomHeader from '../components/CustomHeader.js';
 import DoctorDetails from '../screens/DoctorDetails.js';
 import BookAppointment from '../screens/BookAppointment.js';
+import Faqs from '../screens/Faqs.js';
+import ChangePassword from '../screens/ChangePassword.js';
+import AppointmentReviews from '../screens/AppointmentReviews.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +26,7 @@ const AppStack = () => {
           // headerTitleStyle: {
           //   fontWeight: 'bold',
           // },
-          headerShown:false,
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -32,7 +35,10 @@ const AppStack = () => {
         options={{title: 'DOCTOR'}}
       />
       <Stack.Screen name="Make Appointment" component={MakeAppointment} />
-      <Stack.Screen name="Book Appointment" component={BookAppointment} options={{
+      <Stack.Screen
+        name="Book Appointment"
+        component={BookAppointment}
+        options={{
           title: 'Book Appointment',
           headerStyle: {
             backgroundColor: '#555DF2',
@@ -41,9 +47,13 @@ const AppStack = () => {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-        }}/>
+        }}
+      />
       <Stack.Screen name="Handle Appointment" component={HandleAppointments} />
-      <Stack.Screen name="Doctor Details" component={DoctorDetails}  options={{
+      <Stack.Screen
+        name="Doctor Details"
+        component={DoctorDetails}
+        options={{
           title: 'Doctor Details',
           headerStyle: {
             backgroundColor: '#555DF2',
@@ -53,7 +63,52 @@ const AppStack = () => {
             fontWeight: 'bold',
           },
         }}
-        />
+      />
+
+      <Stack.Screen
+        name="FAQs"
+        component={Faqs}
+        options={{
+          title: 'FAQs',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+
+<Stack.Screen
+        name="Change Password"
+        component={ChangePassword}
+        options={{
+          title: 'Change Password',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+
+<Stack.Screen
+        name="Reviews"
+        component={AppointmentReviews}
+        options={{
+          title: 'Write a Review',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 };

@@ -103,7 +103,7 @@ const DoctorDetails = ({navigation}) => {
           <Avatar.Image
             style={{marginTop: 'auto', marginBottom: 'auto'}}
             size={60}
-            source={require('../assets/avatar2.jpg')}
+            source={doctor.avatar}
           />
           <Card.Content>
             <Text
@@ -112,9 +112,9 @@ const DoctorDetails = ({navigation}) => {
                 color: 'black',
                 fontWeight: 'bold',
               }}>
-              {doctorArr.name}
+              {doctor.name}
             </Text>
-            <Text>{doctorArr.specialization}</Text>
+            <Text>{doctor.specialization}</Text>
             <Text
               style={{
                 marginTop: 5,
@@ -123,9 +123,9 @@ const DoctorDetails = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <Text>{doctorArr.days}</Text>
+              <Text>{doctor.days}</Text>
               <Text> | </Text>
-              <Text>{doctorArr.timings}</Text>
+              <Text>{doctor.startTime} - {doctor.endTime}</Text>
               <Text></Text>
             </Text>
           </Card.Content>
@@ -135,7 +135,7 @@ const DoctorDetails = ({navigation}) => {
               color: 'green',
               fontWeight: '700',
             }}>
-            {doctorArr.price}
+            {doctor.price}
           </Text>
         </View>
       </Card>
