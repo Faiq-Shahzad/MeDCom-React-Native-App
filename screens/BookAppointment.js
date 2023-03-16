@@ -23,35 +23,66 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import HandleAppointment from '../components/HandleAppointment';
 
 const BookAppointment = ({navigation}) => {
-  const {doctor, user, appointment, setAppointment} = useContext(AuthContext);
+  const {doctor, user, appointment, setAppointment, backendUrl} = useContext(AuthContext);
   console.log(user)
   const [selectedTime, setSelectedTime] = useState({});
   const [createApt, setCreateApt] = useState({});
+  const [docAppointments, setDocAppointments] = useState([]);
 
-  const HandleAppointment = () => {
-    setCreateApt({
-      doctorId: doctor.key,
+  const HandleAppointment = async () => {
+
+
+    const date = new Date(selectedDate)
+    date.setUTCHours(0,0,0,0);
+    const appointmentDetails = {
+      doctorId: doctor.cnic,
       patientId: user.identifier,
       doctorMSP: 'org2.department1',
-      time: selectedTime.key,
-      date: selectedDate,
+      time: ''+selectedTime.key,
+      date: date,
       status: 'pending',
-    });
-    console.log(createApt);
-    setAppointment({
-      doctorId: doctor.key,
-      patientId: user.identifier,
-      doctorMSP: 'org2.department1',
-      time: selectedTime.key,
-      date: selectedDate,
-      status: 'pending'
-    });
-    Alert.alert('Success', 'Appointment Booked Successfully!', [
-      {text: 'OK', onPress: () => navigation.navigate('Appointments')},
-    ]);
+    }
+    console.log('Appointment details ', appointmentDetails)
+
+    try {
+
+      const response = await axios.post(backendUrl + 'appointments',appointmentDetails);
+      // console.log(response.data);
+      console.log(response.data);
+      if(response.data.status != "success"){
+        alert("Unable to book appointment at the moment")
+      }else{
+        alert(response.data.message)
+      }
+    } catch (error) {
+      console.log(error.response.data);
+      alert("Unable to book appointment at the moment")
+
+    }
+    // setCreateApt({
+    //   doctorId: doctor.key,
+    //   patientId: user.identifier,
+    //   doctorMSP: 'org2.department1',
+    //   time: selectedTime.key,
+    //   date: selectedDate,
+    //   status: 'pending',
+    // });
+    // console.log(createApt);
+    // setAppointment({
+    //   doctorId: doctor.key,
+    //   patientId: user.identifier,
+    //   doctorMSP: 'org2.department1',
+    //   time: selectedTime.key,
+    //   date: selectedDate,
+    //   status: 'pending'
+    // });
+    // Alert.alert('Success', 'Appointment Booked Successfully!', [
+    //   {text: 'OK', onPress: () => navigation.navigate('Appointments')},
+    // ]);
   };
 
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [allSlots, setAllSlots] = useState([]);
   const [availableTime, setAvailableTime] = useState([]);
   const selectedDate = date ? date.toString() : '';
 
@@ -153,13 +184,83 @@ const BookAppointment = ({navigation}) => {
         finished = true;
       }
     }
-
+    // const availableSlots = timesArray.filter( ( el ) => !docAppointments.includes( el.key ) );
+    // console.log(availableSlots)
+    setAllSlots(timesArray);
     setAvailableTime(timesArray);
   };
 
+  function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+  }
+
+  function formatDate(date) {
+    return [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join('-');
+  }
+
+  const getAppointments = async () => {
+
+    // const todayDateString = date.getDate()+"-"+date.getMonth()+"-"+date.getUTCFullYear()
+    const tempDate = new Date(date);
+    const todayDateString = formatDate(tempDate);
+    console.log(todayDateString)
+    const currentDate = new Date(todayDateString);
+    // currentDate.setHours(0,0,0,0);
+    console.log('Date Changed', currentDate.toISOString())
+    let nextDate = new Date();
+    nextDate.setDate(currentDate.getDate() + 1);
+    // nextDate.setHours(0,0,0,0);
+    const nextDateString = formatDate(nextDate)
+    console.log(nextDateString)
+    nextDate = new Date(nextDateString)
+    console.log('Next day date', nextDate.toISOString())
+
+    let startDate = currentDate.toISOString();
+    let endDate = nextDate.toISOString();
+    // startDate = startDate.slice(0, startDate.length-5);
+    // endDate = endDate.slice(0, endDate.length-1);
+    try {
+      console.log("Getting Doc appointment for ",doctor.cnic)
+      console.log("Getting Doc appointment for ",startDate, endDate)
+      console.log("url " +backendUrl + 'appointments/doc_queryDate/'+doctor.cnic )
+
+      const response = await axios.post(backendUrl + 'appointments/doc_queryDate/'+doctor.cnic,{
+        startDate,
+        endDate
+      });
+      // console.log(response.data);
+      console.log(response.data);
+      const timingArray = []
+      response.data.forEach(element => {
+        timingArray.push(element.Record.time)
+      });
+      console.log(timingArray)
+      // setDocAppointments(timingArray);
+      const availableSlots = allSlots.filter( ( el ) => !timingArray.includes( ""+el.key ) );
+      console.log("avalible slots ",availableSlots)
+      setAvailableTime(availableSlots);
+      // SetPopularDoctors(response.data);
+      // setLoading(false);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  }
+
   useEffect(() => {
-    createIntervals(doctor.startTime, doctor.endTime);
+    createIntervals(doctor.timeStart, doctor.timeEnd);
   }, []);
+
+  useEffect(() => {
+    // createIntervals(doctor.timeStart, doctor.timeEnd);
+    getAppointments();
+
+  }, [date]);
+
+  
 
   const renderItem = ({item}) => (
     <View
@@ -177,6 +278,8 @@ const BookAppointment = ({navigation}) => {
           borderWidth: 1,
           padding: 5,
         }}
+        
+        // disabled= {docAppointments.includes(item.key)}
         onPress={() => {
           setSelectedTime({key: item.key, value: item.value});
         }}>
@@ -213,7 +316,8 @@ const BookAppointment = ({navigation}) => {
           <Avatar.Image
             style={{marginTop: 'auto', marginBottom: 'auto'}}
             size={60}
-            source={doctor.avatar}
+            // source={doctor.avatar}
+            source={{ uri: doctor.profile? 'data:image/png;base64,'+doctor.profile: DummyAvatar }}
           />
           <Card.Content>
             <Text
@@ -224,7 +328,7 @@ const BookAppointment = ({navigation}) => {
               }}>
               {doctor.name}
             </Text>
-            <Text>{doctor.specialization}</Text>
+            <Text>{doctor.speciality}</Text>
             <Text
               style={{
                 marginTop: 5,
@@ -233,10 +337,10 @@ const BookAppointment = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <Text>{doctor.days}</Text>
-              <Text> | </Text>
+              {/* <Text>{doctor.days}</Text> */}
+              {/* <Text> | </Text> */}
               <Text>
-                {doctor.startTime} - {doctor.endTime}
+                {doctor.timeStart} - {doctor.timeEnd}
               </Text>
               <Text></Text>
             </Text>
@@ -247,28 +351,28 @@ const BookAppointment = ({navigation}) => {
               color: 'green',
               fontWeight: '700',
             }}>
-            {doctor.price}
+            Rs. {doctor.price}
           </Text>
         </View>
       </Card>
 
       <View
+        // style={{
+        //   backgroundColor: '#E6EFF9',
+        //   flex: 1,
+        //   borderTopLeftRadius: 30,
+        //   borderTopRightRadius: 30,
+          
+        // }}
         style={{
-          backgroundColor: '#E6EFF9',
-          flex: 1,
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-        }}>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          style={{
             flex: 1,
             backgroundColor: 'white',
             borderTopLeftRadius: 40,
             borderTopRightRadius: 40,
-            padding: 10,
-          }}>
+            padding: 15,
+          }}
+        >
+        
           <View
             style={{
               flexDirection: 'row',
@@ -290,15 +394,18 @@ const BookAppointment = ({navigation}) => {
             </Text>
           </View>
 
-          <View style={{borderRadius: 10}}>
+          {/* <View style={{ width: '80%'}}> */}
             <CalendarPicker onDateChange={setDate} minDate={new Date()} />
-            <Text>{selectedDate}</Text>
-          </View>
+            {/* <Text>{selectedDate}</Text>
+          </View> */}
 
           <Text style={{textAlign: 'center', color: 'grey'}}>
             _________________________________________________________________
           </Text>
-
+          <ScrollView
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          >
           <View
             style={{
               flexDirection: 'row',

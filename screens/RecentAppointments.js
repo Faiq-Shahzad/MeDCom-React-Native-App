@@ -11,13 +11,14 @@ import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
+import axios from 'axios';
 
 export default RecentAppointments = ({navigation}) => {
-  const {user, doctor, appointment, logout} = useContext(AuthContext);
+  const {user, doctor, appointment, logout, backendUrl, token} = useContext(AuthContext);
   console.log(appointment);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [appointmentArr, setAppointment] = useState();
+  const [appointmentArr, setappointmentArr] = useState([]);
   const [completed, setCompleted] = useState();
   const [displayPending, setDisplayPending] = useState(true);
   const [displayCompleted, setDisplayCompleted] = useState(true);
@@ -37,7 +38,7 @@ export default RecentAppointments = ({navigation}) => {
     },
   ];
 
-  const [appointmentList, setAppointmentList] = useState(ComApp);
+  const [appointmentList, setAppointmentList] = useState([]);
 
   // const getAppointments = async () => {
   //   const tempList = []
@@ -83,6 +84,60 @@ export default RecentAppointments = ({navigation}) => {
   //     })
 
   // }
+  const getAppointments = async () => {
+    try {
+      console.log("Getting Appointments for patient ")
+      // console.log("Getting Doc appointment for ",startDate, endDate)
+      console.log("url " +backendUrl + 'appointments/query/docType/appointment', token )
+
+      const response = await axios.get(backendUrl + 'appointments/query/docType/appointment', {
+        headers: {
+          authorization: 'Bearer '+token,
+        },
+      });
+      console.log("Got Response");
+      // console.log(response.data);
+      const allappointments = response.data
+      const pendingApp = []
+      const completedApp = []
+
+      allappointments.forEach(element => {
+        if(element.Record.status != "completed"){
+          pendingApp.push(element)
+        }else{
+          completedApp.push(element)
+        }
+      });
+      console.log("pending", pendingApp.length)
+      console.log("completed", completedApp.length)
+      setappointmentArr(pendingApp)
+      setAppointmentList(completedApp)
+      setLoading(false)
+
+      // const timingArray = []
+      // response.data.forEach(element => {
+      //   timingArray.push(element.Record.time)
+      // });
+      // console.log(timingArray)
+      // // setDocAppointments(timingArray);
+      // const availableSlots = allSlots.filter( ( el ) => !timingArray.includes( ""+el.key ) );
+      // console.log("avalible slots ",availableSlots)
+      // setAvailableTime(availableSlots);
+      // SetPopularDoctors(response.data);
+      // setLoading(false);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  }
+  useEffect(() => {
+    getAppointments();
+  }, []);
+
+  // const timeString12hr = (timeString) => {}
+  // return new Date('1970-01-01T' + timeString + 'Z')
+  // .toLocaleTimeString('en-US',
+  //   {timeZone:'UTC',hour12:true,hour:'numeric',minute:'numeric'}
+  // );
 
   const pendingAppointment = () => {
     Alert.alert('Pending', 'The Request is being processed', [
@@ -128,6 +183,35 @@ export default RecentAppointments = ({navigation}) => {
 
   // }, []);
 
+  const convertTime12h = (time) => {
+    try{
+      let intTime = parseInt(time)
+      // console.log("int time ", intTime)
+      let suffix = " AM"
+      if(intTime >= 1200){
+        suffix = " PM"
+        if(intTime >= 1300){
+          intTime = intTime - 1200;
+        }
+      }
+      // console.log("int time after sub", intTime)
+      const hr = parseInt(intTime / 100)
+      // console.log("hr", hr)
+      let min = intTime - (parseInt(intTime / 100) * 100)
+      if(min==0){
+        min = "00"
+      }
+      // console.log("min", min)
+      const time12h = ""+hr+":"+min+suffix
+      return time12h;
+
+    }catch(e){
+      console.log(e)
+      return time
+
+    }
+  }
+
   if (loading) {
     console.log('Some data');
     return (
@@ -141,23 +225,25 @@ export default RecentAppointments = ({navigation}) => {
         <TouchableOpacity
           style={{backgroundColor: 'white', padding: 15}}
           onPress={() =>
-            displayPending ? setDisplayPending(false) : setDisplayPending(true)
+            getAppointments()
           }>
           <Text style={{marginLeft: 7, fontSize: 17, fontWeight: 'bold'}}>
             Pending Appointments
           </Text>
         </TouchableOpacity>
 
-        {displayPending || appointmentArr.length != 0 ? (
+        {!loading & (displayPending || appointmentArr.length != 0) ? (
+          
           <ScrollView
             style={{
               width: '100%',
-              maxHeight: '30%',
+              maxHeight: '45%',
               paddingBottom: 10,
               padding: 2,
             }}>
-            {appointmentList.map((element, index) => {
-              if (element.status == 'pending') {
+            {appointmentArr.map((element, index) => {
+              console.log(index)
+              {/* if (element.Record.status == 'pending') { */}
                 return (
                   <TouchableOpacity
                     key={index}
@@ -186,15 +272,24 @@ export default RecentAppointments = ({navigation}) => {
                             justifyContent: 'space-between',
                             width: '100%',
                           }}>
+                            <View style={{flexDirection: 'column'}}>
                           <Text
                             style={{
                               fontSize: 16,
                               color: 'black',
                               fontWeight: '600',
                             }}>
-                            {element.name}
-                            {element.doctorId}
+                            {element.Record.doc.name}
                           </Text>
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              color: 'black',
+                              fontWeight: '600',
+                            }}>
+                            {element.Record.doc.contact}
+                          </Text>
+                            </View>
                           <Text
                             style={{
                               marginTop: 5,
@@ -203,9 +298,9 @@ export default RecentAppointments = ({navigation}) => {
                               flexDirection: 'row',
                               justifyContent: 'space-between',
                             }}>
-                            <Text>{element.date}</Text>
+                            <Text>{new Date(element.Record.date).toLocaleDateString()}</Text>
                             <Text> | </Text>
-                            <Text>{element.time}</Text>
+                            <Text>{convertTime12h(element.Record.time)}</Text>
                             <Text></Text>
                           </Text>
                         </Card.Content>
@@ -213,9 +308,9 @@ export default RecentAppointments = ({navigation}) => {
                     </Card>
                   </TouchableOpacity>
                 );
-              } else {
+              {/* } else {
                 return <></>;
-              }
+              } */}
             })}
           </ScrollView>
         ) : (
@@ -235,12 +330,14 @@ export default RecentAppointments = ({navigation}) => {
         </TouchableOpacity>
 
         {displayCompleted || completed.length != 0 ? (
-          <ScrollView style={{maxHeight: '30%', width: '100%', padding: 2}}>
-            {appointmentList.map(element => {
-              if (element.status == 'completed') {
+          <ScrollView style={{maxHeight: '45%', width: '100%', padding: 2}}>
+            {appointmentList.map((element, index) => {
+                    
+              {/* if (element.status == 'completed') { */}
                 return (
                   <TouchableOpacity
-                    style={{width: '100%', marginVertical: 15}}
+                    key={index}
+                    style={{width: '100%', marginVertical: 10}}
                     onPress={() =>
                       navigation.navigate('Handle Appointment', {
                         appointment: element,
@@ -269,14 +366,24 @@ export default RecentAppointments = ({navigation}) => {
                             justifyContent: 'space-between',
                             width: '100%',
                           }}>
+                            <View style={{flexDirection: 'column'}}>
                           <Text
                             style={{
                               fontSize: 16,
                               color: 'black',
                               fontWeight: '600',
                             }}>
-                            {element.name}
+                            {element.Record.doc.name}
                           </Text>
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              color: 'black',
+                              fontWeight: '600',
+                            }}>
+                            {element.Record.doc.contact}
+                          </Text>
+                            </View>
                           <Text
                             style={{
                               marginTop: 5,
@@ -285,9 +392,9 @@ export default RecentAppointments = ({navigation}) => {
                               flexDirection: 'row',
                               justifyContent: 'space-between',
                             }}>
-                            <Text>{element.date}</Text>
+                            <Text>{new Date(element.Record.date).toLocaleDateString()}</Text>
                             <Text> | </Text>
-                            <Text>{element.time}</Text>
+                            <Text>{convertTime12h(element.Record.time)}</Text>
                             <Text></Text>
                           </Text>
                         </Card.Content>
@@ -295,9 +402,9 @@ export default RecentAppointments = ({navigation}) => {
                     </Card>
                   </TouchableOpacity>
                 );
-              } else {
+              {/* } else {
                 return <></>;
-              }
+              } */}
             })}
           </ScrollView>
         ) : (

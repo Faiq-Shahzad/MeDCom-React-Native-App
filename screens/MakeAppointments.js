@@ -77,10 +77,10 @@ function MakeAppointment({route, navigation}) {
         </Card.Content>
       </Card>
       
-      <View style={{width:"90%", backgroundColor:"white", padding:10, marginTop:15, borderRadius:5}}>
+      <View style={{width:"90%", backgroundColor:"white", padding:25, marginTop:15, borderRadius:5}}>
         <Text style={{marginTop:5, color:'gray'}}>Select Date:</Text>
         <View style={{width:"100%", backgroundColor:"white", alignItems:"center", marginTop:10}}>
-        <TouchableOpacity style={{alignItems:"center", width:"90%", borderWidth:1, padding:10, borderRadius:10, borderColor:"green"}} onPress={showDatePicker}>
+        <TouchableOpacity style={{alignItems:"center", width:"80%", borderWidth:1, padding:10, borderRadius:10, borderColor:"green"}} onPress={showDatePicker}>
           <Text style={{fontSize:15}}>{selectedDate?selectedDate.toLocaleDateString():'Select Date'}</Text>
         </TouchableOpacity>
         </View>

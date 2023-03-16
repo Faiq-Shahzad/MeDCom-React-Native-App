@@ -103,7 +103,7 @@ const DoctorDetails = ({navigation}) => {
           <Avatar.Image
             style={{marginTop: 'auto', marginBottom: 'auto'}}
             size={60}
-            source={doctor.avatar}
+            source={{ uri: doctor.profile? 'data:image/png;base64,'+doctor.profile: DummyAvatar }}
           />
           <Card.Content>
             <Text
@@ -114,7 +114,7 @@ const DoctorDetails = ({navigation}) => {
               }}>
               {doctor.name}
             </Text>
-            <Text>{doctor.specialization}</Text>
+            <Text>{doctor.speciality}</Text>
             <Text
               style={{
                 marginTop: 5,
@@ -123,9 +123,7 @@ const DoctorDetails = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <Text>{doctor.days}</Text>
-              <Text> | </Text>
-              <Text>{doctor.startTime} - {doctor.endTime}</Text>
+              <Text>{doctor.timeStart} - {doctor.timeEnd}</Text>
               <Text></Text>
             </Text>
           </Card.Content>
@@ -135,7 +133,7 @@ const DoctorDetails = ({navigation}) => {
               color: 'green',
               fontWeight: '700',
             }}>
-            {doctor.price}
+            Rs. {doctor.price} /-
           </Text>
         </View>
       </Card>

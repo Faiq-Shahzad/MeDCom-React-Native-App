@@ -22,17 +22,44 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 
 const Doctors = ({navigation}) => {
-  const {doctor, setDoctor} = useContext(AuthContext);
+  const {doctor, setDoctor, backendUrl} = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [allDocs, setAllDocs] = useState([]);
+  const [popular, setPopular] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  
+  
+  const getDoc = async () => {
+    try {
+      console.log("Getting Docs ",)
+      const response = await axios.post(backendUrl + 'doctors/search/msp/org2.department1');
+      // console.log(response.data);
+      // console.log(response.data);
+      setPopular(response.data);
+      setAllDocs(response.data)
+      setLoading(false);
+    } catch (error) {
+      console.log(error.response.data);
+      logout()
+    }
+  }
 
+  const filterByName = async (name) => {
+    console.log(name)
+    const filteredDoc = allDocs.filter(o => o.Record.name.toLowerCase().includes(name.toLowerCase()));
+      console.log("filteredDoc ", filteredDoc.length)
+      setPopular(filteredDoc)
+  }
+  
   const doctorDetails = element => {
-    setDoctor(element);
+    setDoctor(element.Record);
     // setDoctorData(element);
-    console.log(element);
+    console.log(element.Record);
     navigation.navigate('Doctor Details');
   };
 
   const bookAppointment = element => {
-    setDoctor(element);
+    setDoctor(element.Record);
     // setDoctorData(element);
     console.log(element);
     navigation.navigate('Book Appointment');
@@ -130,7 +157,11 @@ const Doctors = ({navigation}) => {
     },
   ];
 
-  const [popular, setPopular] = useState(PopularDoctors);
+
+  useEffect(() => {
+    getDoc();
+    
+  },[]);
 
   const renderItem = ({item}) => (
     <Card
@@ -150,7 +181,8 @@ const Doctors = ({navigation}) => {
         <Avatar.Image
           style={{marginTop: 'auto', marginBottom: 'auto'}}
           size={60}
-          source={item.avatar}
+          // source={item.avatar}
+          source={{ uri: item.Record.profile? 'data:image/png;base64,'+item.Record.profile: DummyAvatar }}
         />
         <Card.Content>
           <Text
@@ -159,9 +191,9 @@ const Doctors = ({navigation}) => {
               color: 'black',
               fontWeight: 'bold',
             }}>
-            {item.name}
+            {item.Record.name}
           </Text>
-          <Text>{item.specialization}</Text>
+          <Text>{item.Record.speciality}</Text>
           <Text
             style={{
               marginTop: 5,
@@ -170,9 +202,7 @@ const Doctors = ({navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text>{item.days}</Text>
-            <Text> | </Text>
-            <Text>{item.startTime} - {item.endTime}</Text>
+            <Text>{item.Record.timeStart} - {item.Record.timeEnd}</Text>
             <Text></Text>
           </Text>
         </Card.Content>
@@ -182,7 +212,7 @@ const Doctors = ({navigation}) => {
             color: 'green',
             fontWeight: '700',
           }}>
-          {item.price}
+          Rs. {item.Record.price} /-
         </Text>
       </View>
       <TouchableOpacity
@@ -214,19 +244,48 @@ const Doctors = ({navigation}) => {
         backgroundColor: '#E6EFF9',
         marginTop: 10,
       }}>
-      <TextInput
-        placeholder="Search"
-        style={{
-          padding: 4,
-          backgroundColor: 'white',
-          width: '90%',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          borderRadius: 5,
-          shadowOpacity: 1,
-          shadowRadius: 3,
-          elevation: 3,
-        }}></TextInput>
+      <View style={{flexDirection: 'row'}}>
+
+        
+        <TextInput
+          placeholder="Search"
+          style={{
+            padding: 4,
+            backgroundColor: 'white',
+            width: '75%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            borderRadius: 5,
+            shadowOpacity: 1,
+            shadowRadius: 3,
+            elevation: 3,
+          }} 
+          onChangeText={text => {
+            console.log("setting search text")
+            setSearchText(text)
+            }}
+          value={searchText}
+          />
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#555DF2',
+              padding: 5,
+              borderRadius: 5,
+              width: '20%',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }} onPress={() => filterByName(searchText)}>
+            <Text
+              style={{
+                color: 'white',
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}>
+              Search
+            </Text>
+          </TouchableOpacity>
+        </View>
 
       <View
         style={{

@@ -125,8 +125,8 @@ export default SearchDoctors = ({navigation}) => {
       });
       // console.log(response.data);
       const userData = response.data[0].Value;
-      console.log(userData.pendingRequesters);
-      console.log(userData.authorizedRequesters);
+      console.log("pending", userData.pendingRequesters);
+      console.log("approved", userData.authorizedRequesters);
 
       for (const cnic of userData.pendingRequesters) {
         const docData = await getDocDetails(cnic);
@@ -154,10 +154,10 @@ export default SearchDoctors = ({navigation}) => {
     }
   };
 
-  // useEffect(() => {
-  //   getDoc();
+  useEffect(() => {
+    getDoc();
 
-  // }, []);
+  }, []);
 
   if (loading) {
     console.log('loading Data');
@@ -168,6 +168,8 @@ export default SearchDoctors = ({navigation}) => {
     );
   } else {
     return (
+
+      
       <View style={{flex: 1, alignItems: 'center'}}>
         <View style={{flexDirection: 'row', width: '85%', marginTop: 10}}>
           <MaterialCommunityIcons
@@ -221,7 +223,7 @@ export default SearchDoctors = ({navigation}) => {
           }}>
           Pending Requests:
         </Text>
-        {dummyArray.map(item => {
+        {docList.map(item => {
           return (
             <Card
               style={{
@@ -251,7 +253,7 @@ export default SearchDoctors = ({navigation}) => {
                     }}>
                     {item.name}
                   </Text>
-                  <Text>{item.specialization}</Text>
+                  <Text>{item.speciality}</Text>
                   <Text
                     style={{
                       marginTop: 5,
@@ -260,10 +262,10 @@ export default SearchDoctors = ({navigation}) => {
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                     }}>
-                    <Text>{item.days}</Text>
-                    <Text> | </Text>
+                    {/* <Text>{item.days}</Text> */}
+                    {/* <Text> | </Text> */}
                     <Text>
-                      {item.startTime} - {item.endTime}
+                      {item.timeStart} - {item.timeEnd}
                     </Text>
                     <Text></Text>
                   </Text>
@@ -274,8 +276,9 @@ export default SearchDoctors = ({navigation}) => {
                     color: 'green',
                     fontWeight: '700',
                   }}>
-                  {item.price}
+                  Rs. {item.price}
                 </Text>
+                
               </View>
               <View style={{flexDirection: 'row'}}>
                 <TouchableOpacity
@@ -287,7 +290,7 @@ export default SearchDoctors = ({navigation}) => {
                     marginLeft: 'auto',
                     marginRight: 'auto',
                   }}
-                  onPress={() => rejectRequest(element.cnic, false)}>
+                  onPress={() => rejectRequest(item.cnic, false)}>
                   <Text
                     style={{
                       color: 'white',
@@ -306,7 +309,7 @@ export default SearchDoctors = ({navigation}) => {
                     marginLeft: 'auto',
                     marginRight: 'auto',
                   }}
-                  onPress={() => authorizeRequest(element.cnic)}>
+                  onPress={() => authorizeRequest(item.cnic)}>
                   <Text
                     style={{
                       color: 'white',
@@ -361,7 +364,7 @@ export default SearchDoctors = ({navigation}) => {
                     }}>
                     {item.name}
                   </Text>
-                  <Text>{item.specialization}</Text>
+                  <Text>{item.speciality}</Text>
                   <Text
                     style={{
                       marginTop: 5,
@@ -370,22 +373,39 @@ export default SearchDoctors = ({navigation}) => {
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                     }}>
-                    <Text>{item.days}</Text>
-                    <Text> | </Text>
+                    {/* <Text>{item.days}</Text>
+                    <Text> | </Text> */}
                     <Text>
-                      {item.startTime} - {item.endTime}
+                      {item.timeStart} - {item.timeEnd}
                     </Text>
                     <Text></Text>
                   </Text>
+                  <View style={{marginTop: 5, flexDirection: 'row',}}>
+                      <MaterialCommunityIcons
+                          name="phone"
+                          size={15}
+                          color="green"
+                        />
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          color: 'green',
+                          fontWeight: '400',
+                          marginLeft: 5,
+                        }}>
+                        {item.contact}
+                      </Text>
+                  </View>
                 </Card.Content>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: 'green',
-                    fontWeight: '700',
-                  }}>
-                  {item.price}
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      color: 'green',
+                      fontWeight: '700',
+                    }}>
+                    Rs. {item.price}
+                  </Text>
+              
               </View>
               <TouchableOpacity
                 style={{
@@ -396,7 +416,7 @@ export default SearchDoctors = ({navigation}) => {
                   marginLeft: 'auto',
                   marginRight: 'auto',
                 }}
-                onPress={() => rejectRequest(element.cnic, true)}>
+                onPress={() => rejectRequest(item.cnic, true)}>
                 <Text
                   style={{
                     color: 'white',

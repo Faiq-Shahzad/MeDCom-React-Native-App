@@ -22,7 +22,24 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 
 const HomePage = ({navigation}) => {
-  const {doctor, setDoctor} = useContext(AuthContext);
+  const {doctor, setDoctor, backendUrl, logout} = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [PopularDoctors, SetPopularDoctors] = useState([]);
+
+
+  const getDoc = async () => {
+    try {
+      console.log("Getting Docs ",)
+      const response = await axios.post(backendUrl + 'doctors/search/msp/org2.department1');
+      // console.log(response.data);
+      console.log(response.data);
+      SetPopularDoctors(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error.response.data);
+      logout()
+    }
+  }
 
   const Categories = [
     {
@@ -39,66 +56,81 @@ const HomePage = ({navigation}) => {
     },
   ];
 
-  const PopularDoctors = [
-    {
-      key: 0,
-      name: 'Dr. Faiq Shahzad',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 1,
-      name: 'Dr. Arif Shahzad',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar2.jpg'),
-      price: 'Rs. 2000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 2,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar4.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 3,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar3.png'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-    {
-      key: 4,
-      name: 'Dr. Saima Riaz',
-      specialization: 'Heart Surgeon',
-      avatar: require('../assets/avatar.jpg'),
-      price: 'Rs. 1000/-',
-      startTime: '10 AM',
-      endTime: '4 PM',
-      days: 'Mon - Fri',
-    },
-  ];
+  // const PopularDoctors = [
+  //   {
+  //     key: 0,
+  //     name: 'Dr. Faiq Shahzad',
+  //     specialization: 'Heart Surgeon',
+  //     avatar: require('../assets/avatar.jpg'),
+  //     price: 'Rs. 1000/-',
+  //     startTime: '10 AM',
+  //     endTime: '4 PM',
+  //     days: 'Mon - Fri',
+  //   },
+  //   {
+  //     key: 1,
+  //     name: 'Dr. Arif Shahzad',
+  //     specialization: 'Heart Surgeon',
+  //     avatar: require('../assets/avatar2.jpg'),
+  //     price: 'Rs. 2000/-',
+  //     startTime: '10 AM',
+  //     endTime: '4 PM',
+  //     days: 'Mon - Fri',
+  //   },
+  //   {
+  //     key: 2,
+  //     name: 'Dr. Saima Riaz',
+  //     specialization: 'Heart Surgeon',
+  //     avatar: require('../assets/avatar4.jpg'),
+  //     price: 'Rs. 1000/-',
+  //     startTime: '10 AM',
+  //     endTime: '4 PM',
+  //     days: 'Mon - Fri',
+  //   },
+  //   {
+  //     key: 3,
+  //     name: 'Dr. Saima Riaz',
+  //     specialization: 'Heart Surgeon',
+  //     avatar: require('../assets/avatar3.png'),
+  //     price: 'Rs. 1000/-',
+  //     startTime: '10 AM',
+  //     endTime: '4 PM',
+  //     days: 'Mon - Fri',
+  //   },
+  //   {
+  //     key: 4,
+  //     name: 'Dr. Saima Riaz',
+  //     specialization: 'Heart Surgeon',
+  //     avatar: require('../assets/avatar.jpg'),
+  //     price: 'Rs. 1000/-',
+  //     startTime: '10 AM',
+  //     endTime: '4 PM',
+  //     days: 'Mon - Fri',
+  //   },
+  // ];
 
   const handleBookAppointment = element => {
-    setDoctor(element);
+    setDoctor(element.Record);
     navigation.navigate('Book Appointment');
   };
 
   const [categories, setCategories] = useState(Categories);
-  const [popular, setPopular] = useState(PopularDoctors);
+  // const [popular, setPopular] = useState(PopularDoctors);
+
+  useEffect(() => {
+    getDoc();
+    
+  },[]);
+
+  if(loading){
+    return (
+      <View>
+        <Text> Loading </Text>
+      </View>
+    );
+  }else{
+
+  
 
   return (
     <SafeAreaView
@@ -109,11 +141,27 @@ const HomePage = ({navigation}) => {
         marginTop: 0,
       }}>
       <View style={{flexDirection:'row', width:'100%'}}>
+        
         <TouchableOpacity
           style={{
             marginTop: 15,
-            marginLeft: 'auto',
-            marginRight: '3%',
+            marginLeft: '5%',
+            marginRight: '5%',
+            flexDirection: 'row',
+          }}
+          onPress={() => viewNotifications()}>
+          <Icon
+            name="notifications-none"
+            size={25}
+            color="white"
+            style={{fontWeight: 'bold'}}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            marginTop: 15,
+            marginLeft: '3%',
+            marginRight: 'auto',
             flexDirection: 'row',
           }}
           onPress={() => navigation.navigate('Medical Access')}>
@@ -127,12 +175,13 @@ const HomePage = ({navigation}) => {
         <TouchableOpacity
           style={{
             marginTop: 15,
-            marginRight: '5%',
+            marginLeft: 'auto',
+            marginRight: '3%',
             flexDirection: 'row',
           }}
-          onPress={() => viewNotifications()}>
-          <Icon
-            name="notifications-none"
+          onPress={() => logout()}>
+          <MaterialCommunityIcons
+            name="logout"
             size={25}
             color="white"
             style={{fontWeight: 'bold'}}
@@ -240,15 +289,17 @@ const HomePage = ({navigation}) => {
             </Text>
           </View>
 
-          <ScrollView
+          <ScrollView style={{marginBottom: 190}}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}>
-            {popular.map((item, index) => {
+            {console.log(PopularDoctors.length)}
+            {PopularDoctors.map((item, index) => {
+              {/* console.log(item.Record); */}
               return (
-                <Card
+                <Card key={index+"PD"}
                   style={{
                     padding: 5,
-                    marginBottom: 8,
+                    marginBottom: 10,
                   }}>
                   <View
                     style={{
@@ -259,7 +310,8 @@ const HomePage = ({navigation}) => {
                     <Avatar.Image
                       style={{marginTop: 'auto', marginBottom: 'auto'}}
                       size={60}
-                      source={item.avatar}
+                      // source={item.Record.profile}
+                      source={{ uri: item.Record.profile? 'data:image/png;base64,'+item.Record.profile: DummyAvatar }}
                     />
                     <Card.Content>
                       <Text
@@ -268,16 +320,16 @@ const HomePage = ({navigation}) => {
                           color: 'black',
                           fontWeight: '700',
                         }}>
-                        {item.name}
+                        {item.Record.name}
                       </Text>
-                      <Text>{item.specialization}</Text>
+                      <Text>{item.Record.speciality}</Text>
                       <Text
                         style={{
                           fontSize: 15,
                           color: 'green',
                           fontWeight: '700',
                         }}>
-                        {item.price}
+                        Rs. {item.Record.price}
                       </Text>
                     </Card.Content>
                     <TouchableOpacity
@@ -309,6 +361,7 @@ const HomePage = ({navigation}) => {
       </View>
     </SafeAreaView>
   );
+  }
 };
 
 export default HomePage;

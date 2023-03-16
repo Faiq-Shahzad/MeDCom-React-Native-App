@@ -23,7 +23,7 @@ export default function Profile({navigation, route}) {
 
   const [details, setDetails] = useState();
   // var details;
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [disabled, setDisabled] = useState(true);
 
   const edit = () => {
@@ -60,11 +60,13 @@ export default function Profile({navigation, route}) {
     //   }
     // })
     try {
+      console.log("Getting Profile ", token)
       const response = await axios.get(backendUrl + 'patients/view', {
         headers: {
-          authorization: `Bearer ${token}`,
+          authorization: 'Bearer '+token,
         },
       });
+      // console.log(response.data);
       console.log(response.data[0].Value);
       setDetails(response.data[0].Value);
       setLoading(false);
@@ -95,10 +97,14 @@ export default function Profile({navigation, route}) {
       });
   };
 
-  // useEffect(() => {
-  //   getUser();
+  const logoutUser = () => {
+    logout()
+  }
 
-  // }, []);
+  useEffect(() => {
+    getUser();
+
+  }, []);
 
   if (loading) {
     console.log('Some data');
@@ -114,7 +120,7 @@ export default function Profile({navigation, route}) {
           style={{width: '95%'}}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}>
-          {/* <View style={{padding:8, borderRadius:10, width:"100%", backgroundColor:'white', marginVertical:20,
+          <View style={{padding:8, borderRadius:10, width:"100%", backgroundColor:'white', marginVertical:20,
                       shadowColor: "#000",
                       shadowOffset: {
                           width: 0,
@@ -144,7 +150,7 @@ export default function Profile({navigation, route}) {
             <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.contact} onChangeText={(val)=>setDetails({...details, contact:val})} editable={!disabled}></TextInput>
             <Text style={{marginTop:15}}>Next Of Kin:</Text>
             <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.emergencyContact} onChangeText={(val)=>setDetails({...details, emergencyContact:val})} editable={!disabled}></TextInput>
-            <Text style={{marginTop:15}}>Date of Birth:</Text>
+            {/* <Text style={{marginTop:15}}>Date of Birth:</Text>
             <TouchableOpacity style={{alignItems:"center", backgroundColor:disabled?'lightgray':'rgb(120,220,140)', borderWidth:1, padding:10, borderRadius:5, borderColor:"lightgrey"}} onPress={showDatePicker} disabled={disabled}>
               <Text style={{fontSize:15, color:'white'}}>{details.dob.toLocaleDateString()}</Text> 
               <Text style={{fontSize:15, color:'white'}}></Text>
@@ -155,7 +161,7 @@ export default function Profile({navigation, route}) {
                 mode="date"
                 onConfirm={handleConfirm}
                 onCancel={hideDatePicker}
-              />
+              /> */}
           </View >
           <View style={{width:'50%'}}>
 
@@ -164,23 +170,23 @@ export default function Profile({navigation, route}) {
             <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.bloodGroup} onChangeText={(val)=>setDetails({...details, bloodGroup:val})} editable={!disabled}></TextInput>
             <Text style={{marginTop:15, paddingHorizontal: 10}}>Emergency Number:</Text>
             <TextInput style={{marginTop:5, backgroundColor:'white', paddingHorizontal:10, borderColor:"lightgrey", borderRadius:5,  padding:3}} value={details.nextOfKin} onChangeText={(val)=>setDetails({...details, nextOfKin:val})} editable={!disabled}></TextInput>
-            <RadioButton.Group onValueChange={(val)=>setDetails({...details, gender:val})} value={details.gender} >
+            {/* <RadioButton.Group onValueChange={(val)=>setDetails({...details, gender:val})} value={details.gender} >
               <RadioButton.Item mode='android' label="Male" labelStyle={{fontSize:13}} value="male" color='red' disabled={disabled}/>
               <RadioButton.Item mode='android' label="Female" labelStyle={{fontSize:13}} value="female" color='red' disabled={disabled}/>
               <RadioButton.Item mode='android' label="Custom" labelStyle={{fontSize:13}} value="custom" color='red' disabled={disabled}/>
-            </RadioButton.Group>
+            </RadioButton.Group> */}
             </View>
           </View>
         </View>
 
 
         <Button mode='contained' style={{marginTop:20, padding:5, borderColor:"blue"}} disabled={disabled} onPress={handleProfileUpdate} >Update</Button> 
-        </View> */}
-          <Text style={{fontSize: 25, marginTop: 10, fontWeight: 'bold'}}>
+        </View>
+          {/* <Text style={{fontSize: 25, marginTop: 10, fontWeight: 'bold'}}>
             Profile:
-          </Text>
+          </Text> */}
 
-          <View
+          {/* <View
             style={{
               padding: 8,
               borderRadius: 10,
@@ -214,8 +220,8 @@ export default function Profile({navigation, route}) {
               }}
               source={require('../assets/avatar.jpg')}
             />
-          </View>
-          <View style={{paddingHorizontal: 10}}>
+          </View> */}
+          {/* <View style={{paddingHorizontal: 10}}>
             <View style={{flexDirection: 'row', marginTop: 10}}>
               <View style={{width: '48%', marginRight: 10}}>
                 <Text>Name:</Text>
@@ -278,18 +284,7 @@ export default function Profile({navigation, route}) {
                     setDetails({...details, emergencyContact: val})
                   }
                   editable={!disabled}></TextInput>
-                {/* <Text style={{marginTop:15}}>Date of Birth:</Text>
-            <TouchableOpacity style={{alignItems:"center", backgroundColor:disabled?'lightgray':'rgb(120,220,140)', borderWidth:1, padding:10, borderRadius:5, borderColor:"lightgrey"}} onPress={showDatePicker} disabled={disabled}>
-              <Text style={{fontSize:15, color:'white'}}>{details.dob.toLocaleDateString()}</Text> 
-              <Text style={{fontSize:15, color:'white'}}></Text>
-            </TouchableOpacity>
-
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                onConfirm={handleConfirm}
-                onCancel={hideDatePicker}
-              /> */}
+                
               </View>
               <View style={{width: '50%'}}>
                 <View
@@ -332,11 +327,6 @@ export default function Profile({navigation, route}) {
                       setDetails({...details, nextOfKin: val})
                     }
                     editable={!disabled}></TextInput>
-                  {/* <RadioButton.Group onValueChange={(val)=>setDetails({...details, gender:val})} value={details.gender} >
-              <RadioButton.Item mode='android' label="Male" labelStyle={{fontSize:13}} value="male" color='red' disabled={disabled}/>
-              <RadioButton.Item mode='android' label="Female" labelStyle={{fontSize:13}} value="female" color='red' disabled={disabled}/>
-              <RadioButton.Item mode='android' label="Custom" labelStyle={{fontSize:13}} value="custom" color='red' disabled={disabled}/>
-            </RadioButton.Group> */}
                 </View>
               </View>
             </View>
@@ -348,8 +338,8 @@ export default function Profile({navigation, route}) {
               onPress={handleProfileUpdate}>
               Update
             </Button>
-          </View>
-          <Text style={{color: 'grey', fontWeight: 'bold'}}>
+          </View> */}
+          <Text style={{color: 'grey', fontWeight: 'bold', alignSelf: 'center'}}>
             ____________________________________________________________
           </Text>
           <View style={{alignItems: 'center'}}>
@@ -396,6 +386,28 @@ export default function Profile({navigation, route}) {
                 color="grey"
               />
               <Text style={{fontSize: 16, fontWeight: 'bold', padding:5}}>FAQs</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                marginTop: 0,
+                margin: 10,
+                backgroundColor: 'white',
+                padding: 10,
+                borderRadius: 8,
+                width: '98%',
+                shadowOpacity: 1,
+                shadowRadius: 3,
+                elevation: 3,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }} onPress={() => logoutUser()}>
+              <MaterialCommunityIcons
+                name="logout"
+                size={20}
+                color="grey"
+              />
+              <Text style={{fontSize: 16, fontWeight: 'bold', padding:5}}>Logout</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

@@ -1,6 +1,7 @@
 import React, { createContext, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import firestore from '@react-native-firebase/firestore';
+import {AsyncStorage} from 'react-native';
 import axios from "axios";
 import { Alert } from "react-native";
 
@@ -8,7 +9,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({children}) =>{
     // const backendUrl = 'http://192.168.171.31:3000/';
-    const backendUrl = 'http://192.168.1.101:3000/';
+    const backendUrl = 'http://192.168.18.146:3000/';
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [doctor, setDoctor] = useState(null);
@@ -31,16 +32,25 @@ export const AuthProvider = ({children}) =>{
                 login: async (cnic, password) =>{
                     try{
                         // await auth().signInWithEmailAndPassword(email, password);
-                        // const response = await axios.post(backendUrl + 'auth/login', {
-                        //     cnic: cnic,
-                        //     password: password
-                        // });
+                        const response = await axios.post(backendUrl + 'auth/login', {
+                            cnic: cnic,
+                            password: password
+                        });
                         // console.log('abcd1', response.data);
-                        // const user = response.data.user;
+                        const user = response.data.user;
                         console.log('abcd');
-                        const user = {email:"faiq@gmail.com", identifier:"1234", role:"patient", verified:true}
-                        // const user_token = response.data.token;
-                        const user_token = "abcd";
+                        // const user = {email:"faiq@gmail.com", identifier:"1234", role:"patient", verified:true}
+                        const user_token = response.data.token;
+                        // const user_token = "abcd";
+                        try {
+                            await AsyncStorage.setItem(
+                            'user',
+                            JSON.stringify({user, user_token}),
+                            );
+                        } catch (error) {
+                            // Error saving data
+                        }
+
                         setToken(user_token);
                         setUser(user);
                     } catch(e){
@@ -107,6 +117,7 @@ export const AuthProvider = ({children}) =>{
                 logout: async () =>{
                     try{
                         // await auth().signOut();
+                        await AsyncStorage.removeItem('user');
                         setUser(null);
                         setToken(null);
                     } catch(e){

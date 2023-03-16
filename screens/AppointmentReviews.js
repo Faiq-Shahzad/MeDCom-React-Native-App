@@ -8,12 +8,12 @@ import {
 import React, {useState, useContext} from 'react';
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import StarRating from 'react-native-star-rating-widget';
-import {AuthProvider} from '../navigation/AuthProvider';
+import {AuthContext, AuthProvider} from '../navigation/AuthProvider';
 
 const AppointmentReviews = ({navigation}) => {
   const [rating, setRating] = useState(0);
   const [comments, setComments] = useState();
-  const {user} = useContext(AuthProvider);
+  const {user} = useContext(AuthContext);
   const [review, setReview] = useState();
 
   const [doctor, setDoctor] = useState({
