@@ -80,7 +80,7 @@ const AppStack = () => {
         }}
       />
 
-<Stack.Screen
+      <Stack.Screen
         name="Change Password"
         component={ChangePassword}
         options={{
@@ -95,11 +95,26 @@ const AppStack = () => {
         }}
       />
 
-<Stack.Screen
+      <Stack.Screen
         name="Reviews"
         component={AppointmentReviews}
         options={{
           title: 'Write a Review',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="Medical Access"
+        component={SearchDoctors}
+        options={{
+          title: 'Medical Access',
           headerStyle: {
             backgroundColor: '#555DF2',
           },

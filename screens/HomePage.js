@@ -22,7 +22,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 
 const HomePage = ({navigation}) => {
-
   const {doctor, setDoctor} = useContext(AuthContext);
 
   const Categories = [
@@ -93,10 +92,10 @@ const HomePage = ({navigation}) => {
     },
   ];
 
-  const handleBookAppointment = (element) =>{
+  const handleBookAppointment = element => {
     setDoctor(element);
     navigation.navigate('Book Appointment');
-  }
+  };
 
   const [categories, setCategories] = useState(Categories);
   const [popular, setPopular] = useState(PopularDoctors);
@@ -109,21 +108,37 @@ const HomePage = ({navigation}) => {
         backgroundColor: '#555DF2',
         marginTop: 0,
       }}>
-      <TouchableOpacity
-        style={{
-          marginTop: 15,
-          marginLeft: 'auto',
-          marginRight: '5%',
-          flexDirection: 'row',
-        }}
-        onPress={() => viewNotifications()}>
-        <Icon
-          name="notifications"
-          size={25}
-          color="white"
-          style={{fontWeight: 'bold'}}
-        />
-      </TouchableOpacity>
+      <View style={{flexDirection:'row', width:'100%'}}>
+        <TouchableOpacity
+          style={{
+            marginTop: 15,
+            marginLeft: 'auto',
+            marginRight: '3%',
+            flexDirection: 'row',
+          }}
+          onPress={() => navigation.navigate('Medical Access')}>
+          <MaterialCommunityIcons
+            name="folder-key-outline"
+            size={25}
+            color="white"
+            style={{fontWeight: 'bold'}}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            marginTop: 15,
+            marginRight: '5%',
+            flexDirection: 'row',
+          }}
+          onPress={() => viewNotifications()}>
+          <Icon
+            name="notifications-none"
+            size={25}
+            color="white"
+            style={{fontWeight: 'bold'}}
+          />
+        </TouchableOpacity>
+      </View>
       <View
         style={{
           flexDirection: 'row',
@@ -192,10 +207,7 @@ const HomePage = ({navigation}) => {
               return (
                 <Card style={{width: '32%', alignItems: 'center'}}>
                   <Card.Content style={{alignItems: 'center'}}>
-                    <Avatar.Image
-                      size={45}
-                      source={element.avatar}
-                    />
+                    <Avatar.Image size={45} source={element.avatar} />
                     <Title
                       style={{
                         fontSize: 12,
@@ -221,7 +233,9 @@ const HomePage = ({navigation}) => {
             <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
               Popular Doctors
             </Text>
-            <Text style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}} onPress={() => navigation.navigate('Doctors')}>
+            <Text
+              style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}}
+              onPress={() => navigation.navigate('Doctors')}>
               See all
             </Text>
           </View>
