@@ -48,6 +48,31 @@ export default SearchDoctors = ({navigation}) => {
   const [docList, setDocList] = useState([]);
   const [authDocList, setAuthDocList] = useState([]);
 
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [QRCode, setQRCode] = useState(null);
+  
+
+
+  const getQrCode = async () => {
+    try {
+      console.log('url ', backendUrl + 'patients/qrcode' );
+      const response = await axios.get(
+        backendUrl + 'patients/qrcode',
+        {
+          headers: {
+            authorization: 'Bearer '+token,
+          },
+        },
+      );
+      console.log(response.data)
+      setQRCode(response.data)
+    } catch (error) {
+      console.log(error);
+      console.log(error.response.data);
+
+    }
+  };
+
   const getDocDetails = async cnic => {
     try {
       console.log('url ', backendUrl + 'doctors/search/cnic/' + cnic);
@@ -155,6 +180,7 @@ export default SearchDoctors = ({navigation}) => {
   };
 
   useEffect(() => {
+    getQrCode();
     getDoc();
 
   }, []);
@@ -166,7 +192,60 @@ export default SearchDoctors = ({navigation}) => {
         <Text> Loading </Text>
       </View>
     );
-  } else {
+  } else 
+    if(showQRCode){ return(
+      <Card
+              style={{
+                padding: 10,
+                marginTop: 'auto',
+                marginBottom: 'auto',
+                borderRadius: 10,
+                width: '95%',
+              }}>
+              <View
+                style={{
+                  padding: 5,
+                  flexDirection: 'column',
+                  justifyContent: 'space-around',
+                  marginBottom: 5,
+                }}>
+                
+                <Image style={{width: 350, height: 350, marginBottom:10, alignSelf:'center'}}
+                source={{ uri: QRCode.qrcode }}/>
+                <Text style={{alignSelf: 'center'}}>Cnic: {QRCode.username}</Text>
+{/*                 
+                <Avatar.Image
+                  style={{marginTop: 'auto', marginBottom: 'auto'}}
+                  size={350}
+                  source={{uri: QRCode.qrcode}} 
+                />
+                  */}
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#555DF2',
+                    padding: 5,
+                    borderRadius: 5,
+                    width: '40%',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
+                  onPress={() => {setShowQRCode(false)}}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                    }}>
+                    Back
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Card>
+    )}
+    else {
     return (
 
       
@@ -194,9 +273,10 @@ export default SearchDoctors = ({navigation}) => {
           />
           <TextInput
             style={{
-              width: '80%',
+              width: '60%',
               backgroundColor: 'white',
               paddingHorizontal: 20,
+              marginEnd: 5,
               borderRadius: 10,
               shadowColor: '#000',
               shadowOffset: {
@@ -212,6 +292,27 @@ export default SearchDoctors = ({navigation}) => {
             placeholder="Enter Cnic"
             value={cnicInput}
             onChangeText={setCnicInput}></TextInput>
+
+          <MaterialCommunityIcons
+            name="qrcode"
+            size={30}
+            style={{
+              backgroundColor: 'white',
+              padding: 10,
+              marginLeft: 'auto',
+              borderRadius: 10,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 4.84,
+              elevation: 5,
+            }}
+            color="grey"
+            onPress={() => setShowQRCode(true)}
+          />
         </View>
         <Text
           style={{

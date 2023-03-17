@@ -9,25 +9,60 @@ import React, {useState, useContext} from 'react';
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import StarRating from 'react-native-star-rating-widget';
 import {AuthContext, AuthProvider} from '../navigation/AuthProvider';
+import axios from 'axios';
 
-const AppointmentReviews = ({navigation}) => {
+const AppointmentReviews = ({route, navigation}) => {
   const [rating, setRating] = useState(0);
   const [comments, setComments] = useState();
-  const {user} = useContext(AuthContext);
   const [review, setReview] = useState();
 
-  const [doctor, setDoctor] = useState({
-    name: 'Dr. Saima Riaz',
-    specialization: 'Heart Surgeon',
-    avatar: require('../assets/avatar2.jpg'),
-    price: 'Rs. 1000/-',
-    startTime: '10 AM',
-    endTime: '4 PM',
-    days: 'Mon - Fri',
-  });
+  const {user, backendUrl, token} = useContext(AuthContext);
 
-  const postReview = () => {
-    setReview({userID: user.identifier, ratings: rating, comments: comments});
+  const appointment = route.params?.appointment;
+
+  // const [doctor, setDoctor] = useState({
+  //   name: 'Dr. Saima Riaz',
+  //   specialization: 'Heart Surgeon',
+  //   avatar: require('../assets/avatar2.jpg'),
+  //   price: 'Rs. 1000/-',
+  //   startTime: '10 AM',
+  //   endTime: '4 PM',
+  //   days: 'Mon - Fri',
+  // });
+
+  const postReview = async () => {
+    // setReview({userID: user.identifier, ratings: rating, comments: comments});
+
+    try {
+      // console.log("Getting Doc appointment for ",doctor.cnic)
+      // console.log("Getting Doc appointment for ",startDate, endDate)
+      console.log("url " +backendUrl + 'appointments/review/'+appointment.appointmentId, token, rating, comments )
+      if(!rating){
+        alert('Please Provide rating')
+        return;
+      }else if(!comments){
+        alert('Please Provide comments')
+        return;
+      }
+
+      // alert("Sending request")
+
+      const response = await axios.post(backendUrl + 'appointments/review/'+appointment.appointmentId, { star: rating, comments: comments}, {
+        headers: {
+          authorization: 'Bearer '+token,
+        },
+      });
+      console.log("Got Response");
+      // console.log(response.data);
+      // const allMedicalRecords = response.data
+      alert(response.data.message)
+      
+      // setMedicalRecords(allMedicalRecords)
+      // setLoading(false)
+
+    } catch (error) {
+      console.log(error.response.data);
+    }
   };
   return (
     <SafeAreaView style={{flex: 1, padding: 10}}>
@@ -51,7 +86,7 @@ const AppointmentReviews = ({navigation}) => {
           <Avatar.Image
             style={{marginTop: 'auto', marginBottom: 'auto'}}
             size={60}
-            source={doctor.avatar}
+            source={{ uri: appointment.doc.profile? 'data:image/png;base64,'+appointment.doc.profile: DummyAvatar }}
           />
           <Card.Content>
             <Text
@@ -60,9 +95,9 @@ const AppointmentReviews = ({navigation}) => {
                 color: 'black',
                 fontWeight: 'bold',
               }}>
-              {doctor.name}
+              {appointment.doc.name}
             </Text>
-            <Text>{doctor.specialization}</Text>
+            <Text>{appointment.doc.speciality}</Text>
             <Text
               style={{
                 marginTop: 5,
@@ -71,10 +106,8 @@ const AppointmentReviews = ({navigation}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <Text>{doctor.days}</Text>
-              <Text> | </Text>
               <Text>
-                {doctor.startTime} - {doctor.endTime}
+                {appointment.doc.timeStart} - {appointment.doc.timeEnd}
               </Text>
               <Text></Text>
             </Text>
@@ -85,7 +118,7 @@ const AppointmentReviews = ({navigation}) => {
               color: 'green',
               fontWeight: '700',
             }}>
-            {doctor.price}
+            Rs. {appointment.doc.price} /-
           </Text>
         </View>
       </Card>
@@ -139,7 +172,7 @@ const AppointmentReviews = ({navigation}) => {
           marginLeft: 'auto',
           marginRight: 'auto',
         }}
-        onPress={() => postReview()}>
+        onPress={() => {postReview()}}>
         <Text
           style={{
             color: 'white',

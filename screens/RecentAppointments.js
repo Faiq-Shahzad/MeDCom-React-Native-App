@@ -238,7 +238,7 @@ export default RecentAppointments = ({navigation}) => {
             style={{
               width: '100%',
               maxHeight: '45%',
-              paddingBottom: 10,
+              paddingBottom: 60,
               padding: 2,
             }}>
             {appointmentArr.map((element, index) => {
@@ -290,19 +290,32 @@ export default RecentAppointments = ({navigation}) => {
                             {element.Record.doc.contact}
                           </Text>
                             </View>
-                          <Text
-                            style={{
-                              marginTop: 5,
-                              fontStyle: 'italic',
-                              color: 'black',
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                            }}>
-                            <Text>{new Date(element.Record.date).toLocaleDateString()}</Text>
-                            <Text> | </Text>
-                            <Text>{convertTime12h(element.Record.time)}</Text>
-                            <Text></Text>
-                          </Text>
+                            <View>
+                              <Text
+                                style={{
+                                  marginTop: 5,
+                                  fontStyle: 'italic',
+                                  color: 'black',
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                }}>
+                                {new Date(element.Record.date).toLocaleDateString()}
+                                |
+                                {convertTime12h(element.Record.time)}
+                                {/* <Text></Text> */}
+                              </Text>
+                              <Text
+                                style={{
+                                  marginTop: 5,
+                                  fontStyle: 'italic',
+                                  color: 'black',
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                }}>
+                                Status | {element.Record.status}
+                              </Text>
+
+                            </View>
                         </Card.Content>
                       </View>
                     </Card>
@@ -367,36 +380,51 @@ export default RecentAppointments = ({navigation}) => {
                             width: '100%',
                           }}>
                             <View style={{flexDirection: 'column'}}>
-                          <Text
-                            style={{
-                              fontSize: 16,
-                              color: 'black',
-                              fontWeight: '600',
-                            }}>
-                            {element.Record.doc.name}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 16,
-                              color: 'black',
-                              fontWeight: '600',
-                            }}>
-                            {element.Record.doc.contact}
-                          </Text>
+                              <Text
+                                style={{
+                                  fontSize: 16,
+                                  color: 'black',
+                                  fontWeight: '600',
+                                }}>
+                                {element.Record.doc.name}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 16,
+                                  color: 'black',
+                                  fontWeight: '600',
+                                }}>
+                                {element.Record.doc.contact}
+                              </Text>
                             </View>
-                          <Text
-                            style={{
-                              marginTop: 5,
-                              fontStyle: 'italic',
-                              color: 'black',
-                              flexDirection: 'row',
-                              justifyContent: 'space-between',
-                            }}>
-                            <Text>{new Date(element.Record.date).toLocaleDateString()}</Text>
-                            <Text> | </Text>
-                            <Text>{convertTime12h(element.Record.time)}</Text>
-                            <Text></Text>
-                          </Text>
+                            <View>
+                            <Text
+                              style={{
+                                marginTop: 5,
+                                fontStyle: 'italic',
+                                color: 'black',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                              }}>
+                              {new Date(element.Record.date).toLocaleDateString()}
+                              |
+                              {convertTime12h(element.Record.time)}
+                              {/* <Text></Text> */}
+                            </Text>
+                            <Text
+                              style={{
+                                marginTop: 5,
+                                fontStyle: 'italic',
+                                color: 'black',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                              }}>
+                              Status
+                              | 
+                              {element.Record.status}
+                            </Text>
+
+                            </View>
                         </Card.Content>
                       </View>
                     </Card>

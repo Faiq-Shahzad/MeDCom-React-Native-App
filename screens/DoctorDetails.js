@@ -12,7 +12,6 @@ import {
   Button,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import StarRating from 'react-native-star-rating';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext, AuthProvider} from '../navigation/AuthProvider';
 import axios from 'axios';
@@ -21,9 +20,11 @@ import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 import {UserContext} from '../navigation/UserProvider';
+import StarRating from 'react-native-star-rating-widget';
 
 const DoctorDetails = ({navigation}) => {
-  const { doctor } = useContext(AuthContext);
+  const { doctor, backendUrl } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
   console.log(doctor);
 
   const [doctorArr, setDoctor] = useState({
@@ -35,45 +36,69 @@ const DoctorDetails = ({navigation}) => {
     days: 'Mon - Fri',
   });
 
-  const Reviews = [
-    {
-      name: 'Ali Khan',
-      comment: 'Very Good Experience',
-      rating: '5 Stars',
-    },
-    {
-      name: 'Ali Khan',
-      comment: 'Very Good Experience',
-      rating: '5 Stars',
-    },
-    {
-      name: 'Ali Khan',
-      comment: 'Very Good Experience',
-      rating: '5 Stars',
-    },
-    {
-      name: 'Ali Khan',
-      comment: 'Very Good Experience',
-      rating: '5 Stars',
-    },
-    {
-      name: 'Ali Khan',
-      comment: 'Very Good Experience',
-      rating: '5 Stars',
-    },
-    {
-      name: 'Ali Khan',
-      comment: 'Very Good Experience',
-      rating: '5 Stars',
-    },
-    {
-      name: 'Ali Khan',
-      comment: 'Very Good Experience',
-      rating: '5 Stars',
-    },
-  ];
+  // const Reviews = [
+  //   {
+  //     name: 'Ali Khan',
+  //     comment: 'Very Good Experience',
+  //     rating: '5 Stars',
+  //   },
+  //   {
+  //     name: 'Ali Khan',
+  //     comment: 'Very Good Experience',
+  //     rating: '5 Stars',
+  //   },
+  //   {
+  //     name: 'Ali Khan',
+  //     comment: 'Very Good Experience',
+  //     rating: '5 Stars',
+  //   },
+  //   {
+  //     name: 'Ali Khan',
+  //     comment: 'Very Good Experience',
+  //     rating: '5 Stars',
+  //   },
+  //   {
+  //     name: 'Ali Khan',
+  //     comment: 'Very Good Experience',
+  //     rating: '5 Stars',
+  //   },
+  //   {
+  //     name: 'Ali Khan',
+  //     comment: 'Very Good Experience',
+  //     rating: '5 Stars',
+  //   },
+  //   {
+  //     name: 'Ali Khan',
+  //     comment: 'Very Good Experience',
+  //     rating: '5 Stars',
+  //   },
+  // ];
 
-  const [reviews, setReviews] = useState(Reviews);
+  const [reviews, setReviews] = useState([]);
+
+  const getReviews = async () => {
+    try {
+      // console.log("Getting Doc appointment for ",doctor.cnic)
+      // console.log("Getting Doc appointment for ",startDate, endDate)
+      console.log("url " +backendUrl + 'appointments/reviews/'+doctor.cnic )
+
+      const response = await axios.get(backendUrl + 'appointments/reviews/'+doctor.cnic);
+      console.log("Got Response");
+      // console.log(response.data);
+      const rev = response.data
+      
+      setReviews(rev)
+      setLoading(false);
+      
+
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  }
+
+  useEffect(()=>{
+    getReviews();
+  },[])
 
   return (
     <SafeAreaView
@@ -163,37 +188,86 @@ const DoctorDetails = ({navigation}) => {
             </Text>
           </View>
 
-          <ScrollView style={{height:'75%', marginBottom:10, borderRadius:10, padding:5, backgroundColor:'white'}}>
-            {reviews.map(item => {
+          {!loading && (<ScrollView style={{maxHeight:'75%', marginBottom:10, borderRadius:10, padding:5, backgroundColor:'white'}}>
+            {reviews.map((item, index) => {
               return (
-                <Card
+                <View
                   style={{
-                    padding: 0,
+                    // padding: 0,
+                    marginHorizontal: 15,
+                    paddingTop: index>0?15:8,
                     marginBottom: 8,
+                    borderTopColor: 'lightgray',
+                    borderTopWidth: index>0?1:0,
                   }}>
-                  <Card.Content>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        color: 'black',
-                        fontWeight: '600',
-                      }}>
-                      {item.name}
-                    </Text>
-                    <Text>{item.comment}</Text>
-                    <Text
-                      style={{
-                        fontSize: 15,
-                        color: 'black',
-                        fontWeight: '700',
-                      }}>
-                      {item.rating}
-                    </Text>
-                  </Card.Content>
-                </Card>
+                  <View
+                    style={{
+                      padding: 5,
+                      
+                      flexDirection: 'row',
+                      // justifyContent: 'space-around',
+                      marginBottom: 5,
+                  }}>
+                    <Avatar.Image
+                      style={{marginTop: 'auto', marginBottom: 'auto', marginHorizontal: 10,}}
+                      size={45}
+                      
+                      // source={require('../assets/avatar.jpg')}
+                      source={{ uri: item.Record.profile? 'data:image/png;base64,'+item.Record.profile: DummyAvatar }}
+                    />
+                    <View style={{
+                      // borderColor: 'red',
+                      // borderWidth: 2,
+                      padding: 0,
+                      width: '80%',
+                    }}>
+                      <View
+                        style={{
+                          width: '100%',
+                          flexDirection: 'row',
+                          // borderColor: 'red',
+                          // borderWidth: 2,
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            color: 'black',
+                            fontWeight: '600',
+                            maxWidth: '60%',
+                          }}>
+                          {item.Record.name}
+                        </Text>
+                        <View
+                        style={{
+                          marginLeft: 'auto',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                          <MaterialCommunityIcons
+                            name="calendar"
+                            size={20}
+                            color="lightgray"
+                            style={{fontWeight: 'bold', marginRight: 2}}
+                          />
+                          <Text>{new Date(item.Record.date).toLocaleDateString()}</Text>
+                        </View>
+                      </View>
+                      <StarRating
+                        rating={item.Record.rating}
+                        starSize={25}
+                        onChange={()=>{}}
+                        style={{padding: 2}}
+                      />
+                      <Text>{item.Record.comments}</Text>
+                      
+                      
+                    </View>
+                  </View>
+                </View>
               );
             })}
-          </ScrollView>
+          </ScrollView>)}
           <TouchableOpacity
             style={{
               backgroundColor: '#555DF2',

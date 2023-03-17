@@ -21,18 +21,35 @@ import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 
-const Doctors = ({navigation}) => {
-  const {doctor, setDoctor, backendUrl} = useContext(AuthContext);
+const Doctors = ({navigation, route}) => {
+  const {doctor, setDoctor, backendUrl, selectedCat, setSelectedCat} = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [allDocs, setAllDocs] = useState([]);
   const [popular, setPopular] = useState([]);
   const [searchText, setSearchText] = useState('');
+
+  // const searchCategory = route.params?.searchCategory;
+  // const [cat, setCat] = useState(searchCategory);
   
   
   const getDoc = async () => {
     try {
       console.log("Getting Docs ",)
       const response = await axios.post(backendUrl + 'doctors/search/msp/org2.department1');
+      // console.log(response.data);
+      // console.log(response.data);
+      setPopular(response.data);
+      setAllDocs(response.data)
+      setLoading(false);
+    } catch (error) {
+      console.log(error.response.data);
+      logout()
+    }
+  }
+  const getDocByCat = async (cat) => {
+    try {
+      console.log("Getting Docs by cat", cat)
+      const response = await axios.post(backendUrl + 'doctors/search/speciality/'+cat.title);
       // console.log(response.data);
       // console.log(response.data);
       setPopular(response.data);
@@ -159,9 +176,13 @@ const Doctors = ({navigation}) => {
 
 
   useEffect(() => {
-    getDoc();
+    if(!selectedCat){
+      getDoc();
+    }else{
+      getDocByCat(selectedCat);
+    }
     
-  },[]);
+  },[selectedCat]);
 
   const renderItem = ({item}) => (
     <Card
@@ -273,6 +294,8 @@ const Doctors = ({navigation}) => {
               padding: 5,
               borderRadius: 5,
               width: '20%',
+              alignItems: 'center',
+              justifyContent: 'center',
               marginLeft: 'auto',
               marginRight: 'auto',
             }} onPress={() => filterByName(searchText)}>
@@ -286,6 +309,76 @@ const Doctors = ({navigation}) => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {selectedCat && 
+
+        <Card
+          style={{
+            margin: 10,
+            padding: 10,
+            marginBottom: 15,
+            borderRadius: 10,
+          }}
+          // onPress={() => doctorDetails(item)}
+          >
+          <View
+            style={{
+              padding: 1,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Avatar.Image size={30} source={selectedCat.avatar} />
+            {/* <Avatar.Image
+              style={{marginTop: 'auto', marginBottom: 'auto'}}
+              size={60}
+              // source={item.avatar}
+              source={{ uri: item.Record.profile? 'data:image/png;base64,'+item.Record.profile: DummyAvatar }}
+            /> */}
+            <Card.Content style={{ alignItems: 'center', justifyContent: 'center'}}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: 'black',
+                  fontWeight: 'bold',
+                }}>
+                {selectedCat.title}
+              </Text>
+            </Card.Content>
+            
+          
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#f74545',
+              padding: 5,
+              borderRadius: 5,
+              width: '10%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginLeft: 'auto',
+              marginRight: 5,
+            }} onPress={() => {setSelectedCat(null)}}>
+            {/* <Text
+              style={{
+                color: 'white',
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}>
+              Get All
+            </Text> */}
+            <MaterialCommunityIcons
+              name="close"
+              size={20}
+              color="white"
+              style={{fontWeight: 'bold'}}
+            />
+          </TouchableOpacity>
+          </View>
+        </Card>
+        
+          
+      }
 
       <View
         style={{

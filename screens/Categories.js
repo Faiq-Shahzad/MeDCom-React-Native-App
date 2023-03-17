@@ -20,6 +20,9 @@ import axios from 'axios';
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 
 const Categories = ({navigation}) => {
+
+  const {setSelectedCat} = useContext(AuthContext);
+
   const Categories = [
     {
       key: 'a',
@@ -86,7 +89,12 @@ const Categories = ({navigation}) => {
         margin: 13,
         borderRadius: 10,
       }}
-      onPress={() => setCategories()}>
+      onPress={() =>
+        {
+        setSelectedCat({title: item.title, avatar: item.avatar})
+        navigation.navigate('Doctors')
+        }
+      }>
       <Card.Content style={{alignItems: 'center'}}>
         <Avatar.Image size={55} source={item.avatar} />
         <Title

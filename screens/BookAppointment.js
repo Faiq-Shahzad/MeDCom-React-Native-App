@@ -234,8 +234,9 @@ const BookAppointment = ({navigation}) => {
       });
       // console.log(response.data);
       console.log(response.data);
+      const allApp = response.data.filter( el => el.Record.status == "pending" || el.Record.status == "approved" );
       const timingArray = []
-      response.data.forEach(element => {
+      allApp.forEach(element => {
         timingArray.push(element.Record.time)
       });
       console.log(timingArray)

@@ -1,19 +1,46 @@
 import {View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
+import { AuthContext } from '../navigation/AuthProvider';
+import axios from 'axios';
 
 const ChangePassword = ({navigation}) => {
+  const {backendUrl, token,} = useContext(AuthContext);
   const [oldPass, setOldPass] = useState();
   const [newPass, setNewPass] = useState();
   const [cnfrmPass, setCnfrmPass] = useState();
 
-  const changePass = () =>{
+  const changePass = async () =>{
     if (newPass == cnfrmPass){
-      Alert.alert('Success', 'Password Changed Successfully!', [
-        {text: 'OK', onPress: () => navigation.navigate('Menu')},
-      ]);
+
+      try {
+        // console.log("Getting Profile ", token)
+        const response = await axios.post(backendUrl + 'auth/changePassword', {old_password: oldPass, new_password: newPass}, {
+          headers: {
+            authorization: 'Bearer '+token,
+          },
+        });
+        console.log(response.data);
+        if(response.data.message){
+          Alert.alert('Failed', response.data.message, [
+            {text: 'OK'},
+          ]);
+        }else{
+          Alert.alert('Success', 'Password Changed Successfully!', [
+            {text: 'OK', onPress: () => navigation.navigate('Menu')},
+          ]);
+
+        }
+      } catch (error) {
+        console.log(error)
+        console.log(error.response.data)
+        Alert.alert('Failed', error.response.data.message, [
+          {text: 'OK'},
+        ]);
+      }
+
     } else{
-      Alert.alert('Failed', 'Wrong Input!', [
+      Alert.alert('Failed', 'New password doesnot match', [
         {text: 'OK'},
       ]);
     }

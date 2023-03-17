@@ -14,6 +14,7 @@ export const AuthProvider = ({children}) =>{
     const [token, setToken] = useState(null);
     const [doctor, setDoctor] = useState(null);
     const [appointment, setAppointment] = useState(null);
+    const [selectedCat, setSelectedCat] = useState(null);
     const DummyAvatar = "https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a"
 
     return (
@@ -29,6 +30,7 @@ export const AuthProvider = ({children}) =>{
                 token,
                 setToken,
                 backendUrl,
+                selectedCat, setSelectedCat,
                 login: async (cnic, password) =>{
                     try{
                         // await auth().signInWithEmailAndPassword(email, password);

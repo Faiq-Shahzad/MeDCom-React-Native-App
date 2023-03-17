@@ -77,24 +77,60 @@ export default function Profile({navigation, route}) {
 
   const handleProfileUpdate = async () => {
     setDisabled(true);
-    let imgUrl = details.userImg;
-    await firestore()
-      .collection('users')
-      .doc(user.uid)
-      .update({
-        fname: details.fname,
-        lname: details.lname,
-        email: details.email,
-        phone: details.phone,
-        gender: details.gender,
-        dob: details.dob,
-        createdAt: details.createdAt,
-        userImg: imgUrl,
-      })
-      .then(() => {
-        console.log('User Updated');
-        Alert.alert('Profile', 'Your Profile Updated Successfully.');
+    console.log("Details ",details)
+    let newObj = {...details}
+    delete newObj.profile
+    delete newObj.authorizedRequesters
+    delete newObj.pendingRequesters
+    delete newObj.owner
+    delete newObj.docType
+
+    console.log({...newObj})
+    console.log(backendUrl + 'patients/update')
+    try{
+      // axios.patch(backendUrl + 'patients/update',{ name: newObj.name}, {
+      //   headers: {
+      //     authorization: 'Bearer '+token,
+      //   },
+      // })
+      const response = await axios.patch(backendUrl + 'patients/update', {
+        name: newObj.name,
+        email:  newObj.email,
+        contact:  newObj.contact,
+        bloodGroup:  newObj.bloodGroup,
+        nextOfKin:  newObj.nextOfKin,
+        emergencyContact:  newObj.emergencyContact
+      }, {
+        headers: {
+          authorization: 'Bearer '+token,
+        },
       });
+
+      alert(response.data.message)
+
+    }catch(e){
+      console.log(e)
+      alert(e)
+      
+    }
+    // let imgUrl = details.userImg;
+    // await firestore()
+    //   .collection('users')
+    //   .doc(user.uid)
+    //   .update({
+    //     fname: details.fname,
+    //     lname: details.lname,
+    //     email: details.email,
+    //     phone: details.phone,
+    //     gender: details.gender,
+    //     dob: details.dob,
+    //     createdAt: details.createdAt,
+    //     userImg: imgUrl,
+    //   })
+    //   .then(() => {
+    //     console.log('User Updated');
+    //     Alert.alert('Profile', 'Your Profile Updated Successfully.');
+    //   });
   };
 
   const logoutUser = () => {

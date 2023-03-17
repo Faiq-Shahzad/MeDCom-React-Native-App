@@ -8,7 +8,9 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
+import { getProfileData } from 'react-native-calendars/src/Profiler';
 import {Card, Title, Paragraph} from 'react-native-paper';
+import StarRating from 'react-native-star-rating-widget';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { AuthContext } from '../navigation/AuthProvider';
@@ -22,6 +24,7 @@ function HandleAppointment({route, navigation}) {
 
   const [loading, setLoading] = useState(true);
   const [medicalRecords, setMedicalRecords] = useState([]);
+  const [review, setReview] = useState();
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -46,28 +49,50 @@ function HandleAppointment({route, navigation}) {
       const allMedicalRecords = response.data
       
       setMedicalRecords(allMedicalRecords)
-      setLoading(false)
+      
 
     } catch (error) {
       console.log(error.response.data);
     }
   }
 
+  const getReview = async () => {
+    try {
+      // console.log("Getting Doc appointment for ",doctor.cnic)
+      // console.log("Getting Doc appointment for ",startDate, endDate)
+      console.log("url " +backendUrl + 'appointments/review/RID-'+appointment.Key )
+
+      const response = await axios.get(backendUrl + 'appointments/review/RID-'+appointment.Key);
+      console.log("Got Response");
+      console.log("Rev", response.data);
+      const rev = response.data
+      if(rev.message){
+        setReview(null)
+      }else{
+        setReview(rev)
+
+      }
+      
+
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  }
+
+
+
+  const getData = async () => {
+    await getReview()
+    await getMedicalRecords()
+    setLoading(false)
+  }
+
   useEffect(()=>{
-    getMedicalRecords()
+    getData()
+    
   },[])
 
-  // const [medicalRecord, setMedicalRecords] = useState(
-  //   appointment.medicalRecord,
-  // );
 
-  // const [details, setDetails] = useState({
-  //   name: 'Muhammad Ahmed',
-  //   date: '28-06-2022',
-  //   time: '13:00',
-  //   fees: '2500',
-  //   status: 'in-progress',
-  // });
   const convertTime12h = (time) => {
     try{
       let intTime = parseInt(time)
@@ -106,39 +131,7 @@ function HandleAppointment({route, navigation}) {
   });
 
   return (
-    // <View style={{flex: 1}}>
-    // <ScrollView style={{flex: 1,}}>
-
-    // <View style={{flex: 1, justifyContent:'center', alignItems:'center', paddingBottom:5, marginBottom:5}}>
-    //   <Card style={{width:"80%", marginTop:20, alignItems:"center", marginBottom:10}}>
-    //     <Image style={{width: 100, height: 100, alignSelf:'center', borderRadius:100, marginTop:10}}
-    //           source={{ uri: appointment.doc.imgUrl}}/>
-    //     <Card.Content style={{alignItems:"center"}}>
-    //       <Title style={{fontSize:20, fontWeight:"bold"}}>{appointment.name}</Title>
-    //       <View style={{flexDirection:"row", justifyContent:"space-evenly", width:"100%", marginTop:5}}>
-    //         <View>
-    //             <Paragraph style={{fontWeight:"bold"}}>Appointment Date</Paragraph>
-    //             <Paragraph>{(new Date(appointment.date.seconds*1000)).toLocaleDateString()}</Paragraph>
-    //         </View>
-    //         <Paragraph style={{fontSize:25, marginTop:16}}>|</Paragraph>
-    //         <View>
-    //             <Paragraph style={{fontWeight:"bold"}}>Time</Paragraph>
-    //             <Paragraph>{appointment.time}</Paragraph>
-    //         </View>
-    //         <Paragraph style={{fontSize:25, marginTop:16}}>|</Paragraph>
-    //         <View>
-    //             <Paragraph style={{fontWeight:"bold"}}>Fee</Paragraph>
-    //             <Paragraph>{appointment.fee}</Paragraph>
-    //         </View>
-    //       </View>
-    //     </Card.Content>
-    //   </Card>
-    //   {console.log(appointment)}
-    //   <Prescription id={appointment.id} status={appointment.status} medicalRecord={appointment.medicalRecord} />
-
-    // </View>
-    // </ScrollView>
-    // </View>
+    
 
     <View style={{flex: 1}}>
       <ScrollView style={{flex: 1}}>
@@ -279,13 +272,8 @@ function HandleAppointment({route, navigation}) {
   
             )}
           )}
-          </View>)
 
-
-          }
-          
-
-          <TouchableOpacity
+          {!review ? (<TouchableOpacity
             style={{
               marginTop: 20,
               margin: 10,
@@ -299,7 +287,7 @@ function HandleAppointment({route, navigation}) {
               flexDirection: 'row',
               alignItems: 'center',
             }}
-            onPress={() => navigation.navigate('Reviews')}>
+            onPress={() => navigation.navigate('Reviews', { appointment: appointment.Record})}>
             <Icon
               name="rate-review"
               size={20}
@@ -308,7 +296,47 @@ function HandleAppointment({route, navigation}) {
             <Text style={{fontSize: 16, fontWeight: 'bold', padding: 5}}>
               Write a Review
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity>)
+          :(
+            <Card
+                  style={{
+                    marginTop: 20,
+                    padding: 0,
+                    marginBottom: 8,
+                  }}>
+                  <Card.Content>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        color: 'black',
+                        fontWeight: '600',
+                      }}>
+                      Review
+                    </Text>
+                    {/* <Text
+                      style={{
+                        fontSize: 15,
+                        color: 'black',
+                        fontWeight: '700',
+                      }}>
+                      {review.rating}
+                    </Text> */}
+                    <StarRating
+                      rating={review.rating}
+                      onChange={()=>{}}
+                      style={{backgroundColor: 'white', padding: 5, borderRadius: 10}}
+                    />
+                    <Text>{review.comments}</Text>
+                  </Card.Content>
+                </Card>
+          )}
+          </View>)
+
+
+          }
+          
+
+          
         </View>
       </ScrollView>
     </View>

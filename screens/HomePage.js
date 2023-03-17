@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 
 const HomePage = ({navigation}) => {
-  const {doctor, setDoctor, backendUrl, logout} = useContext(AuthContext);
+  const {doctor, setDoctor, backendUrl, logout, setSelectedCat } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [PopularDoctors, SetPopularDoctors] = useState([]);
 
@@ -254,7 +254,13 @@ const HomePage = ({navigation}) => {
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             {categories.map((element, index) => {
               return (
-                <Card style={{width: '32%', alignItems: 'center'}}>
+                <Card style={{width: '32%', alignItems: 'center'}}
+                  onPress={() =>
+                    {
+                    setSelectedCat({title: element.title, avatar: element.avatar})
+                    navigation.navigate('Doctors')
+                    }
+                  }>
                   <Card.Content style={{alignItems: 'center'}}>
                     <Avatar.Image size={45} source={element.avatar} />
                     <Title
@@ -300,6 +306,12 @@ const HomePage = ({navigation}) => {
                   style={{
                     padding: 5,
                     marginBottom: 10,
+                  }}
+                  onPress={()=>{
+                    setDoctor(item.Record);
+                    // setDoctorData(element);
+                    // console.log(element.Record);
+                    navigation.navigate('Doctor Details');
                   }}>
                   <View
                     style={{
