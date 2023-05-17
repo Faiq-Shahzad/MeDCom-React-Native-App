@@ -13,6 +13,7 @@ import ChangePassword from '../screens/ChangePassword.js';
 import AppointmentReviews from '../screens/AppointmentReviews.js';
 import Appointments from '../screens/Appointments.js';
 import AppointmentTabNavigation from './AppointmentTabNavigation.js';
+import HandleLabAppointment from '../components/HandleLabAppointment.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,7 @@ const AppStack = () => {
         }}
       />
       <Stack.Screen name="Handle Appointment" component={HandleAppointments} />
+      <Stack.Screen name="Handle Lab Appointment" component={HandleLabAppointment} />
       <Stack.Screen
         name="Doctor Details"
         component={DoctorDetails}

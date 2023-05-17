@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { AuthContext } from '../navigation/AuthProvider';
 import Prescription from './prescription';
 
-function HandleAppointment({route, navigation}) {
+function HandleLabAppointment({route, navigation}) {
 
   const {backendUrl, token} = useContext(AuthContext);
 
@@ -35,15 +35,14 @@ function HandleAppointment({route, navigation}) {
 
   const getMedicalRecords = async () => {
     try {
-      console.log("url " +backendUrl + 'patients/medicalrecordByAppointment/'+appointment.Key, token )
+      console.log("url " +backendUrl + 'patients/labrecordByAppointment/'+appointment.Key, token )
 
-      const response = await axios.get(backendUrl + 'patients/medicalrecordByAppointment/'+appointment.Key, {
+      const response = await axios.get(backendUrl + 'patients/labrecordByAppointment/'+appointment.Key, {
         headers: {
           authorization: 'Bearer '+token,
         },
       });
       console.log("Got Response");
-      // console.log(response.data);
       const allMedicalRecords = response.data
       
       setMedicalRecords(allMedicalRecords)
@@ -56,8 +55,6 @@ function HandleAppointment({route, navigation}) {
 
   const getReview = async () => {
     try {
-      // console.log("Getting Doc appointment for ",doctor.cnic)
-      // console.log("Getting Doc appointment for ",startDate, endDate)
       console.log("url " +backendUrl + 'appointments/review/RID-'+appointment.Key )
 
       const response = await axios.get(backendUrl + 'appointments/review/RID-'+appointment.Key);
@@ -155,11 +152,11 @@ function HandleAppointment({route, navigation}) {
                 marginTop: 10,
               }}
               // source={require('../assets/avatar.jpg')}
-              source={{ uri: appointment.Record.doc.profile? 'data:image/png;base64,'+appointment.Record.doc.profile: DummyAvatar }}
+              source={{ uri: appointment.Record.op.profile? 'data:image/png;base64,'+appointment.Record.op.profile: DummyAvatar }}
             />
             <Card.Content style={{alignItems: 'center'}}>
               <Title style={{fontSize: 20, fontWeight: 'bold'}}>
-                {appointment.Record.doc.name}
+                {appointment.Record.op.name}
               </Title>
               <View
                 style={{
@@ -180,10 +177,10 @@ function HandleAppointment({route, navigation}) {
                   <Paragraph>{convertTime12h(appointment.Record.time)}</Paragraph>
                 </View>
                 <Paragraph style={{fontSize: 25, marginTop: 16}}>|</Paragraph>
-                <View>
+                {/* <View>
                   <Paragraph style={{fontWeight: 'bold'}}>Fee</Paragraph>
-                  <Paragraph>{appointment.Record.doc.price}</Paragraph>
-                </View>
+                  <Paragraph>{appointment.Record.op.price}</Paragraph>
+                </View> */}
               </View>
             </Card.Content>
           </Card>
@@ -217,12 +214,8 @@ function HandleAppointment({route, navigation}) {
             //  onPress={()=> navigation.navigate("Make Appointment", {doctor:element})}
              >
                 <View style={{width:"100%", justifyContent:'center'}}>
-                {/* <View style={{width:"85%", borderRadius:20, backgroundColor:"red", justifyContent:'center', padding:10}}> */}
                 <View style={{flexDirection:'row'}}>
-                    {/* <View style={{}}>
-                      <Image style={{width: 100, height: 100, alignSelf:'center', borderRadius:100, marginTop:10}}
-                        source={{ uri: `data:image/png;base64,${element.profile}`}}/>
-                    </View> */}
+
                     <View style={{paddingLeft:10, paddingRight: 10}}>
                       <View style={{flexDirection:'row'}}>
                         <Text style={{fontSize:17, fontWeight:"bold", color:"blue", marginVertical:5}}>Diagnosis: </Text>
@@ -252,16 +245,7 @@ function HandleAppointment({route, navigation}) {
 
                       
                     </View>
-                    {/* <View style={{paddingHorizontal: 10}}>
-                      
-                      <TouchableOpacity style={{backgroundColor: 'red', padding: 10, borderRadius: 100, marginBottom: 30}} onPress={()=> rejectRequest(element.cnic, false)}>
-                        <Text style={{fontSize:15, color:"white", marginVertical:2}}>Reject</Text>
-                      </TouchableOpacity>
 
-                      <TouchableOpacity style={{backgroundColor: 'blue', padding: 10, borderRadius: 100}} onPress={()=> authorizeRequest(element.cnic)}>
-                        <Text style={{fontSize:15, color:"white", marginVertical:2}}>Accept</Text>
-                      </TouchableOpacity>
-                    </View> */}
                   </View>
                 </View>
             </TouchableOpacity>
@@ -309,14 +293,6 @@ function HandleAppointment({route, navigation}) {
                       }}>
                       Review
                     </Text>
-                    {/* <Text
-                      style={{
-                        fontSize: 15,
-                        color: 'black',
-                        fontWeight: '700',
-                      }}>
-                      {review.rating}
-                    </Text> */}
                     <StarRating
                       rating={review.rating}
                       onChange={()=>{}}
@@ -327,16 +303,12 @@ function HandleAppointment({route, navigation}) {
                 </Card>
           )}
           </View>)
-
-
           }
-          
 
-          
         </View>
       </ScrollView>
     </View>
   );
 }
 
-export default HandleAppointment;
+export default HandleLabAppointment;

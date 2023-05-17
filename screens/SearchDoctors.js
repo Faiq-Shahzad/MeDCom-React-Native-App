@@ -50,26 +50,20 @@ export default SearchDoctors = ({navigation}) => {
 
   const [showQRCode, setShowQRCode] = useState(false);
   const [QRCode, setQRCode] = useState(null);
-  
-
 
   const getQrCode = async () => {
     try {
-      console.log('url ', backendUrl + 'patients/qrcode' );
-      const response = await axios.get(
-        backendUrl + 'patients/qrcode',
-        {
-          headers: {
-            authorization: 'Bearer '+token,
-          },
+      console.log('url ', backendUrl + 'patients/qrcode');
+      const response = await axios.get(backendUrl + 'patients/qrcode', {
+        headers: {
+          authorization: 'Bearer ' + token,
         },
-      );
-      console.log(response.data)
-      setQRCode(response.data)
+      });
+      console.log(response.data);
+      setQRCode(response.data);
     } catch (error) {
       console.log(error);
       console.log(error.response.data);
-
     }
   };
 
@@ -79,7 +73,10 @@ export default SearchDoctors = ({navigation}) => {
       const response = await axios.post(
         backendUrl + 'doctors/search/cnic/' + cnic,
       );
-      // console.log(response.data[0])
+      const response2 = await axios.post(
+        backendUrl + 'doctors/search/cnic/' + cnic,
+      );
+      console.log(response.data[0])
       return response.data[0].Record;
     } catch (error) {
       console.log(error);
@@ -129,12 +126,56 @@ export default SearchDoctors = ({navigation}) => {
       );
       console.log(response);
       await getDoc();
+      await getOp();
       // return response.data[0].Record;
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
   };
+
+  const getOp = async()=>{
+    setLoading(true);
+    const tempList = [];
+    const tempList2 = [];
+
+    try {
+      console.log('sending request ..');
+      const response = await axios.get(backendUrl + 'patients/view', {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(response.data);
+      const userData = response.data[0].Value;
+      console.log('pending', userData.pendingRequesters);
+      console.log('approved', userData.authorizedRequesters);
+
+      for (const cnic of userData.pendingRequesters) {
+        const docData = await getDocDetails(cnic);
+        // console.log('docData', docData);
+        tempList.push(docData);
+      }
+
+      for (const cnic of userData.authorizedRequesters) {
+        const docData = await getDocDetails(cnic);
+        // console.log('docData', docData);
+        tempList2.push(docData);
+      }
+
+      // console.log(tempList)
+      setDocList(tempList);
+      setAuthDocList(tempList2);
+      setLoading(false);
+
+      // console.log("DOC", docList)
+      // setLoading(false)
+    } catch (error) {
+      console.log(error);
+
+      console.log(error.response.data);
+    }
+  }
 
   const getDoc = async () => {
     setLoading(true);
@@ -150,8 +191,8 @@ export default SearchDoctors = ({navigation}) => {
       });
       // console.log(response.data);
       const userData = response.data[0].Value;
-      console.log("pending", userData.pendingRequesters);
-      console.log("approved", userData.authorizedRequesters);
+      console.log('pending', userData.pendingRequesters);
+      console.log('approved', userData.authorizedRequesters);
 
       for (const cnic of userData.pendingRequesters) {
         const docData = await getDocDetails(cnic);
@@ -182,7 +223,7 @@ export default SearchDoctors = ({navigation}) => {
   useEffect(() => {
     getQrCode();
     getDoc();
-
+    getOp();
   }, []);
 
   if (loading) {
@@ -192,63 +233,61 @@ export default SearchDoctors = ({navigation}) => {
         <Text> Loading </Text>
       </View>
     );
-  } else 
-    if(showQRCode){ return(
-      <Card
-              style={{
-                padding: 10,
-                marginTop: 'auto',
-                marginBottom: 'auto',
-                borderRadius: 10,
-                width: '95%',
-              }}>
-              <View
-                style={{
-                  padding: 5,
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                  marginBottom: 5,
-                }}>
-                
-                <Image style={{width: 350, height: 350, marginBottom:10, alignSelf:'center'}}
-                source={{ uri: QRCode.qrcode }}/>
-                <Text style={{alignSelf: 'center'}}>Cnic: {QRCode.username}</Text>
-{/*                 
-                <Avatar.Image
-                  style={{marginTop: 'auto', marginBottom: 'auto'}}
-                  size={350}
-                  source={{uri: QRCode.qrcode}} 
-                />
-                  */}
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: '#555DF2',
-                    padding: 5,
-                    borderRadius: 5,
-                    width: '40%',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                  onPress={() => {setShowQRCode(false)}}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontWeight: 'bold',
-                      textAlign: 'center',
-                    }}>
-                    Back
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </Card>
-    )}
-    else {
+  } else if (showQRCode) {
     return (
-
-      
+      <Card
+        style={{
+          padding: 10,
+          marginTop: 'auto',
+          marginBottom: 'auto',
+          borderRadius: 10,
+          width: '95%',
+        }}>
+        <View
+          style={{
+            padding: 5,
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+            marginBottom: 5,
+          }}>
+          <Image
+            style={{
+              width: 350,
+              height: 350,
+              marginBottom: 10,
+              alignSelf: 'center',
+            }}
+            source={{uri: QRCode.qrcode}}
+          />
+          <Text style={{alignSelf: 'center'}}>Cnic: {QRCode.username}</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#555DF2',
+              padding: 5,
+              borderRadius: 5,
+              width: '40%',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+            onPress={() => {
+              setShowQRCode(false);
+            }}>
+            <Text
+              style={{
+                color: 'white',
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}>
+              Back
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Card>
+    );
+  } else {
+    return (
       <View style={{flex: 1, alignItems: 'center'}}>
         <View style={{flexDirection: 'row', width: '85%', marginTop: 10}}>
           <MaterialCommunityIcons
@@ -379,7 +418,6 @@ export default SearchDoctors = ({navigation}) => {
                   }}>
                   Rs. {item.price}
                 </Text>
-                
               </View>
               <View style={{flexDirection: 'row'}}>
                 <TouchableOpacity
@@ -481,32 +519,31 @@ export default SearchDoctors = ({navigation}) => {
                     </Text>
                     <Text></Text>
                   </Text>
-                  <View style={{marginTop: 5, flexDirection: 'row',}}>
-                      <MaterialCommunityIcons
-                          name="phone"
-                          size={15}
-                          color="green"
-                        />
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          color: 'green',
-                          fontWeight: '400',
-                          marginLeft: 5,
-                        }}>
-                        {item.contact}
-                      </Text>
+                  <View style={{marginTop: 5, flexDirection: 'row'}}>
+                    <MaterialCommunityIcons
+                      name="phone"
+                      size={15}
+                      color="green"
+                    />
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        color: 'green',
+                        fontWeight: '400',
+                        marginLeft: 5,
+                      }}>
+                      {item.contact}
+                    </Text>
                   </View>
                 </Card.Content>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: 'green',
-                      fontWeight: '700',
-                    }}>
-                    Rs. {item.price}
-                  </Text>
-              
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: 'green',
+                    fontWeight: '700',
+                  }}>
+                  Rs. {item.price}
+                </Text>
               </View>
               <TouchableOpacity
                 style={{
