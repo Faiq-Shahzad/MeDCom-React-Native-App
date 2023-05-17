@@ -10,6 +10,7 @@ import {
   ScrollView,
   TextInput,
   Button,
+  ImageBackground,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import StarRating from 'react-native-star-rating';
@@ -22,24 +23,26 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {white} from 'react-native-paper/lib/typescript/styles/colors';
 
 const HomePage = ({navigation}) => {
-  const {doctor, setDoctor, backendUrl, logout, setSelectedCat } = useContext(AuthContext);
+  const {doctor, setDoctor, backendUrl, logout, setSelectedCat} =
+    useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [PopularDoctors, SetPopularDoctors] = useState([]);
 
-
   const getDoc = async () => {
     try {
-      console.log("Getting Docs ",)
-      const response = await axios.post(backendUrl + 'doctors/search/msp/org2.department1');
+      console.log('Getting Docs ');
+      const response = await axios.post(
+        backendUrl + 'doctors/search/msp/org2.department1',
+      );
       // console.log(response.data);
       console.log(response.data);
       SetPopularDoctors(response.data);
       setLoading(false);
     } catch (error) {
       console.log(error.response.data);
-      logout()
+      logout();
     }
-  }
+  };
 
   const Categories = [
     {
@@ -119,260 +122,314 @@ const HomePage = ({navigation}) => {
 
   useEffect(() => {
     getDoc();
-    
-  },[]);
+  }, []);
 
-  if(loading){
+  if (loading) {
     return (
       <View>
         <Text> Loading </Text>
       </View>
     );
-  }else{
-
-  
-
-  return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        width: '100%',
-        backgroundColor: '#555DF2',
-        marginTop: 0,
-      }}>
-      <View style={{flexDirection:'row', width:'100%'}}>
-        
-        <TouchableOpacity
-          style={{
-            marginTop: 15,
-            marginLeft: '5%',
-            marginRight: '5%',
-            flexDirection: 'row',
-          }}
-          onPress={() => viewNotifications()}>
-          <Icon
-            name="notifications-none"
-            size={25}
-            color="white"
-            style={{fontWeight: 'bold'}}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            marginTop: 15,
-            marginLeft: '3%',
-            marginRight: 'auto',
-            flexDirection: 'row',
-          }}
-          onPress={() => navigation.navigate('Medical Access')}>
-          <MaterialCommunityIcons
-            name="folder-key-outline"
-            size={25}
-            color="white"
-            style={{fontWeight: 'bold'}}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            marginTop: 15,
-            marginLeft: 'auto',
-            marginRight: '3%',
-            flexDirection: 'row',
-          }}
-          onPress={() => logout()}>
-          <MaterialCommunityIcons
-            name="logout"
-            size={25}
-            color="white"
-            style={{fontWeight: 'bold'}}
-          />
-        </TouchableOpacity>
-      </View>
-      <View
+  } else {
+    return (
+      <SafeAreaView
         style={{
-          flexDirection: 'row',
-          marginBottom: 20,
-          marginTop: 30,
-          marginLeft: 20,
-          marginRight: 20,
-          justifyContent: 'space-between',
-        }}>
-        <Text
-          style={{
-            color: 'white',
-            fontWeight: 'bold',
-            fontSize: 30,
-            marginTop: 5,
-          }}>
-          <Text>Med</Text>
-          <Text style={{color: '#44E354'}}>Com</Text>
-        </Text>
-        <View>
-          <Text style={{color: 'white'}}>Find your desired</Text>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 23}}>
-            Doctor Right Now!
-          </Text>
-        </View>
-      </View>
-      <TextInput
-        placeholder="Search"
-        style={{
-          padding: 4,
-          backgroundColor: 'white',
-          marginBottom: 20,
-          width: '90%',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          borderRadius: 5,
-        }}></TextInput>
-
-      <View
-        style={{
-          backgroundColor: '#E6EFF9',
           flex: 1,
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
-          padding: 10,
+          width: '100%',
+          backgroundColor: '#555DF2',
+          marginTop: 0,
         }}>
-        <View>
-          <View
+        <View style={{flexDirection: 'row', width: '100%'}}>
+          <TouchableOpacity
             style={{
+              marginTop: 15,
+              marginLeft: '5%',
+              marginRight: '5%',
               flexDirection: 'row',
+            }}
+            onPress={() => viewNotifications()}>
+            <Icon
+              name="notifications-none"
+              size={25}
+              color="white"
+              style={{fontWeight: 'bold'}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              marginTop: 15,
+              marginLeft: '3%',
+              marginRight: 'auto',
+              flexDirection: 'row',
+            }}
+            onPress={() => navigation.navigate('Medical Access')}>
+            <MaterialCommunityIcons
+              name="folder-key-outline"
+              size={25}
+              color="white"
+              style={{fontWeight: 'bold'}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              marginTop: 15,
+              marginLeft: 'auto',
+              marginRight: '3%',
+              flexDirection: 'row',
+            }}
+            onPress={() => logout()}>
+            <MaterialCommunityIcons
+              name="logout"
+              size={25}
+              color="white"
+              style={{fontWeight: 'bold'}}
+            />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginBottom: 20,
+            marginTop: 30,
+            marginLeft: 20,
+            marginRight: 20,
+            justifyContent: 'space-between',
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: 30,
               marginTop: 5,
-              justifyContent: 'space-between',
-              padding: 10,
             }}>
-            <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
-              Categories
+            <Text>Med</Text>
+            <Text style={{color: '#44E354'}}>Com</Text>
+          </Text>
+          <View>
+            <Text style={{color: 'white'}}>Find your desired</Text>
+            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 23}}>
+              Doctor Right Now!
             </Text>
-            <Text
-              style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}}
-              onPress={() => navigation.navigate('Categories')}>
-              See all
-            </Text>
-          </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            {categories.map((element, index) => {
-              return (
-                <Card style={{width: '32%', alignItems: 'center'}}
-                  onPress={() =>
-                    {
-                    setSelectedCat({title: element.title, avatar: element.avatar})
-                    navigation.navigate('Doctors')
-                    }
-                  }>
-                  <Card.Content style={{alignItems: 'center'}}>
-                    <Avatar.Image size={45} source={element.avatar} />
-                    <Title
-                      style={{
-                        fontSize: 12,
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                      }}>
-                      {element.title}
-                    </Title>
-                  </Card.Content>
-                </Card>
-              );
-            })}
           </View>
         </View>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 5,
-              justifyContent: 'space-between',
-              padding: 10,
-            }}>
-            <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
-              Popular Doctors
-            </Text>
-            <Text
-              style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}}
-              onPress={() => navigation.navigate('Doctors')}>
-              See all
-            </Text>
-          </View>
+        <TextInput
+          placeholder="Search"
+          style={{
+            padding: 4,
+            backgroundColor: 'white',
+            marginBottom: 20,
+            width: '90%',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            borderRadius: 5,
+          }}></TextInput>
 
-          <ScrollView style={{marginBottom: 190}}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}>
-            {console.log(PopularDoctors.length)}
-            {PopularDoctors.map((item, index) => {
-              {/* console.log(item.Record); */}
-              return (
-                <Card key={index+"PD"}
-                  style={{
-                    padding: 5,
-                    marginBottom: 10,
-                  }}
-                  onPress={()=>{
-                    setDoctor(item.Record);
-                    // setDoctorData(element);
-                    // console.log(element.Record);
-                    navigation.navigate('Doctor Details');
-                  }}>
-                  <View
-                    style={{
-                      padding: 5,
-                      flexDirection: 'row',
-                      justifyContent: 'space-around',
+        <View
+          style={{
+            backgroundColor: '#E6EFF9',
+            flex: 1,
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+            padding: 10,
+          }}>
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 5,
+                justifyContent: 'space-between',
+                padding: 10,
+              }}>
+              <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
+                Categories
+              </Text>
+              <Text
+                style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}}
+                onPress={() => navigation.navigate('Categories')}>
+                See all
+              </Text>
+            </View>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              {categories.map((element, index) => {
+                return (
+                  <Card
+                    style={{width: '32%', alignItems: 'center'}}
+                    onPress={() => {
+                      setSelectedCat({
+                        title: element.title,
+                        avatar: element.avatar,
+                      });
+                      navigation.navigate('Doctors');
                     }}>
-                    <Avatar.Image
-                      style={{marginTop: 'auto', marginBottom: 'auto'}}
-                      size={60}
-                      // source={item.Record.profile}
-                      source={{ uri: item.Record.profile? 'data:image/png;base64,'+item.Record.profile: DummyAvatar }}
-                    />
-                    <Card.Content>
-                      <Text
+                    <Card.Content style={{alignItems: 'center'}}>
+                      <Avatar.Image size={45} source={element.avatar} />
+                      <Title
                         style={{
-                          fontSize: 18,
-                          color: 'black',
-                          fontWeight: '700',
-                        }}>
-                        {item.Record.name}
-                      </Text>
-                      <Text>{item.Record.speciality}</Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          color: 'green',
-                          fontWeight: '700',
-                        }}>
-                        Rs. {item.Record.price}
-                      </Text>
-                    </Card.Content>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: '#555DF2',
-                        padding: 5,
-                        borderRadius: 5,
-                        width: '25%',
-                        height: '50%',
-                        marginTop: 'auto',
-                        marginBottom: 'auto',
-                      }}
-                      onPress={() => handleBookAppointment(item)}>
-                      <Text
-                        style={{
-                          color: 'white',
+                          fontSize: 12,
                           fontWeight: 'bold',
                           textAlign: 'center',
                         }}>
-                        Book
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </Card>
-              );
-            })}
-          </ScrollView>
+                        {element.title}
+                      </Title>
+                    </Card.Content>
+                  </Card>
+                );
+              })}
+            </View>
+          </View>
+
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 5,
+                justifyContent: 'space-between',
+                padding: 10,
+              }}>
+              <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
+                Labs
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Lab Appointment')}>
+              <ImageBackground
+                style={{width: '100%', height: 90, borderRadius: 20}}
+                imageStyle={{borderRadius: 10}}
+                source={require('../assets/lab6.jpg')}>
+                <Text
+                  style={{
+                    padding: 5,
+                    fontSize: 18,
+                    color: 'black',
+                    fontWeight: '700',
+                    color: 'green',
+                    textAlign: 'right',
+                    marginTop: '8%',
+                  }}>
+                  Unveiling the UNSEEN
+                </Text>
+                <Text
+                  style={{
+                    paddingTop: 2,
+                    padding: 5,
+                    fontSize: 18,
+                    color: 'black',
+                    fontWeight: '700',
+                    color: 'black',
+                    textAlign: 'right',
+                  }}>
+                  Lab Tests revealing Hidden TRUTHS
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
+          </View>
+
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 5,
+                justifyContent: 'space-between',
+                padding: 10,
+              }}>
+              <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
+                Popular Doctors
+              </Text>
+              <Text
+                style={{fontWeight: 'bold', fontSize: 15, color: '#555DF2'}}
+                onPress={() => navigation.navigate('Doctors')}>
+                See all
+              </Text>
+            </View>
+
+            <ScrollView
+              style={{marginBottom: 190}}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}>
+              {console.log(PopularDoctors.length)}
+              {PopularDoctors.map((item, index) => {
+                {
+                  /* console.log(item.Record); */
+                }
+                return (
+                  <Card
+                    key={index + 'PD'}
+                    style={{
+                      padding: 5,
+                      marginBottom: 10,
+                    }}
+                    onPress={() => {
+                      setDoctor(item.Record);
+                      // setDoctorData(element);
+                      // console.log(element.Record);
+                      navigation.navigate('Doctor Details');
+                    }}>
+                    <View
+                      style={{
+                        padding: 5,
+                        flexDirection: 'row',
+                        justifyContent: 'space-around',
+                      }}>
+                      <Avatar.Image
+                        style={{marginTop: 'auto', marginBottom: 'auto'}}
+                        size={60}
+                        // source={item.Record.profile}
+                        source={{
+                          uri: item.Record.profile
+                            ? 'data:image/png;base64,' + item.Record.profile
+                            : DummyAvatar,
+                        }}
+                      />
+                      <Card.Content>
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            color: 'black',
+                            fontWeight: '700',
+                          }}>
+                          {item.Record.name}
+                        </Text>
+                        <Text>{item.Record.speciality}</Text>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            color: 'green',
+                            fontWeight: '700',
+                          }}>
+                          Rs. {item.Record.price}
+                        </Text>
+                      </Card.Content>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: '#555DF2',
+                          padding: 5,
+                          borderRadius: 5,
+                          width: '25%',
+                          height: '50%',
+                          marginTop: 'auto',
+                          marginBottom: 'auto',
+                        }}
+                        onPress={() => handleBookAppointment(item)}>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                          }}>
+                          Book
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </Card>
+                );
+              })}
+            </ScrollView>
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
   }
 };
 

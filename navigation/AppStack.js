@@ -6,10 +6,13 @@ import HandleAppointments from '../components/HandleAppointment';
 import PatientTabMavigation from './PatientTabNavigation.js';
 import CustomHeader from '../components/CustomHeader.js';
 import DoctorDetails from '../screens/DoctorDetails.js';
+import LabAppointment from '../screens/LabAppointment.js';
 import BookAppointment from '../screens/BookAppointment.js';
 import Faqs from '../screens/Faqs.js';
 import ChangePassword from '../screens/ChangePassword.js';
 import AppointmentReviews from '../screens/AppointmentReviews.js';
+import Appointments from '../screens/Appointments.js';
+import AppointmentTabNavigation from './AppointmentTabNavigation.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +32,7 @@ const AppStack = () => {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="Doctor Home"
         component={DoctorHome}
@@ -115,6 +119,21 @@ const AppStack = () => {
         component={SearchDoctors}
         options={{
           title: 'Medical Access',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="Lab Appointment"
+        component={LabAppointment}
+        options={{
+          title: 'Lab Appointment',
           headerStyle: {
             backgroundColor: '#555DF2',
           },

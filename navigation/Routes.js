@@ -11,39 +11,40 @@ const Routes = () => {
   const {user, setUser, setToken} = useContext(AuthContext);
   const [initializing, setInitializing] = useState(true);
 
-  const onAuthStateChanged = (user) => {
-    setUser(user);
-    if (initializing) setInitializing(false);
-  }
+  // const onAuthStateChanged = (user) => {
+  //   setUser(user);
+  //   if (initializing) setInitializing(false);
+  // }
 
-  const _retrieveData = async () => {
-    try {
-      console.log("Reading from async storage")
-      const value = await AsyncStorage.getItem('user');
-      console.log("Value Reading from async storage", value)
-      if (value !== null) {
-        // We have data!!
-        // console.log(value);
-        const data = JSON.parse(value)
-        setToken(data.user_token)
-        setUser(data.user);
-      }
-    } catch (error) {
-      // Error retrieving data
-        console.log(error);
+  // const _retrieveData = async () => {
+  //   try {
+  //     console.log("Reading from async storage")
+  //     const value = await AsyncStorage.getItem('user');
+  //     console.log("Value Reading from async storage", value)
+  //     if (value !== null) {
+  //       // We have data!!
+  //       // console.log(value);
+  //       const data = JSON.parse(value)
+  //       setToken(data.user_token)
+  //       setUser(data.user);
+  //     }
+  //   } catch (error) {
+  //     // Error retrieving data
+  //       console.log(error);
 
-    }
-  };
+  //   }
+  // };
 
 
   useEffect(() => {
-    _retrieveData()
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
+    console.log("user is ", user)
+    // _retrieveData()
+    // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    // return subscriber;
     
   }, []);
 
-  if (initializing) return null;
+  // if (initializing) return null;
 
   return(
       <NavigationContainer>

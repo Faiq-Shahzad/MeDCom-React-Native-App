@@ -22,8 +22,9 @@ import RecordScreen from '../screens/Record';
 import CustomHeader from '../components/CustomHeader';
 import Doctors from '../screens/Doctors';
 import TabStackNavigator from './TabStackNavigator';
+import Appointments from '../screens/Appointments';
 
-export default function PatientTabMavigation({navigation}) {
+export default function AppointmentTabNavigation({navigation}) {
   const [patient, setPatient] = useState('patient');
 
   const {user, logout} = useContext(AuthContext);
@@ -54,8 +55,8 @@ export default function PatientTabMavigation({navigation}) {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Home"
-        component={HomePage}
+        name="Appointments new"
+        component={Appointments}
         options={{
           headerShown: false,
           title: 'Home',
