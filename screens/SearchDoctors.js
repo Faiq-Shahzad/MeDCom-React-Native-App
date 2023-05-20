@@ -73,11 +73,17 @@ export default SearchDoctors = ({navigation}) => {
       const response = await axios.post(
         backendUrl + 'doctors/search/cnic/' + cnic,
       );
-      const response2 = await axios.post(
-        backendUrl + 'doctors/search/cnic/' + cnic,
-      );
-      console.log(response.data[0])
-      return response.data[0].Record;
+      
+      console.log(response.data[0]);
+
+      if (response.data[0]?.Record) {
+        return response.data[0].Record;
+      }else{
+        const response2 = await axios.post(
+          backendUrl + 'lab/search/cnic/' + cnic,
+        );
+        return response2.data[0].Record;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -134,7 +140,7 @@ export default SearchDoctors = ({navigation}) => {
     setLoading(false);
   };
 
-  const getOp = async()=>{
+  const getOp = async () => {
     setLoading(true);
     const tempList = [];
     const tempList2 = [];
@@ -175,7 +181,7 @@ export default SearchDoctors = ({navigation}) => {
 
       console.log(error.response.data);
     }
-  }
+  };
 
   const getDoc = async () => {
     setLoading(true);
@@ -393,31 +399,32 @@ export default SearchDoctors = ({navigation}) => {
                     }}>
                     {item.name}
                   </Text>
-                  <Text>{item.speciality}</Text>
-                  <Text
-                    style={{
-                      marginTop: 5,
-                      fontStyle: 'italic',
-                      color: 'black',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    {/* <Text>{item.days}</Text> */}
-                    {/* <Text> | </Text> */}
-                    <Text>
-                      {item.timeStart} - {item.timeEnd}
+                  <Text>{item.email}</Text>
+                  <View style={{marginTop: 5, flexDirection: 'row'}}>
+                    <MaterialCommunityIcons
+                      name="phone"
+                      size={15}
+                      color="green"
+                    />
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        color: 'green',
+                        fontWeight: '400',
+                        marginLeft: 5,
+                      }}>
+                      {item.contact}
                     </Text>
-                    <Text></Text>
-                  </Text>
+                  </View>
                 </Card.Content>
-                <Text
+                {/* <Text
                   style={{
                     fontSize: 15,
                     color: 'green',
                     fontWeight: '700',
                   }}>
                   Rs. {item.price}
-                </Text>
+                </Text> */}
               </View>
               <View style={{flexDirection: 'row'}}>
                 <TouchableOpacity
@@ -503,22 +510,7 @@ export default SearchDoctors = ({navigation}) => {
                     }}>
                     {item.name}
                   </Text>
-                  <Text>{item.speciality}</Text>
-                  <Text
-                    style={{
-                      marginTop: 5,
-                      fontStyle: 'italic',
-                      color: 'black',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    {/* <Text>{item.days}</Text>
-                    <Text> | </Text> */}
-                    <Text>
-                      {item.timeStart} - {item.timeEnd}
-                    </Text>
-                    <Text></Text>
-                  </Text>
+                  <Text>{item.email}</Text>
                   <View style={{marginTop: 5, flexDirection: 'row'}}>
                     <MaterialCommunityIcons
                       name="phone"
@@ -536,14 +528,6 @@ export default SearchDoctors = ({navigation}) => {
                     </Text>
                   </View>
                 </Card.Content>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    color: 'green',
-                    fontWeight: '700',
-                  }}>
-                  Rs. {item.price}
-                </Text>
               </View>
               <TouchableOpacity
                 style={{

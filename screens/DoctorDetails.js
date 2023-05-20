@@ -211,8 +211,6 @@ const DoctorDetails = ({navigation}) => {
                     <Avatar.Image
                       style={{marginTop: 'auto', marginBottom: 'auto', marginHorizontal: 10,}}
                       size={45}
-                      
-                      // source={require('../assets/avatar.jpg')}
                       source={{ uri: item.Record.profile? 'data:image/png;base64,'+item.Record.profile: DummyAvatar }}
                     />
                     <View style={{

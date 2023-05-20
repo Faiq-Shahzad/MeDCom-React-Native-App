@@ -17,6 +17,7 @@ import {AuthContext} from '../navigation/AuthProvider';
 import axios from 'axios';
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import CalendarPicker from 'react-native-calendar-picker';
+import StarRating from 'react-native-star-rating-widget';
 
 const LabAppointment = ({navigation}) => {
   const {user, backendUrl} = useContext(AuthContext);
@@ -26,6 +27,32 @@ const LabAppointment = ({navigation}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [date, setDate] = useState(new Date());
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getReviews = async () => {
+    try {
+      console.log(
+        'url ' + backendUrl + 'appointments/labreviewsbyquery/opMSP/org3.department',
+      );
+
+      const response = await axios.get(
+        backendUrl + 'appointments/labreviews/' + '3460173831513',
+      );
+      console.log('Got Response');
+      // console.log(response.data);
+      const rev = response.data;
+
+      setReviews(rev);
+      setLoading(false);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  useEffect(() => {
+    getReviews();
+  }, []);
 
   const getTemplateData = async () => {
     try {
@@ -82,8 +109,6 @@ const LabAppointment = ({navigation}) => {
   useEffect(() => {
     getTemplateData();
   }, []);
-
-  
 
   function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
@@ -155,11 +180,24 @@ const LabAppointment = ({navigation}) => {
 
       <View
         style={{
+          flexDirection: 'row',
+          marginTop: 5,
+          justifyContent: 'space-between',
+          padding: 10,
+        }}>
+        <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
+          Book Appointment
+        </Text>
+      </View>
+
+
+      <View
+        style={{
           flex: 1,
           backgroundColor: 'white',
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
+          borderRadius: 10,
           padding: 15,
+          paddingBottom:50
         }}>
         <View
           style={{
@@ -216,6 +254,116 @@ const LabAppointment = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          marginTop: 5,
+          justifyContent: 'space-between',
+          padding: 10,
+        }}>
+        <Text style={{fontWeight: 'bold', fontSize: 20, color: 'black'}}>
+          Reviews
+        </Text>
+      </View>
+
+      {!loading && (
+        <ScrollView
+          style={{
+            maxHeight: '75%',
+            marginBottom: 10,
+            borderRadius: 10,
+            padding: 5,
+            backgroundColor: 'white',
+          }}>
+          {reviews.map((item, index) => {
+            return (
+              <View
+                style={{
+                  // padding: 0,
+                  marginHorizontal: 15,
+                  paddingTop: index > 0 ? 15 : 8,
+                  marginBottom: 8,
+                  borderTopColor: 'lightgray',
+                  borderTopWidth: index > 0 ? 1 : 0,
+                }}>
+                <View
+                  style={{
+                    padding: 5,
+
+                    flexDirection: 'row',
+                    // justifyContent: 'space-around',
+                    marginBottom: 5,
+                  }}>
+                  <Avatar.Image
+                    style={{
+                      marginTop: 'auto',
+                      marginBottom: 'auto',
+                      marginHorizontal: 10,
+                    }}
+                    size={45}
+                    // source={require('../assets/avatar.jpg')}
+                    source={{
+                      uri: item.Record.profile
+                        ? 'data:image/png;base64,' + item.Record.profile
+                        : DummyAvatar,
+                    }}
+                  />
+                  <View
+                    style={{
+                      // borderColor: 'red',
+                      // borderWidth: 2,
+                      padding: 0,
+                      width: '80%',
+                    }}>
+                    <View
+                      style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        // borderColor: 'red',
+                        // borderWidth: 2,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          color: 'black',
+                          fontWeight: '600',
+                          maxWidth: '60%',
+                        }}>
+                        {item.Record.name}
+                      </Text>
+                      <View
+                        style={{
+                          marginLeft: 'auto',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <MaterialCommunityIcons
+                          name="calendar"
+                          size={20}
+                          color="lightgray"
+                          style={{fontWeight: 'bold', marginRight: 2}}
+                        />
+                        <Text>
+                          {new Date(item.Record.date).toLocaleDateString()}
+                        </Text>
+                      </View>
+                    </View>
+                    <StarRating
+                      rating={item.Record.rating}
+                      starSize={25}
+                      onChange={() => {}}
+                      style={{padding: 2}}
+                    />
+                    <Text>{item.Record.comments}</Text>
+                  </View>
+                </View>
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

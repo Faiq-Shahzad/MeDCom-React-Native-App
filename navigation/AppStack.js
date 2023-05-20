@@ -14,6 +14,7 @@ import AppointmentReviews from '../screens/AppointmentReviews.js';
 import Appointments from '../screens/Appointments.js';
 import AppointmentTabNavigation from './AppointmentTabNavigation.js';
 import HandleLabAppointment from '../components/HandleLabAppointment.js';
+import AppointmentLabReviews from '../screens/AppointmentLabReview.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,8 +55,34 @@ const AppStack = () => {
           },
         }}
       />
-      <Stack.Screen name="Handle Appointment" component={HandleAppointments} />
-      <Stack.Screen name="Handle Lab Appointment" component={HandleLabAppointment} />
+      <Stack.Screen
+        name="Handle Appointment"
+        component={HandleAppointments}
+        options={{
+          title: 'Medical Record',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+      <Stack.Screen
+        name="Handle Lab Appointment"
+        component={HandleLabAppointment}
+        options={{
+          title: 'Lab Record',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
       <Stack.Screen
         name="Doctor Details"
         component={DoctorDetails}
@@ -104,6 +131,21 @@ const AppStack = () => {
       <Stack.Screen
         name="Reviews"
         component={AppointmentReviews}
+        options={{
+          title: 'Write a Review',
+          headerStyle: {
+            backgroundColor: '#555DF2',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="Lab Reviews"
+        component={AppointmentLabReviews}
         options={{
           title: 'Write a Review',
           headerStyle: {

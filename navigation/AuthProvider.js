@@ -15,6 +15,7 @@ export const AuthProvider = ({children}) => {
   const [doctor, setDoctor] = useState(null);
   const [appointment, setAppointment] = useState(null);
   const [selectedCat, setSelectedCat] = useState(null);
+  console.log('AuthProvider')
   const DummyAvatar =
     'https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a';
 
@@ -110,7 +111,7 @@ export const AuthProvider = ({children}) => {
             });
             // console.log('abcd1', response.data);
             const user = response.data.user;
-            console.log('abcd');
+            console.log('The user is ', user);
             // const user = {email:"faiq@gmail.com", identifier:"1234", role:"patient", verified:true}
             const user_token = response.data.token;
             // const user_token = "abcd";
