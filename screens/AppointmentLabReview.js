@@ -20,22 +20,9 @@ const AppointmentLabReviews = ({route, navigation}) => {
 
   const appointment = route.params?.appointment;
 
-  // const [doctor, setDoctor] = useState({
-  //   name: 'Dr. Saima Riaz',
-  //   specialization: 'Heart Surgeon',
-  //   avatar: require('../assets/avatar2.jpg'),
-  //   price: 'Rs. 1000/-',
-  //   startTime: '10 AM',
-  //   endTime: '4 PM',
-  //   days: 'Mon - Fri',
-  // });
-
   const postReview = async () => {
-    // setReview({userID: user.identifier, ratings: rating, comments: comments});
 
     try {
-      // console.log("Getting Doc appointment for ",doctor.cnic)
-      // console.log("Getting Doc appointment for ",startDate, endDate)
       console.log(
         'url ' +
           backendUrl +
@@ -53,8 +40,6 @@ const AppointmentLabReviews = ({route, navigation}) => {
         return;
       }
 
-      // alert("Sending request")
-
       const response = await axios.post(
         backendUrl + 'appointments/labreview/' + appointment.appointmentId,
         {star: rating, comments: comments},
@@ -65,12 +50,8 @@ const AppointmentLabReviews = ({route, navigation}) => {
         },
       );
       console.log('Got Response');
-      // console.log(response.data);
-      // const allMedicalRecords = response.data
       alert(response.data.message);
-
-      // setMedicalRecords(allMedicalRecords)
-      // setLoading(false)
+      navigation.navigate("Appointments");
     } catch (error) {
       console.log(error.response.data);
     }
@@ -116,28 +97,7 @@ const AppointmentLabReviews = ({route, navigation}) => {
             <Text>
               HexoLife Lab
             </Text>
-            {/* <Text
-              style={{
-                marginTop: 5,
-                fontStyle: 'italic',
-                color: 'black',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text>
-                {appointment.doc.timeStart} - {appointment.doc.timeEnd}
-              </Text>
-              <Text></Text>
-            </Text> */}
           </Card.Content>
-          {/* <Text
-            style={{
-              fontSize: 15,
-              color: 'green',
-              fontWeight: '700',
-            }}>
-            Rs. {appointment.doc.price} /-
-          </Text> */}
         </View>
       </Card>
 

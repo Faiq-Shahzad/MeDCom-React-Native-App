@@ -20,22 +20,9 @@ const AppointmentReviews = ({route, navigation}) => {
 
   const appointment = route.params?.appointment;
 
-  // const [doctor, setDoctor] = useState({
-  //   name: 'Dr. Saima Riaz',
-  //   specialization: 'Heart Surgeon',
-  //   avatar: require('../assets/avatar2.jpg'),
-  //   price: 'Rs. 1000/-',
-  //   startTime: '10 AM',
-  //   endTime: '4 PM',
-  //   days: 'Mon - Fri',
-  // });
-
   const postReview = async () => {
-    // setReview({userID: user.identifier, ratings: rating, comments: comments});
 
     try {
-      // console.log("Getting Doc appointment for ",doctor.cnic)
-      // console.log("Getting Doc appointment for ",startDate, endDate)
       console.log("url " +backendUrl + 'appointments/review/'+appointment.appointmentId, token, rating, comments )
       if(!rating){
         alert('Please Provide rating')
@@ -45,20 +32,15 @@ const AppointmentReviews = ({route, navigation}) => {
         return;
       }
 
-      // alert("Sending request")
-
       const response = await axios.post(backendUrl + 'appointments/review/'+appointment.appointmentId, { star: rating, comments: comments}, {
         headers: {
           authorization: 'Bearer '+token,
         },
       });
       console.log("Got Response");
-      // console.log(response.data);
-      // const allMedicalRecords = response.data
       alert(response.data.message)
-      
-      // setMedicalRecords(allMedicalRecords)
-      // setLoading(false)
+      navigation.navigate("Appointments");
+
 
     } catch (error) {
       console.log(error.response.data);
