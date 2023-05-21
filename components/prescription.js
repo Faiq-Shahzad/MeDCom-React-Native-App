@@ -3,7 +3,7 @@ import { Text,TextInput, ScrollView, TouchableOpacity, View, Alert, Button, Styl
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 
 
 export default function Prescription(props) {
@@ -73,11 +73,11 @@ export default function Prescription(props) {
             followUpDate:selectedDate,
             prescription
         }
-        await firestore()
-        .collection('appointments')
-        .doc(appointmentID)
-        .update({medicalRecord: medicalRecord})
-        Alert.alert("Updating Medical Records", "Updated")
+        // await firestore()
+        // .collection('appointments')
+        // .doc(appointmentID)
+        // .update({medicalRecord: medicalRecord})
+        // Alert.alert("Updating Medical Records", "Updated")
     }
 
   return (

@@ -117,7 +117,7 @@ export default RecentAppointments = ({navigation}) => {
     console.log('useeffect');
     getAppointments();
     getLabAppointments();
-  }, [value]);
+  }, []);
 
   const pendingAppointment = () => {
     Alert.alert('Pending', 'The Request is being processed', [
@@ -161,7 +161,7 @@ export default RecentAppointments = ({navigation}) => {
     );
   } else {
     return (
-      <>
+      <View style={{flex:1, backgroundColor: '#E6EFF9'}}>
         <View style={{margin: 10}}>
           <DropDownPicker
             open={open}
@@ -173,7 +173,7 @@ export default RecentAppointments = ({navigation}) => {
           />
         </View>
 
-        <View style={{flex: 1}}>
+        <View style={{}}>
           {/* HOSPITAL APPOINTMENTS */}
           {value == 'hospital' ? (
             <>
@@ -618,7 +618,7 @@ export default RecentAppointments = ({navigation}) => {
             </>
           )}
         </View>
-      </>
+      </View>
     );
   }
 };

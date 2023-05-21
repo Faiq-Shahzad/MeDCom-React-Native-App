@@ -52,33 +52,15 @@ const BookAppointment = ({navigation}) => {
       if(response.data.status != "success"){
         alert("Unable to book appointment at the moment")
       }else{
-        alert(response.data.message)
+        alert(response.data.message);
+        navigation.navigate('Patient Home')
       }
     } catch (error) {
       console.log(error.response.data);
       alert("Unable to book appointment at the moment")
 
     }
-    // setCreateApt({
-    //   doctorId: doctor.key,
-    //   patientId: user.identifier,
-    //   doctorMSP: 'org2.department1',
-    //   time: selectedTime.key,
-    //   date: selectedDate,
-    //   status: 'pending',
-    // });
-    // console.log(createApt);
-    // setAppointment({
-    //   doctorId: doctor.key,
-    //   patientId: user.identifier,
-    //   doctorMSP: 'org2.department1',
-    //   time: selectedTime.key,
-    //   date: selectedDate,
-    //   status: 'pending'
-    // });
-    // Alert.alert('Success', 'Appointment Booked Successfully!', [
-    //   {text: 'OK', onPress: () => navigation.navigate('Appointments')},
-    // ]);
+  
   };
 
   const [date, setDate] = useState(new Date());

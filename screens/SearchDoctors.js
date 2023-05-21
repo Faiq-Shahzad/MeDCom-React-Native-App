@@ -12,7 +12,7 @@ import {
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import StarRating from 'react-native-star-rating';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
 import axios from 'axios';
 
@@ -235,7 +235,7 @@ export default SearchDoctors = ({navigation}) => {
   if (loading) {
     console.log('loading Data');
     return (
-      <View>
+      <View style={{backgroundColor: '#E6EFF9'}}>
         <Text> Loading </Text>
       </View>
     );
@@ -294,7 +294,7 @@ export default SearchDoctors = ({navigation}) => {
     );
   } else {
     return (
-      <View style={{flex: 1, alignItems: 'center'}}>
+      <View style={{flex: 1, alignItems: 'center' , backgroundColor: '#E6EFF9'}}>
         <View style={{flexDirection: 'row', width: '85%', marginTop: 10}}>
           <MaterialCommunityIcons
             name="account-search"

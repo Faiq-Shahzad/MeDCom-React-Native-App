@@ -1,4 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
+import { useToast } from "react-native-toast-notifications";
 import {
   Text,
   View,
@@ -13,7 +14,7 @@ import {Button, RadioButton} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
 import axios from 'axios';
 
@@ -25,6 +26,7 @@ export default function Profile({navigation, route}) {
   // var details;
   const [loading, setLoading] = useState(true);
   const [disabled, setDisabled] = useState(true);
+  const toast = useToast();
 
   const edit = () => {
     setDisabled(!disabled);

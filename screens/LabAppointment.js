@@ -99,6 +99,7 @@ const LabAppointment = ({navigation}) => {
         alert('Unable to book appointment at the moment');
       } else {
         alert(response.data.message);
+        navigation.navigate('Patient Home');
       }
     } catch (error) {
       console.log(error.response.data);

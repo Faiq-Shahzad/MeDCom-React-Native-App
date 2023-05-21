@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import StarRating from 'react-native-star-rating';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
 import axios from 'axios';
 import {Avatar, Card, Title, IconButton} from 'react-native-paper';

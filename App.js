@@ -1,11 +1,12 @@
-import React from "react";
-import Providers from "./navigation";
+import React from 'react';
+import Providers from './navigation';
+import {ToastProvider} from 'react-native-toast-notifications';
 
 function App() {
-
   return (
-
-    <Providers />
+    <ToastProvider placement="top" animationType="slide-in" normalColor="white" textStyle={{color:'black'}} swipeEnabled={true}>
+      <Providers />
+    </ToastProvider>
   );
 }
 

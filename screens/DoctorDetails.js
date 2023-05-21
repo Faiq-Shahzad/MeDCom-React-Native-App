@@ -12,7 +12,7 @@ import {
   Button,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import {AuthContext, AuthProvider} from '../navigation/AuthProvider';
 import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';

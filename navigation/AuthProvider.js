@@ -1,20 +1,23 @@
 import React, {createContext, useState, useEffect} from 'react';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+// import auth from '@react-native-firebase/auth';
+// import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {Alert} from 'react-native';
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({children, navigation}) => {
   // const backendUrl = 'http://192.168.171.31:3000/';
   const backendUrl = 'http://192.168.1.111:3000/';
+  const eventUrl = 'http://192.168.1.111:3100/';
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [doctor, setDoctor] = useState(null);
   const [appointment, setAppointment] = useState(null);
   const [selectedCat, setSelectedCat] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [eventData, setEventData] = useState([]);
   console.log('AuthProvider')
   const DummyAvatar =
     'https://firebasestorage.googleapis.com/v0/b/medcom-e961c.appspot.com/o/avatar.png?alt=media&token=f6a81a27-c82c-4f22-9ba4-ca8ead95cb5a';
@@ -102,6 +105,11 @@ export const AuthProvider = ({children}) => {
         backendUrl,
         selectedCat,
         setSelectedCat,
+        eventUrl,
+        notifications,
+        setNotifications,
+        eventData,
+        setEventData,
         login: async (cnic, password) => {
           try {
             // await auth().signInWithEmailAndPassword(email, password);
@@ -207,8 +215,10 @@ export const AuthProvider = ({children}) => {
           try {
             // await auth().signOut();
             await AsyncStorage.removeItem('user');
+            AsyncStorage.clear();
             setUser(null);
             setToken(null);
+            
           } catch (e) {
             console.log(e);
           }

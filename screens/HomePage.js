@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import StarRating from 'react-native-star-rating';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../navigation/AuthProvider';
 import axios from 'axios';
 import CustomHeader from '../components/CustomHeader';
@@ -59,59 +59,6 @@ const HomePage = ({navigation}) => {
     },
   ];
 
-  // const PopularDoctors = [
-  //   {
-  //     key: 0,
-  //     name: 'Dr. Faiq Shahzad',
-  //     specialization: 'Heart Surgeon',
-  //     avatar: require('../assets/avatar.jpg'),
-  //     price: 'Rs. 1000/-',
-  //     startTime: '10 AM',
-  //     endTime: '4 PM',
-  //     days: 'Mon - Fri',
-  //   },
-  //   {
-  //     key: 1,
-  //     name: 'Dr. Arif Shahzad',
-  //     specialization: 'Heart Surgeon',
-  //     avatar: require('../assets/avatar2.jpg'),
-  //     price: 'Rs. 2000/-',
-  //     startTime: '10 AM',
-  //     endTime: '4 PM',
-  //     days: 'Mon - Fri',
-  //   },
-  //   {
-  //     key: 2,
-  //     name: 'Dr. Saima Riaz',
-  //     specialization: 'Heart Surgeon',
-  //     avatar: require('../assets/avatar4.jpg'),
-  //     price: 'Rs. 1000/-',
-  //     startTime: '10 AM',
-  //     endTime: '4 PM',
-  //     days: 'Mon - Fri',
-  //   },
-  //   {
-  //     key: 3,
-  //     name: 'Dr. Saima Riaz',
-  //     specialization: 'Heart Surgeon',
-  //     avatar: require('../assets/avatar3.png'),
-  //     price: 'Rs. 1000/-',
-  //     startTime: '10 AM',
-  //     endTime: '4 PM',
-  //     days: 'Mon - Fri',
-  //   },
-  //   {
-  //     key: 4,
-  //     name: 'Dr. Saima Riaz',
-  //     specialization: 'Heart Surgeon',
-  //     avatar: require('../assets/avatar.jpg'),
-  //     price: 'Rs. 1000/-',
-  //     startTime: '10 AM',
-  //     endTime: '4 PM',
-  //     days: 'Mon - Fri',
-  //   },
-  // ];
-
   const handleBookAppointment = element => {
     setDoctor(element.Record);
     navigation.navigate('Book Appointment');
@@ -147,7 +94,7 @@ const HomePage = ({navigation}) => {
               marginRight: '5%',
               flexDirection: 'row',
             }}
-            onPress={() => viewNotifications()}>
+            onPress={() => navigation.navigate('Notifications')}>
             <Icon
               name="notifications-none"
               size={25}
@@ -177,7 +124,7 @@ const HomePage = ({navigation}) => {
               marginRight: '3%',
               flexDirection: 'row',
             }}
-            onPress={() => logout()}>
+            onPress={() => {logout()}}>
             <MaterialCommunityIcons
               name="logout"
               size={25}

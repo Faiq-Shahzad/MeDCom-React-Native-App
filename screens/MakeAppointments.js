@@ -3,7 +3,7 @@ import { Text, View, Alert, TouchableOpacity, TextInput, Image} from 'react-nati
 import {Card, Title, Paragraph, Button} from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DropDownPicker from 'react-native-dropdown-picker';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import { AuthContext } from '../navigation/AuthProvider';
 
 function MakeAppointment({route, navigation}) {
@@ -35,23 +35,23 @@ function MakeAppointment({route, navigation}) {
 
   const confirmAppointment = async () =>{
     setDisabled(true)
-    console.log(doc.id,user.uid,selectedDate.toLocaleDateString(),value, doc.fee)
-    await firestore().collection('appointments').add({
-        doc_id: doc.id,
-        p_id: user.uid,
-        date: selectedDate,
-        time: value,
-        fee: doc.fee,
-        status: 'pending',
-        medicalRecord:null,
-        createdAt: firestore.Timestamp.fromDate(new Date()),
-    }).catch(error => {
-      setDisabled(false)
-      return console.log('Something went wrong with adding appointment to firestore: ', error);
-    })
-    Alert.alert("Success", "Appointment Booked Successfully")
-    setDisabled(false)
-    navigation.popToTop()
+    // console.log(doc.id,user.uid,selectedDate.toLocaleDateString(),value, doc.fee)
+    // await firestore().collection('appointments').add({
+    //     doc_id: doc.id,
+    //     p_id: user.uid,
+    //     date: selectedDate,
+    //     time: value,
+    //     fee: doc.fee,
+    //     status: 'pending',
+    //     medicalRecord:null,
+    //     createdAt: firestore.Timestamp.fromDate(new Date()),
+    // }).catch(error => {
+    //   setDisabled(false)
+    //   return console.log('Something went wrong with adding appointment to firestore: ', error);
+    // })
+    // Alert.alert("Success", "Appointment Booked Successfully")
+    // setDisabled(false)
+    // navigation.popToTop()
     
   }
 

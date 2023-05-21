@@ -1,7 +1,7 @@
 import React, {useState, useContext, useEffect} from 'react';
 import { Text, View, FlatList, Alert, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import { AuthContext } from '../navigation/AuthProvider';
 
 export default function DoctorAppointmentList({navigation}){
@@ -35,10 +35,10 @@ export default function DoctorAppointmentList({navigation}){
     }
 
     const putInProgress = async (id) => {
-      await firestore()
-        .collection('appointments')
-        .doc(id)
-        .update({status:'in-progress'})
+      // await firestore()
+      //   .collection('appointments')
+      //   .doc(id)
+      //   .update({status:'in-progress'})
 
       appointment.map( (el) =>{
         if (el.doc_id == id){
@@ -52,46 +52,46 @@ export default function DoctorAppointmentList({navigation}){
     }
 
     const getAppointments = async () => {
-      const tempList = []
-      await firestore()
-      .collection('appointments')
-      .where('p_id', '==', user.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach(doc => {      
-          const {doc_id, p_id, status, date, time, fee} = doc.data()  
+      // const tempList = []
+      // await firestore()
+      // .collection('appointments')
+      // .where('p_id', '==', user.uid)
+      // .get()
+      // .then((querySnapshot) => {
+      //   querySnapshot.forEach(doc => {      
+      //     const {doc_id, p_id, status, date, time, fee} = doc.data()  
   
-            tempList.push({
-              id: doc.id,
-              doc_id,
-              status,
-              date,
-              time,
-              fee,
-            })
+      //       tempList.push({
+      //         id: doc.id,
+      //         doc_id,
+      //         status,
+      //         date,
+      //         time,
+      //         fee,
+      //       })
   
-          }
+      //     }
   
-          )}
-        ).then(()=>{
+      //     )}
+      //   ).then(()=>{
   
-          const tempList2 = []
-          tempList.map( ap => {
-            firestore()
-            .collection('doctors')
-            .doc(ap.doc_id)
-            .get()
-            .then((documentSnapshot) => {
-              if( documentSnapshot.exists ) {
-                const docDetails = documentSnapshot.data()
-                tempList2.push({...ap, doc:docDetails})
-              }} )
-            }
+      //     const tempList2 = []
+      //     tempList.map( ap => {
+      //       firestore()
+      //       .collection('doctors')
+      //       .doc(ap.doc_id)
+      //       .get()
+      //       .then((documentSnapshot) => {
+      //         if( documentSnapshot.exists ) {
+      //           const docDetails = documentSnapshot.data()
+      //           tempList2.push({...ap, doc:docDetails})
+      //         }} )
+      //       }
             
-            )
-            setAppointmentList(tempList2)
+      //       )
+      //       setAppointmentList(tempList2)
   
-        })
+      //   })
         
     }
 
