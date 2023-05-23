@@ -119,6 +119,14 @@ export default RecentAppointments = ({navigation}) => {
     getLabAppointments();
   }, []);
 
+  useEffect(() => {
+    if (value == 'hospital') {
+      getAppointments();
+    } else {
+      getLabAppointments();
+    }
+  }, [value]);
+
   const pendingAppointment = () => {
     Alert.alert('Pending', 'The Request is being processed', [
       {text: 'OK', onPress: () => console.log('OK Pressed')},
@@ -161,7 +169,7 @@ export default RecentAppointments = ({navigation}) => {
     );
   } else {
     return (
-      <View style={{flex:1, backgroundColor: '#E6EFF9'}}>
+      <View style={{flex: 1, backgroundColor: '#E6EFF9'}}>
         <View style={{margin: 10}}>
           <DropDownPicker
             open={open}

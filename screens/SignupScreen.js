@@ -86,6 +86,7 @@ export default function SignupScreen({navigation}) {
       emergencyContact,
       profile,
     );
+    navigation.navigate('Login');
   };
 
   return (

@@ -61,9 +61,7 @@ const AppStack = () => {
     console.log('Arr', eventArr);
     eventArr.push(abcd);
     console.log('JOSON ARR ', eventArr);
-    // setEventData(eventArr);
     console.log('SetEventData', eventArr);
-    // toast.show("Hello World");
   };
 
   useEffect(() => {

@@ -335,6 +335,7 @@ const HomePage = ({navigation}) => {
                             fontSize: 18,
                             color: 'black',
                             fontWeight: '700',
+                            width:150
                           }}>
                           {item.Record.name}
                         </Text>
