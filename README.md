@@ -18,9 +18,6 @@ A React-Native Android Application:
   <li>Animation (React.Animatable)</li>
   <li>Material Icons</li>
   <li>Context API</li>
-  <li>FireBase Authentication</li>
-  <li>Fire Store</li>
-  <li>FireBase Storage</li>
 </ul>
 
 
