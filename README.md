@@ -6,8 +6,7 @@ https://github.com/Faiq-Shahzad/MeDCom-React-Native-App/assets/85623366/bf697a8b
 
 ## Mobile Interface
 
-![1](https://github.com/Faiq-Shahzad/MeDCom-React-Native-App/assets/85623366/7d319d6b-77fd-4546-bc55-a8abcab066c3)
-![2](https://github.com/Faiq-Shahzad/MeDCom-React-Native-App/assets/85623366/b678683e-39f8-478d-abb6-f860de6c93ca)
+![1](https://github.com/Faiq-Shahzad/MeDCom-React-Native-App/assets/85623366/7d319d6b-77fd-4546-bc55-a8abcab066c3) | ![2](https://github.com/Faiq-Shahzad/MeDCom-React-Native-App/assets/85623366/b678683e-39f8-478d-abb6-f860de6c93ca)
 ![3](https://github.com/Faiq-Shahzad/MeDCom-React-Native-App/assets/85623366/3c817888-8e55-4cf9-82bb-572484204c0f)
 ![6](https://github.com/Faiq-Shahzad/MeDCom-React-Native-App/assets/85623366/4516ae20-d29f-46f7-8e0c-b0f615f3e971)
 ![5](https://github.com/Faiq-Shahzad/MeDCom-React-Native-App/assets/85623366/4e022eb3-2634-4838-b13d-f510f5572764)
