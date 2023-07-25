@@ -1,4 +1,14 @@
-# MeDCom-React-Native-App
+# MeDCom-ReactNative-Application
+
+Our Vision for MedCom is to create an ecosystem where medical data could be easily shared
+among different entities without the concern for privacy and security. For the doctors who need
+the information about the medical background and record of a patient, the MedCom is an
+ecosystem with Web and Mobile based applications that will help the doctors to store and
+maintain the patient’s record on a safe and secure ledger. Unlike the existing standard EHR
+systems developed for legacy systems for which the sharing of data is near to impossible, the
+MedCom a Blockchain based EHR system provides the facility of sharing of data and
+interoperability among different HealthCare organizations over a confidential and secure
+platform.
 
 A React-Native Android Application:
 
